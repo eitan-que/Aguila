@@ -1,6 +1,23 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* === Variantes personalizadas === */
+@layer utilities {
+  /* --- hover-only --- */
+  @media (hover: hover) and (pointer: fine) {
+    /* .hover-only\:hover\:text-destructive:hover {
+      @apply text-destructive;
+    } */
+  }
+
+  /* --- touch-only --- */
+  @media (hover: none) and (pointer: coarse) {
+    /* .touch-only\:text-destructive {
+      @apply text-destructive;
+    } */
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -8,6 +25,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-inter: var(--font-inter);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -41,75 +59,75 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --yellow-accent: var(--yellow-accent);
+  --yellow-accent-foreground: var(--yellow-accent-foreground);
+  --success: var(--success);
+  --success-foreground: var(--success-foreground);
+  --warning: var(--warning);
+  --warning-foreground: var(--warning-foreground);
 }
 
 :root {
+  --font-inter: 'Inter', sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), var(--font-geist-sans), system-ui, sans-serif;
   --radius: 1rem;
-  --background: oklch(97.02% 0.000 0);
-  --foreground: oklch(21.03% 0.006 285.89);
-  --card: oklch(97.02% 0.000 0);
-  --card-foreground: oklch(21.03% 0.006 285.89);
-  --popover: oklch(97.02% 0.000 0);
-  --popover-foreground: oklch(21.03% 0.006 285.89);
-  --primary: oklch(26.86% 0.000 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.967 0.001 286.375);
-  --secondary-foreground: oklch(26.86% 0.000 0);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(26.86% 0.000 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.705 0.015 286.067);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(21.03% 0.006 285.89);
-  --sidebar-primary: oklch(26.86% 0.000 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(26.86% 0.000 0);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.705 0.015 286.067);
+  /* Colores base */
+  --background: #FAFAFA;              /* Fondo gris claro para páginas de la app (neutral, aporta contraste con las tarjetas) */
+  --foreground: #171717;             /* Texto casi negro para alta legibilidad sobre fondos claros */
+  --card: #FFFFFF;                   /* Color de tarjeta y superficies (blanco, para secciones de contenido limpio) */
+  --card-foreground: #171717;        /* Texto sobre tarjetas (mismo color que foreground) */
+  --popover: #FFFFFF;                /* Popovers/menús también con fondo blanco */
+  --popover-foreground: #171717;     /* Texto en popovers */
+  /* Colores de marca (acentos) */
+  --primary: #F97316;                /* Color de acento primario (naranja cálido vibrante) para botones primarios, links, elementos destacados */
+  --primary-foreground: #FFFFFF;     /* Texto sobre fondo primario (blanco para contrastar con el naranja) */
+  --secondary: #10B981;              /* Color de acento secundario (verde teal) para acciones secundarias o resaltados en interfaz admin */
+  --secondary-foreground: #FFFFFF;   /* Texto sobre fondo secundario (blanco sobre teal) */
+  --muted: #D4D4D4;                  /* Fondo atenuado (p.ej. para inputs deshabilitados o secciones secundarias) */
+  --muted-foreground: #A3A3A3;       /* Texto atenuado (gris, para texto placeholder o deshabilitado) */
+  --accent: #D4D4D4;                 /* Acento (dorado brillante) para elementos que requieren atención (ej. etiquetas promocionales) */
+  --accent-foreground: #171717;      /* Texto sobre fondo de acento (texto oscuro sobre dorado claro) */
+  --border: #E5E5E5;                 /* Color de borde para divisores y contornos (gris claro) */
+  --input: #FFFFFF;                  /* Fondo de inputs (blanco en tema claro, dentro de tarjetas) */
+  --ring: #D4D4D4;                   /* Color para el halo de enfoque (ring) de elementos en focus (naranja con transparencia) */
+  --destructive: #C20C0C;            /* Color destructivo (error) (rojo para estados de error o botones de eliminar) */
+  --destructive-foreground: #FFFFFF; /* Texto sobre fondos destructivos (blanco sobre rojo) */
+  /* Colores adicionales para UI */
+  --yellow-accent: #FFEC1A;                 /* Acento (dorado brillante) para elementos que requieren atención (ej. etiquetas promocionales) */
+  --yellow-accent-foreground: #171717;      /* Texto sobre fondo de acento (texto oscuro sobre dorado claro) */
+  --success: #16A34A;                /* Éxito: mensajes o íconos de éxito (verde) */
+  --success-foreground: #FFFFFF;     /* Texto sobre fondo de éxito (si se usa como fondo) */
+  --warning: #FBBF24;                /* Advertencia (ámbar para mensajes de atención) */
+  --warning-foreground: #171717;     /* Texto sobre fondo de advertencia (oscuro sobre ámbar claro) */
 }
 
 .dark {
-  --background: oklch(21.03% 0.006 285.89);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(26.86% 0.000 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(26.86% 0.000 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.92 0.004 286.32);
-  --primary-foreground: oklch(26.86% 0.000 0);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.552 0.016 285.938);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(26.86% 0.000 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.552 0.016 285.938);
+  --background: #0A0A0A;            /* Fondo en modo oscuro (casi negro) */
+  --foreground: #FAFAFA;           /* Texto gris claro en modo oscuro (alto contraste sobre fondo oscuro) */
+  --card: #171717;                 /* Fondo de tarjeta en modo oscuro (gris oscuro) */
+  --card-foreground: #FFFFFF;      /* Texto sobre tarjetas oscuras (gris claro) */
+  --popover: #171717;              /* Fondo de popover en modo oscuro */
+  --popover-foreground: #FFFFFF;   /* Texto de popover en modo oscuro */
+  --primary: #DC2626;              /* Color primario en modo oscuro (naranja algo más claro para mayor vividez) */
+  --primary-foreground: #FFFFFF;   /* Texto sobre primario en oscuro (negro sobre naranja claro) */
+  --secondary: #10B981;            /* Color secundario en modo oscuro (teal algo más claro) */
+  --secondary-foreground: #FFFFFF; /* Texto sobre secundario en oscuro (negro sobre teal) */
+  --muted: #E5E5E5;                /* Fondo atenuado en oscuro (gris oscuro) */
+  --muted-foreground: #A3A3A3;     /* Texto atenuado en oscuro (gris) */
+  --accent: #D4D4D4;                 /* Acento (dorado brillante) para elementos que requieren atención (ej. etiquetas promocionales) */
+  --accent-foreground: #171717;      /* Texto sobre fondo de acento (texto oscuro sobre dorado claro) */
+  --border: #E5E5E5;                 /* Color de borde para divisores y contornos (gris claro) */
+  --input: #171717;                  /* Fondo de inputs (blanco en tema claro, dentro de tarjetas) */
+  --ring: #D4D4D4;                   /* Color para el halo de enfoque (ring) de elementos en focus (naranja con transparencia) */
+  --destructive: #C20C0C;            /* Color destructivo (error) (rojo para estados de error o botones de eliminar) */
+  --destructive-foreground: #FFFFFF; /* Texto sobre fondos destructivos (blanco sobre rojo) */
+  /* Colores adicionales para UI */
+  --yellow-accent: #FFEC1A;                 /* Acento (dorado brillante) para elementos que requieren atención (ej. etiquetas promocionales) */
+  --yellow-accent-foreground: #171717;      /* Texto sobre fondo de acento (texto oscuro sobre dorado claro) */
+  --success: #16A34A;                /* Éxito: mensajes o íconos de éxito (verde) */
+  --success-foreground: #FFFFFF;     /* Texto sobre fondo de éxito (si se usa como fondo) */
+  --warning: #FBBF24;                /* Advertencia (ámbar para mensajes de atención) */
+  --warning-foreground: #171717;     /* Texto sobre fondo de advertencia (oscuro sobre ámbar claro) */
 }
 
 @layer base {

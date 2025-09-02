@@ -1,9 +1,9 @@
 {
-   "users": {
+  "users": {
     "welcome": "welcome"
   },
   "metadata":{
-    "title": "nBeast",
+    "title": "Aguila",
     "description": "Description"
   },
   "auth": {
@@ -55,5 +55,23 @@
     "genericError": "An error occurred. Please try again later.",
     "ohno": "Oh no!",
     "somethingWentWrong": "Something went wrong. Please try again later."
+  },
+  "menu": {
+    "search": {
+      "placeholder": "Search for dishes, categories, restaurants"
+    },
+    "sections": {
+      "viewAll": "View All",
+      "restaurants": "Restaurants",
+      "categories": "Categories"
+    },
+    "tags": {
+      "bestSeller": "Best seller"
+    }
+  },
+  "navbar": {
+    "home": "Home",
+    "orders": "Orders",
+    "profile": "Profile"
   }
 }

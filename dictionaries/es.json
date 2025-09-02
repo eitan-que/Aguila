@@ -3,7 +3,7 @@
     "welcome": "Bienvenido"
   },
   "metadata":{
-    "title": "nBeast",
+    "title": "Aguila",
     "description": "Descripcion"
   },
   "auth": {
@@ -55,5 +55,23 @@
     "genericError": "Ocurrió un error. Por favor, intenta más tarde.",
     "ohno": "¡Oh no!",
     "somethingWentWrong": "Algo salió mal. Por favor, intenta más tarde."
+  },
+  "menu": {
+    "search": {
+      "placeholder": "Busca platos, categorías, restaurantes"
+    },
+    "sections": {
+      "viewAll": "Ver todos",
+      "restaurants": "Restaurantes",
+      "categories": "Categorías"
+    },
+    "tags": {
+      "bestSeller": "Más vendido"
+    }
+  },
+  "navbar": {
+    "home": "Inicio",
+    "orders": "Pedidos",
+    "profile": "Perfil"
   }
 }

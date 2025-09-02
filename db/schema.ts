@@ -79,3 +79,60 @@ export const verification = pgTable("verification", {
 }, (table) => [
   index('verification_identifier_idx').on(table.identifier),
 ]);
+
+export const restaurant = pgTable("restaurant", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  address: text("address"),
+  phone: text("phone"),
+  email: text("email"),
+  website: text("website"),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+});
+
+export const category = pgTable("category", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  restaurantId: text("restaurant_id")
+    .notNull()
+    .references(() => restaurant.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+}, (table) => [
+  index('category_restaurant_id_idx').on(table.restaurantId),
+]);
+
+export const menuItem = pgTable("menu_item", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  price: text("price").notNull(),
+  imageUrl: text("image_url"),
+  categoryId: text("category_id")
+    .notNull()
+    .references(() => category.id, { onDelete: "cascade" }),
+  restaurantId: text("restaurant_id")
+    .notNull()
+    .references(() => restaurant.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  
+}, (table) => [
+  index('menu_item_category_id_idx').on(table.categoryId),
+  index('menu_item_restaurant_id_idx').on(table.restaurantId),
+]);
