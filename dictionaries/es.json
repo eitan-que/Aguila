@@ -1,0 +1,59 @@
+{
+  "users": {
+    "welcome": "Bienvenido"
+  },
+  "metadata":{
+    "title": "nBeast",
+    "description": "Descripcion"
+  },
+  "auth": {
+    "account": "Cuenta",
+    "signIn": "Iniciar Sesión",
+    "signInDescription": "Ingresa tu email para iniciar sesión en tu cuenta",
+    "email": "Email",
+    "emailPlaceholder": "m@ejemplo.com",
+    "sendingMagicLink": "Enviando Email...",
+    "signInWithMagicLink": "Continuar con Email",
+    "signinIn": "Iniciando sesión...",
+    "signInWithGoogle": "Google",
+    "signInWithGithub": "Github",
+    "checkYourEmail": "Revisa tu Email",
+    "magicLinkSent": "Enviamos un email a",
+    "clickLinkToSignIn": "Hace click en el link del email para iniciar sesión.",
+    "checkSpamFolder": "Si no ves el email, fijate en la carpeta de spam",
+    "orContinueWith": "O continua con",
+    "signOut": "Cerrar Sesión",
+    "byContinuingYouAgreeToOurTermsAndConditions": "Al continuar aceptas nuestros ##Términos## y ##Condiciones##",
+    "logInTo": "Iniciar sesión en",
+    "resendEmail": "Reenviar email",
+    "didntReciveTheEmail": "No recibiste el email?",
+    "resendIn": "Reenviar en {{seconds}}s",
+    "changeEmail": "Cambiar email"
+  },
+  "email": {
+    "signInPreview": "Tu link de inicio de sesión",
+    "passwordResetPreview": "Restablecer tu contraseña",
+    "signInSubject": "Iniciar sesión",
+    "passwordResetSubject": "Restablecer contraseña",
+    "hello": "Hola",
+    "signInRequest": "Recibimos una solicitud para iniciar sesión en tu cuenta.",
+    "passwordResetRequest": "Recibimos una solicitud para restablecer la contraseña de tu cuenta.",
+    "signInButton": "Iniciar Sesión",
+    "resetPasswordButton": "Restablecer Contraseña",
+    "orCopyLink": "O copia y pega este link en tu navegador:",
+    "linkExpires": "Este link expirará en 15 minutos.",
+    "didntRequest": "Si no solicitaste esto, puedes ignorar este email de forma segura.",
+    "allRightsReserved": "Todos los derechos reservados."
+  },
+  "error": {
+    "invalidEmail": "Dirección de email inválida",
+    "emailRequired": "El email es requerido",
+    "magicLinkError": "Error al enviar el email. Por favor, intenta nuevamente.",
+    "signInError": "Error al iniciar sesión. Por favor, intenta nuevamente.",
+    "passwordResetError": "Error al restablecer la contraseña. Por favor, intenta nuevamente.",
+    "userNotFound": "Usuario no encontrado",
+    "genericError": "Ocurrió un error. Por favor, intenta más tarde.",
+    "ohno": "¡Oh no!",
+    "somethingWentWrong": "Algo salió mal. Por favor, intenta más tarde."
+  }
+}

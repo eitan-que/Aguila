@@ -1,0 +1,59 @@
+{
+   "users": {
+    "welcome": "welcome"
+  },
+  "metadata":{
+    "title": "nBeast",
+    "description": "Description"
+  },
+  "auth": {
+    "account": "Account",
+    "signIn": "Sign In",
+    "signInDescription": "Enter your email below to login to your account",
+    "email": "Email",
+    "emailPlaceholder": "m@example.com",
+    "sendingMagicLink": "Sending Email...",
+    "signInWithMagicLink": "Continue with Email",
+    "signinIn": "Signin in...",
+    "signInWithGoogle": "Google",
+    "signInWithGithub": "Github",
+    "checkYourEmail": "Check Your Email",
+    "magicLinkSent": "We've sent an email to",
+    "clickLinkToSignIn": "Click the link in the email to sign in.",
+    "checkSpamFolder": "If you don't see the email, check your spam folder",
+    "orContinueWith": "Or continue with",
+    "signOut": "Sign Out",
+    "byContinuingYouAgreeToOurTermsAndConditions": "By continuing, you agree to our ##Terms## & ##Conditions##",
+    "logInTo": "Log in to",
+    "resendEmail": "Resend email",
+    "didntReciveTheEmail": "Didn’t receive the email?",
+    "resendIn": "Resend in {{seconds}}s",
+    "changeEmail": "Change email"
+  },
+  "email": {
+    "signInPreview": "Your sign-in link",
+    "passwordResetPreview": "Reset your password",
+    "signInSubject": "Sign in",
+    "passwordResetSubject": "Reset your password",
+    "hello": "Hello",
+    "signInRequest": "We received a request to sign in to your account.",
+    "passwordResetRequest": "We received a request to reset your password for your account.",
+    "signInButton": "Sign In",
+    "resetPasswordButton": "Reset Password",
+    "orCopyLink": "Or copy and paste this link in your browser:",
+    "linkExpires": "This link will expire in 15 minutes.",
+    "didntRequest": "If you didn't request this, you can safely ignore this email.",
+    "allRightsReserved": "All rights reserved."
+  },
+  "error": {
+    "invalidEmail": "Invalid email address",
+    "emailRequired": "Email is required",
+    "magicLinkError": "Error sending email. Please try again.",
+    "signInError": "Error signing in. Please try again.",
+    "passwordResetError": "Error resetting password. Please try again.",
+    "userNotFound": "User not found",
+    "genericError": "An error occurred. Please try again later.",
+    "ohno": "Oh no!",
+    "somethingWentWrong": "Something went wrong. Please try again later."
+  }
+}
