@@ -1,7 +1,7 @@
 "use client";
 import { Ref, useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Bell, ChevronLeft, Search, ShoppingBasket } from "lucide-react";
+import { Bell, ChevronLeft, Search } from "lucide-react";
 import Link from "next/link";
 import { Lang } from "@/actions/dictionaries";
 
@@ -16,7 +16,7 @@ type HeaderProps = {
 };
 
 function HeaderComponent(
-    { ref, lang, restaurant, title, variant="default", backUrl, searchFilter }: HeaderProps
+    { ref, lang, title, variant="default", backUrl, searchFilter }: HeaderProps
 ) {
     return (
         <header ref={ref || undefined} className={`flex justify-between items-center w-full ${variant === "sticky" ? "py-5 px-4 bg-card shadow-xs rounded-b-2xl border-b-2 border-background" : ""}`}>

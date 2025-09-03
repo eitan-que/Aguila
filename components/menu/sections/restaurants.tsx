@@ -18,12 +18,6 @@ type RestaurantsProps = {
     variant?: "primary" | "secondary";
 };
 
-type Place = { 
-    id: string;
-    name: string;
-    slug: string;
-}
-
 type Tag = {
     type: "text";
     text?: string;

@@ -43,6 +43,47 @@ export const statement = {
         "ban:other",
         "unban:other",
     ],
+    restaurant: [
+        "read:restaurant:public",  // Public permission to view restaurant details
+        "read:restaurant:private", // Private restaurant details (owner/admin only)
+        "create:restaurant",       // Create new restaurant
+        "update:restaurant:own",   // Update own restaurant
+        "update:restaurant:any",   // Admin-only permission to update any restaurant
+        "delete:restaurant:own",   // Delete own restaurant
+        "delete:restaurant:any",   // Admin-only permission to delete any restaurant
+    ],
+    category: [
+        "read:category:public",    // Public permission to view categories
+        "create:category",         // Create new category
+        "update:category:own",     // Update category in own restaurant
+        "update:category:any",     // Admin-only permission to update any category
+        "delete:category:own",     // Delete category from own restaurant
+        "delete:category:any",     // Admin-only permission to delete any category
+    ],
+    product: [
+        "read:product:public",     // Public permission to view products
+        "create:product",          // Create new product
+        "update:product:own",      // Update product in own restaurant
+        "update:product:any",      // Admin-only permission to update any product
+        "delete:product:own",      // Delete product from own restaurant
+        "delete:product:any",      // Admin-only permission to delete any product
+    ],
+    discount: [
+        "read:discount:public",    // Public permission to view discounts
+        "create:discount",         // Create new discount
+        "update:discount:own",     // Update discount in own restaurant
+        "update:discount:any",     // Admin-only permission to update any discount
+        "delete:discount:own",     // Delete discount from own restaurant
+        "delete:discount:any",     // Admin-only permission to delete any discount
+        "redeem:discount",         // Redeem a discount (customer permission)
+        "generate:discount-qr",    // Generate QR code for discount
+    ],
+    analytics: [
+        "read:analytics:own",      // View analytics for own restaurant
+        "read:analytics:any",      // Admin permission to view any restaurant's analytics
+        "read:analytics:platform", // Admin permission to view platform-wide analytics
+        "write:analytics:event",    // Agregar permiso opcional para escritura de eventos (no requerido si se consideran públicos)
+    ],
 } as const;
  
 export const ac = createAccessControl(statement);
@@ -62,11 +103,50 @@ export const user = ac.newRole({
 
         "update:own:name",
         "update:own:image",
+    ],
+    restaurant: [
+        "read:restaurant:public",
+    ],
+    category: [
+        "read:category:public",
+    ],
+    product: [
+        "read:product:public",
+    ],
+    discount: [
+        "read:discount:public",
+        "redeem:discount",
     ]
 }); 
  
-export const admin = ac.newRole({
+export const restaurantOwner = ac.newRole({
     ...user.statements,
+    
+    restaurant: [
+        "create:restaurant",
+        "update:restaurant:own",
+        "delete:restaurant:own",
+    ],
+    category: [
+        "create:category",
+        "update:category:own",
+        "delete:category:own",
+    ],
+    product: [
+        "create:product",
+        "update:product:own",
+        "delete:product:own",
+    ],
+    discount: [
+        "create:discount",
+        "update:discount:own",
+        "delete:discount:own",
+        "generate:discount-qr",
+    ],
+});
+ 
+export const admin = ac.newRole({
+    ...restaurantOwner.statements,
 
     user: [
         "read:other:id",
@@ -85,5 +165,28 @@ export const admin = ac.newRole({
 
         "ban:other",
         "unban:other",
+    ],
+    restaurant: [
+        "read:restaurant:private",
+        "update:restaurant:any",
+        "delete:restaurant:any",
+    ],
+    category: [
+        "update:category:any",
+        "delete:category:any",
+    ],
+    product: [
+        "update:product:any",
+        "delete:product:any",
+    ],
+    discount: [
+        "update:discount:any",
+        "delete:discount:any",
+    ],
+    analytics: [
+        "read:analytics:own",
+        "read:analytics:any",
+        "read:analytics:platform",
+        "write:analytics:event",
     ]
 });

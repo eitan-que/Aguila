@@ -106,7 +106,7 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
     }
   }
 
-  const handleSocialSignIn = async (provider: "google" | "github") => {
+  const handleSocialSignIn = async (provider: "google") => {
     setLoading(provider);
     try {
       await signIn.social({ 
@@ -147,14 +147,14 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
       ) : (
         <BackButton as="link" href="goBack" />
       )}
-      <Card className="w-full max-w-[95%] sm:max-w-md shadow-none bg-card/0 border-border/0">
+      <Card className="bg-card/0 shadow-none border-border/0 w-full max-w-[95%] sm:max-w-md">
         <CardHeader className="space-y-4">
           <div className="space-y-1 text-center">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+            <h1 className="font-bold text-2xl sm:text-3xl tracking-tight">
               {!emailSent ? (<>{dict.auth.logInTo} {dict.metadata.title}</>) : (dict.auth.checkYourEmail)}
             </h1>
             {emailSent && 
-              <p className="text-center text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm text-center">
                 {dict.auth.clickLinkToSignIn}
               </p>
             }
@@ -179,7 +179,7 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
                 </div>
               </div>
               <Button
-                className="w-full bg-primary text-background hover:bg-primary/60 cursor-pointer mt-2 sm:mt-0"
+                className="bg-primary hover:bg-primary/60 mt-2 sm:mt-0 w-full text-background cursor-pointer"
                 size={"default"}
                 onClick={
                   async () => await handleSignIn()
@@ -190,21 +190,21 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
               </Button>
               <div className="relative my-3 sm:my-4">
                 <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t border-border/20"></span>
+                  <span className="border-t border-border/20 w-full"></span>
                 </div>
                 <div className="relative flex justify-center text-xs">
                   <span className="bg-background px-2 text-muted-foreground">{dict.auth.orContinueWith}</span>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="gap-2 grid grid-cols-2">
                 <Button
                   variant="outline"
                   size={"default"}
-                  className="bg-card/30 backdrop-blur-sm border border-border/10 hover:bg-card/50 cursor-pointer"
+                  className="bg-card/30 hover:bg-card/50 backdrop-blur-sm border border-border/10 cursor-pointer"
                   onClick={() => handleSocialSignIn("google")}
                   disabled={loading === "email" || loading === "github" || loading === "google"}
                 >
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="w-4 h-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                       fill="#4285F4"
@@ -223,42 +223,21 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
                     />
                     <path d="M1 1h22v22H1z" fill="none" />
                   </svg>
-                  <span className="ml-1.5 hidden sm:block">{loading === "google" ? dict.auth.signinIn : dict.auth.signInWithGoogle}</span>
-                </Button>
-                <Button
-                  variant="outline"
-                  size={"default"}
-                  className="bg-card/30 backdrop-blur-sm border border-border/10 hover:bg-card/50 cursor-pointer"
-                  onClick={() => handleSocialSignIn("github")}
-                  disabled={loading === "email" || loading === "google" || loading === "github"}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1em"
-                    height="1em"
-                    viewBox="0 0 24 24"
-                    className="h-4 w-4"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33c.85 0 1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z"
-                    />
-                  </svg>
-                  <span className="ml-1.5 hidden sm:block">{loading === "github" ? dict.auth.signinIn : dict.auth.signInWithGithub}</span>
+                  <span className="hidden sm:block ml-1.5">{loading === "google" ? dict.auth.signinIn : dict.auth.signInWithGoogle}</span>
                 </Button>
               </div>
             </>
           ) : (
             <div className="flex flex-col items-center space-y-3 sm:space-y-4">
               {emailSent && (
-                <div className="p-4 rounded-full bg-white/20">
-                  <Mail className="mx-auto h-10 w-10 text-white" />
+                <div className="bg-white/20 p-4 rounded-full">
+                  <Mail className="mx-auto w-10 h-10 text-white" />
                 </div>
               )}
-              <p className="text-center text-sm text-muted-foreground">
+              <p className="text-muted-foreground text-sm text-center">
                   {dict.auth.magicLinkSent} <span className="font-semibold text-white">{email}</span>
               </p>
-              <div className="text-center text-xs text-muted-foreground space-y-1">
+              <div className="space-y-1 text-muted-foreground text-xs text-center">
                 <p>{dict.auth.checkSpamFolder}</p>
                 <p>
                   {dict.auth.didntReciveTheEmail}{" "}
@@ -283,8 +262,8 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
           )}
         </CardContent>
 
-        <CardFooter className="flex flex-col space-y-3 sm:space-y-4 pt-0 px-3 sm:px-6">
-          <div className="text-center text-xs text-muted-foreground">
+        <CardFooter className="flex flex-col space-y-3 sm:space-y-4 px-3 sm:px-6 pt-0">
+          <div className="text-muted-foreground text-xs text-center">
             <p>
               {
                 renderTextWithActions({

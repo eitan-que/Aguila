@@ -5,7 +5,7 @@ import Banner from "@/components/menu/sections/banner";
 import Categories from "@/components/menu/sections/categories";
 import Category from "@/components/menu/sections/category";
 import { Home, User } from "lucide-react";
-import { categories } from "../../page";
+import { categories } from "@/lib/mocks/menu"; // antes: ../../page
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang, restaurantSlug: "restaurante-1" }))
