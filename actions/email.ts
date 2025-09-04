@@ -38,18 +38,25 @@ export async function sendMagicLink({
 
     const dict = await getDictionary(lang)
 
+    // Nuevo: determina el remitente según entorno
+    const appName = process.env.APP_NAME || 'Aguila'
+    const appDomain = process.env.APP_DOMAIN || 'restoman.tech'
+    const fromAddress =
+      process.env.NODE_ENV === 'development'
+        ? `${appName} <onboarding@resend.dev>`
+        : `${appName} <noreply@${appDomain}>`
+
     await resend.emails.send({
-      from: `${process.env.APP_NAME || 'nBeast'} <noreply@${process.env.APP_DOMAIN || 'restoman.tech'}>`,
+      from: fromAddress,
       to: email,
-      subject: `${dict.email.signInSubject} - ${process.env.APP_NAME || 'nBeast'}`,
+      subject: `${dict.email.signInSubject} - ${appName}`,
       react: await EmailTemplate({
         username,
         url,
-        productName: process.env.APP_NAME || 'nBeast',
+        productName: appName,
         dict
       }),
     })
-
     return { success: true }
   } catch (error) {
     console.error('Error sending verification email:', error)
