@@ -4,9 +4,6 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
 
-import { PageHeader } from '@/components/dashboard/page-header';
-import { PageShell } from '@/components/dashboard/page-shell';
-
 async function create(formData: FormData) {
   'use server';
   const lang = formData.get('lang') as string;
@@ -36,35 +33,47 @@ export default async function NewRestaurantDashboardPage({ params }: { params: P
     return <div className="p-6 text-sm text-center">{dict.dashboard.error.unauthorizedDescription}</div>;
   }
   return (
-    <PageShell className="max-w-xl">
-      <PageHeader title={dict.dashboard.restaurants.new} backHref={`/${lang}/dashboard/restaurants`} backLabel={`← ${dict.dashboard.restaurants.back}`} />
-      <form action={create} className="flex flex-col gap-5">
+    <main className="flex flex-col gap-6 p-6 max-w-xl">
+      <h1 className="font-bold text-2xl">{dict.dashboard.restaurants.new}</h1>
+      <form action={create} className="flex flex-col gap-4">
         <input type="hidden" name="lang" value={lang} />
-        <Field label="Name"><input name="name" required className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
-        <Field label="Slug"><input name="slug" required className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
-        <Field label="Description"><textarea name="description" className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 min-h-24 transition" /></Field>
-        <div className="gap-4 grid grid-cols-2 max-sm:grid-cols-1">
-          <Field label="Address"><input name="address" className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
-          <Field label="Phone"><input name="phone" className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
+        <div className="flex flex-col gap-1">
+          <label className="font-medium text-sm">Name</label>
+          <input name="name" required className="bg-background px-3 py-2 border rounded" />
         </div>
-        <div className="gap-4 grid grid-cols-2 max-sm:grid-cols-1">
-          <Field label="Email"><input name="email" type="email" className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
-          <Field label="Website"><input name="website" className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
+        <div className="flex flex-col gap-1">
+          <label className="font-medium text-sm">Slug</label>
+          <input name="slug" required className="bg-background px-3 py-2 border rounded" />
         </div>
-        <div className="flex gap-2 pt-2">
-          <button type="submit" className="bg-primary hover:opacity-90 px-4 py-2 border border-primary rounded text-primary-foreground text-sm transition">{dict.dashboard.restaurants.create}</button>
-          <a href={`/${lang}/dashboard/restaurants`} className="hover:bg-muted px-4 py-2 border rounded text-sm transition">{dict.dashboard.restaurants.cancel}</a>
+        <div className="flex flex-col gap-1">
+          <label className="font-medium text-sm">Description</label>
+          <textarea name="description" className="bg-background px-3 py-2 border rounded" />
+        </div>
+        <div className="gap-4 grid grid-cols-2">
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-sm">Address</label>
+            <input name="address" className="bg-background px-3 py-2 border rounded" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-sm">Phone</label>
+            <input name="phone" className="bg-background px-3 py-2 border rounded" />
+          </div>
+        </div>
+        <div className="gap-4 grid grid-cols-2">
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-sm">Email</label>
+            <input name="email" type="email" className="bg-background px-3 py-2 border rounded" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-sm">Website</label>
+            <input name="website" className="bg-background px-3 py-2 border rounded" />
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <button type="submit" className="bg-primary px-4 py-2 rounded text-primary-foreground text-sm">Create</button>
+          <a href={`/${lang}/dashboard/restaurants`} className="px-4 py-2 border rounded text-sm">Cancel</a>
         </div>
       </form>
-    </PageShell>
-  );
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="flex flex-col gap-1 font-medium text-sm">
-      <span className="font-normal text-muted-foreground">{label}</span>
-      {children}
-    </label>
+    </main>
   );
 }

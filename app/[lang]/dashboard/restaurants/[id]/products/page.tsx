@@ -2,11 +2,8 @@ import { getDictionary, Lang } from '@/actions/dictionaries';
 import { getRestaurant } from '@/actions/restaurant';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
-import { PageShell, PageSections } from '@/components/dashboard/page-shell';
-import { PageHeader } from '@/components/dashboard/page-header';
-import { Section } from '@/components/dashboard/section';
-import { MetricCard } from '@/components/dashboard/cards';
-import { ResourceList } from '@/components/dashboard/resource-list';
+import Link from 'next/link';
+import { GridSection } from '@/components/dashboard/blocks';
 
 export default async function DashboardRestaurantProducts({ params }: { params: Promise<{ lang: Lang; id: string }> }) {
   const { lang, id } = await params;
@@ -22,28 +19,34 @@ export default async function DashboardRestaurantProducts({ params }: { params: 
   }
   const categories = r.restaurant.categories || [];
   const products = categories.flatMap((c: any) => c.products || []);
-  const resources = products.map((p: any) => ({
-    id: p.id,
-    title: p.name,
-    subtitle: p.category?.name || '',
-    hint: `$${(p.price/100).toFixed(2)}`,
-    metaRight: (p.categoryId || '').slice(0,6)
-  }));
   return (
-    <PageShell>
-      <PageHeader
-        title={`${dict.dashboard.restaurants.productsLabel} — ${r.restaurant.name}`}
-        backHref={`/${lang}/dashboard/restaurants/${id}`}
-        backLabel={`← ${dict.dashboard.restaurants.back}`}
-      />
-      <PageSections>
-        <Section title={dict.dashboard.sections.overview}>
-          <MetricCard label={dict.dashboard.restaurants.productsLabel} value={products.length} />
-        </Section>
-        <div>
-          <ResourceList resources={resources} emptyLabel="(empty)" />
+    <main className="flex flex-col gap-10 p-6">
+      <header className="flex flex-wrap justify-between items-center gap-4">
+        <h1 className="font-bold text-2xl tracking-tight">{dict.dashboard.restaurants.productsLabel} — {r.restaurant.name}</h1>
+        <Link href={`/${lang}/dashboard/restaurants/${id}`} className="hover:bg-muted px-3 py-1 border rounded text-xs">← {dict.dashboard.restaurants.back}</Link>
+      </header>
+      <div className="flex flex-col gap-10">
+        <GridSection title={dict.dashboard.sections.overview}>
+          <div className="flex flex-wrap gap-4 col-span-full bg-card p-4 border rounded-lg text-xs">
+            <div>
+              <p className="text-muted-foreground">{dict.dashboard.restaurants.productsLabel}</p>
+              <p className="font-medium">{products.length}</p>
+            </div>
+          </div>
+        </GridSection>
+        <div className="border rounded-lg divide-y">
+          {products.map((p: any) => (
+            <div key={p.id} className="flex justify-between items-center px-4 py-3">
+              <div>
+                <p className="font-medium text-sm">{p.name}</p>
+                <p className="text-muted-foreground text-xs">${p.price / 100}</p>
+              </div>
+              <span className="text-[11px] text-muted-foreground">{p.categoryId?.slice(0,6)}</span>
+            </div>
+          ))}
+          {products.length === 0 && <div className="p-4 text-muted-foreground text-sm">(empty)</div>}
         </div>
-      </PageSections>
-    </PageShell>
+      </div>
+    </main>
   );
 }

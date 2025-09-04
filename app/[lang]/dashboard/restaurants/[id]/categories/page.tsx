@@ -3,11 +3,7 @@ import { getRestaurant } from '@/actions/restaurant';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import Link from 'next/link';
-import { PageShell, PageSections } from '@/components/dashboard/page-shell';
-import { PageHeader } from '@/components/dashboard/page-header';
-import { Section } from '@/components/dashboard/section';
-import { ResourceList } from '@/components/dashboard/resource-list';
-import { MetricCard } from '@/components/dashboard/cards';
+import { GridSection } from '@/components/dashboard/blocks';
 
 export default async function DashboardRestaurantCategories({ params }: { params: Promise<{ lang: Lang; id: string }> }) {
   const { lang, id } = await params;
@@ -21,28 +17,35 @@ export default async function DashboardRestaurantCategories({ params }: { params
   if ('error' in r || !r.restaurant) {
     return <div className="p-6 text-sm">{dict.dashboard.error.title}</div>;
   }
-  const categories = (r.restaurant.categories || []) as any[];
-  const resources = categories.map(c => ({
-    id: c.id,
-    title: c.name,
-    subtitle: `${(c.products?.length || 0)} ${dict.dashboard.restaurants.productsLabel.toLowerCase()}`,
-    metaRight: c.id.slice(0,6)
-  }));
+  const categories = r.restaurant.categories || [];
   return (
-    <PageShell>
-      <PageHeader
-        title={`${dict.dashboard.restaurants.categoriesLabel} — ${r.restaurant.name}`}
-        backHref={`/${lang}/dashboard/restaurants/${id}`}
-        backLabel={`← ${dict.dashboard.restaurants.back}`}
-      />
-      <PageSections>
-        <Section title={dict.dashboard.sections.overview}>
-          <MetricCard label={dict.dashboard.restaurants.categoriesLabel} value={categories.length} />
-        </Section>
-        <div>
-          <ResourceList resources={resources} emptyLabel="(empty)" />
+    <main className="flex flex-col gap-10 p-6">
+      <header className="flex flex-wrap justify-between items-center gap-4">
+        <h1 className="font-bold text-2xl tracking-tight">{dict.dashboard.restaurants.categoriesLabel} — {r.restaurant.name}</h1>
+        <Link href={`/${lang}/dashboard/restaurants/${id}`} className="hover:bg-muted px-3 py-1 border rounded text-xs">← {dict.dashboard.restaurants.back}</Link>
+      </header>
+      <div className="flex flex-col gap-10">
+        <GridSection title={dict.dashboard.sections.overview}>
+          <div className="flex flex-wrap gap-4 col-span-full bg-card p-4 border rounded-lg text-xs">
+            <div>
+              <p className="text-muted-foreground">{dict.dashboard.restaurants.categoriesLabel}</p>
+              <p className="font-medium">{categories.length}</p>
+            </div>
+          </div>
+        </GridSection>
+        <div className="border rounded-lg divide-y">
+          {categories.map((c: any) => (
+            <div key={c.id} className="flex justify-between items-center px-4 py-3">
+              <div>
+                <p className="font-medium text-sm">{c.name}</p>
+                <p className="text-muted-foreground text-xs">{c.products?.length || 0} {dict.dashboard.restaurants.productsLabel.toLowerCase()}</p>
+              </div>
+              <span className="text-[11px] text-muted-foreground">{c.id.slice(0,6)}</span>
+            </div>
+          ))}
+          {categories.length === 0 && <div className="p-4 text-muted-foreground text-sm">(empty)</div>}
         </div>
-      </PageSections>
-    </PageShell>
+      </div>
+    </main>
   );
 }

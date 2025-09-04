@@ -231,11 +231,11 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
             <div className="flex flex-col items-center space-y-3 sm:space-y-4">
               {emailSent && (
                 <div className="bg-white/20 p-4 rounded-full">
-                  <Mail className="mx-auto w-10 h-10 text-foreground" />
+                  <Mail className="mx-auto w-10 h-10 text-white" />
                 </div>
               )}
               <p className="text-muted-foreground text-sm text-center">
-                  {dict.auth.magicLinkSent} <span className="font-semibold text-foreground">{email}</span>
+                  {dict.auth.magicLinkSent} <span className="font-semibold text-white">{email}</span>
               </p>
               <div className="space-y-1 text-muted-foreground text-xs text-center">
                 <p>{dict.auth.checkSpamFolder}</p>

@@ -3,8 +3,7 @@ import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 import { updateRestaurant, getRestaurant } from '@/actions/restaurant';
 import { redirect } from 'next/navigation';
-import { PageShell } from '@/components/dashboard/page-shell';
-import { PageHeader } from '@/components/dashboard/page-header';
+import Link from 'next/link';
 
 async function update(formData: FormData) {
   'use server';
@@ -40,46 +39,55 @@ export default async function EditRestaurantDashboardPage({ params }: { params: 
   }
   const restaurant = r.restaurant as any;
   return (
-    <PageShell className="max-w-xl">
-      <PageHeader
-        title={`${dict.dashboard.restaurants.edit} — ${restaurant.name}`}
-        backHref={`/${lang}/dashboard/restaurants/${restaurant.id}`}
-        backLabel={`← ${dict.dashboard.restaurants.back}`}
-      />
-      <form action={update} className="flex flex-col gap-5">
+    <main className="flex flex-col gap-8 p-6 max-w-xl">
+      <header className="flex flex-wrap justify-between items-center gap-4">
+        <h1 className="font-bold text-2xl tracking-tight">{dict.dashboard.restaurants.edit} — {restaurant.name}</h1>
+        <Link href={`/${lang}/dashboard/restaurants/${restaurant.id}`} className="hover:bg-muted px-3 py-1 border rounded text-xs">← {dict.dashboard.restaurants.back}</Link>
+      </header>
+      <form action={update} className="flex flex-col gap-4">
         <input type="hidden" name="lang" value={lang} />
         <input type="hidden" name="id" value={restaurant.id} />
-        <Field label="Name"><input name="name" defaultValue={restaurant.name} required className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
-        <Field label="Slug"><input name="slug" defaultValue={restaurant.slug} required className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
-        <Field label="Description"><textarea name="description" defaultValue={restaurant.description || ''} className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 min-h-24 transition" /></Field>
-        <div className="gap-4 grid grid-cols-2 max-sm:grid-cols-1">
-          <Field label="Address"><input name="address" defaultValue={restaurant.address || ''} className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
-          <Field label="Phone"><input name="phone" defaultValue={restaurant.phone || ''} className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
+        <div className="flex flex-col gap-1">
+          <label className="font-medium text-sm">Name</label>
+          <input name="name" defaultValue={restaurant.name} required className="bg-background px-3 py-2 border rounded" />
         </div>
-        <div className="gap-4 grid grid-cols-2 max-sm:grid-cols-1">
-          <Field label="Email"><input name="email" type="email" defaultValue={restaurant.email || ''} className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
-          <Field label="Website"><input name="website" defaultValue={restaurant.website || ''} className="bg-background px-3 py-2 border rounded outline-none ring-primary/50 focus-visible:ring-2 transition" /></Field>
+        <div className="flex flex-col gap-1">
+          <label className="font-medium text-sm">Slug</label>
+            <input name="slug" defaultValue={restaurant.slug} required className="bg-background px-3 py-2 border rounded" />
         </div>
-        <div className="flex gap-2 pt-2">
-          <button type="submit" className="bg-primary hover:opacity-90 px-4 py-2 border border-primary rounded text-primary-foreground text-sm transition">{dict.dashboard.restaurants.save}</button>
-          <a href={`/${lang}/dashboard/restaurants/${restaurant.id}`} className="hover:bg-muted px-4 py-2 border rounded text-sm transition">{dict.dashboard.restaurants.cancel}</a>
+        <div className="flex flex-col gap-1">
+          <label className="font-medium text-sm">Description</label>
+          <textarea name="description" defaultValue={restaurant.description || ''} className="bg-background px-3 py-2 border rounded" />
+        </div>
+        <div className="gap-4 grid grid-cols-2">
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-sm">Address</label>
+            <input name="address" defaultValue={restaurant.address || ''} className="bg-background px-3 py-2 border rounded" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-sm">Phone</label>
+            <input name="phone" defaultValue={restaurant.phone || ''} className="bg-background px-3 py-2 border rounded" />
+          </div>
+        </div>
+        <div className="gap-4 grid grid-cols-2">
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-sm">Email</label>
+            <input name="email" type="email" defaultValue={restaurant.email || ''} className="bg-background px-3 py-2 border rounded" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="font-medium text-sm">Website</label>
+            <input name="website" defaultValue={restaurant.website || ''} className="bg-background px-3 py-2 border rounded" />
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <button type="submit" className="bg-primary px-4 py-2 rounded text-primary-foreground text-sm">Save</button>
+          <a href={`/${lang}/dashboard/restaurants/${restaurant.id}`} className="px-4 py-2 border rounded text-sm">Cancel</a>
+        </div>
+        <div className="flex justify-end gap-2 pt-2">
+          <Link href={`/${lang}/dashboard/restaurants/${restaurant.id}`} className="hover:bg-muted px-3 py-2 border rounded text-xs">{dict.dashboard.restaurants.cancel}</Link>
+          <button type="submit" className="bg-primary px-3 py-2 border rounded text-primary-foreground text-xs">{dict.dashboard.restaurants.save}</button>
         </div>
       </form>
-    </PageShell>
+    </main>
   );
-}
-
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <label className="flex flex-col gap-1 font-medium text-sm">
-      <span className="font-normal text-muted-foreground">{label}</span>
-      {children}
-    </label>
-  );
-}
-
-// Util classes (podrías mover a globals / componente)
-declare global {
-  // eslint-disable-next-line no-var
-  var _styleHelper: any;
 }
