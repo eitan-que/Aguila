@@ -28,11 +28,18 @@ type CategoryFormData = z.infer<typeof categorySchema>;
  */
 export async function getCategoriesByRestaurant(restaurantId: string) {
   try {
-    const categories = await db.query.category.findMany({
-      where: eq(category.restaurantId, restaurantId),
-      orderBy: (category) => [asc(category.name)],
+    const rows = await db.query.category.findMany({
+      where: eq(category.restaurantId, restaurantId)
     });
-    
+    const now = Date.now();
+    const categories = rows.map(c => {
+      const ageHours = (now - new Date(c.createdAt).getTime()) / 36e5;
+      const newBoost = ageHours < 48 ? Math.max(0, 48 - ageHours) : 0;
+      const base = (c as any).weight ?? 0;
+      const popularity = (c as any).popularityScore ?? 0;
+      const random = Math.random();
+      return { ...c, _score: base + popularity + newBoost * 1.5 + random };
+    }).sort((a,b)=> b._score - a._score);
     return { categories };
   } catch (error) {
     console.error(`Failed to fetch categories for restaurant ${restaurantId}:`, error);

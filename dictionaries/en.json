@@ -73,5 +73,110 @@
     "home": "Home",
     "orders": "Orders",
     "profile": "Profile"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "stats": {
+      "restaurants": "Restaurants",
+      "products": "Products",
+      "activeDiscounts": "Active Discounts",
+      "qrScans": "QR Scans",
+      "visits24h": "Visits 24h",
+      "visits7d": "Visits 7d",
+      "visits30d": "Visits 30d",
+      "registeredUsers": "Registered Users",
+      "registeredPctSuffix": "% of total",
+      "returnRate": "Return Rate",
+      "conversionRate": "Conversion Rate",
+      "instagramClicks": "Instagram Clicks",
+      "shareClicks": "Share Clicks",
+      "totalUsers": "Total Users",
+      "registeredPct": "% Registered",
+      "weeklyGrowth": "Weekly Growth",
+      "monthlyGrowth": "Monthly Growth",
+      "promoViews": "Promo Views"
+    },
+    "sections": {
+      "restaurantExtremes": "Restaurant Extremes",
+      "promotions": "Promotions",
+      "distributions": "Distributions",
+      "overview": "Overview",
+      "engagement": "Engagement",
+      "users": "Users",
+      "extremes": "Extremes"
+    },
+    "labels": {
+      "mostVisited": "Most Visited",
+      "leastVisited": "Least Visited",
+      "mostViewedPromo": "Most Viewed",
+      "leastViewedPromo": "Least Viewed",
+      "mostRedeemedPromo": "Most Redeemed",
+      "leastRedeemedPromo": "Least Redeemed",
+      "peakHour": "Peak Hour",
+      "mostVisitedDay": "Most Visited Day"
+    },
+    "restaurant": {
+      "ageInMonths": "Age (months)",
+      "visitsWeekly": "Weekly Visits",
+      "visitsMonthly": "Monthly Visits",
+      "mostVisitedDay": "Top Weekday",
+      "projectedVisits": "Projected Visits (3 mo)",
+  "projectedNext3Months": "Projected Next 3 Months",
+  "weeklySeries": "Weekly Series (last 90d)",
+      "promotionScans": "Promo Scans",
+      "successfulPromoScans": "Successful QR Scans",
+      "whatsappClicks": "WhatsApp Clicks",
+      "locationClicks": "Location Clicks",
+      "menuClicks": "Menu Clicks",
+      "instagramClicks": "Instagram Clicks",
+      "shareClicks": "Share Clicks",
+      "shareOfAttention": "Share of Attention",
+      "categoryRanking": "Platform Ranking",
+      "costPerExposure": "Cost per Exposure (ARS)",
+      "perCategory": {
+        "title": "By Category",
+        "category": "Category",
+        "share": "Share %",
+        "ranking": "Ranking",
+        "restaurants": "Restaurants",
+        "visits": "Visits",
+        "yourVisits": "Your Visits"
+      },
+      "projections": "Projections",
+      "interactions": "Interactions"
+    },
+    "error": {
+      "title": "Unable to load metrics",
+      "description": "An error occurred while loading dashboard data.",
+      "retry": "Retry",
+      "unauthorizedTitle": "Access denied",
+      "unauthorizedDescription": "You don't have permission to view this area."
+    },
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "restaurants": "Restaurants",
+      "logout": "Logout",
+      "backToSite": "Back to site"
+    },
+    "restaurants": {
+      "listTitle": "Restaurants",
+      "new": "New Restaurant",
+      "edit": "Edit Restaurant",
+      "create": "Create Restaurant",
+      "name": "Name",
+      "slug": "Slug",
+      "save": "Save",
+  "cancel": "Cancel",
+  "back": "Back",
+  "categoriesLabel": "Categories",
+  "productsLabel": "Products",
+  "discountsLabel": "Discounts"
+    },
+    "management": {
+      "title": "Management",
+      "products": "Products",
+      "categories": "Categories",
+      "discounts": "Discounts"
+    }
   }
 }

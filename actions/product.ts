@@ -31,11 +31,18 @@ type ProductFormData = z.infer<typeof productSchema>;
  */
 export async function getProductsByRestaurant(restaurantId: string) {
   try {
-    const products = await db.query.product.findMany({
-      where: eq(product.restaurantId, restaurantId),
-      orderBy: (product) => [asc(product.name)],
+    const rows = await db.query.product.findMany({
+      where: eq(product.restaurantId, restaurantId)
     });
-    
+    const now = Date.now();
+    const products = rows.map(p => {
+      const ageHours = (now - new Date(p.createdAt).getTime()) / 36e5;
+      const newBoost = ageHours < 24 ? Math.max(0, 24 - ageHours) : 0; // stronger but shorter for products
+      const base = (p as any).weight ?? 0;
+      const popularity = (p as any).popularityScore ?? 0;
+      const random = Math.random();
+      return { ...p, _score: base + popularity + newBoost * 2 + random };
+    }).sort((a,b)=> b._score - a._score);
     return { products };
   } catch (error) {
     console.error(`Failed to fetch products for restaurant ${restaurantId}:`, error);
@@ -48,11 +55,18 @@ export async function getProductsByRestaurant(restaurantId: string) {
  */
 export async function getProductsByCategory(categoryId: string) {
   try {
-    const products = await db.query.product.findMany({
-      where: eq(product.categoryId, categoryId),
-      orderBy: (product) => [asc(product.name)],
+    const rows = await db.query.product.findMany({
+      where: eq(product.categoryId, categoryId)
     });
-    
+    const now = Date.now();
+    const products = rows.map(p => {
+      const ageHours = (now - new Date(p.createdAt).getTime()) / 36e5;
+      const newBoost = ageHours < 24 ? Math.max(0, 24 - ageHours) : 0;
+      const base = (p as any).weight ?? 0;
+      const popularity = (p as any).popularityScore ?? 0;
+      const random = Math.random();
+      return { ...p, _score: base + popularity + newBoost * 2 + random };
+    }).sort((a,b)=> b._score - a._score);
     return { products };
   } catch (error) {
     console.error(`Failed to fetch products for category ${categoryId}:`, error);

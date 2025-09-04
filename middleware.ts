@@ -53,6 +53,25 @@ export async function middleware(request: NextRequest) {
         console.error("Session check failed in middleware:", error);
       }
     }
+    // Admin gating: if path includes /{locale}/admin ensure role
+    if (pathname.startsWith(`/${candidate}/admin`)) {
+      try {
+        const session = await auth.api.getSession({ headers: await headers() });
+        const role = session?.user?.role;
+        const allowed = role === 'admin' || role === 'restaurantOwner';
+        if (!allowed) {
+          const url = request.nextUrl.clone();
+          url.pathname = `/${candidate}`;
+          url.searchParams.set('unauthorized', '1');
+          return NextResponse.redirect(url);
+        }
+      } catch {
+        const url = request.nextUrl.clone();
+        url.pathname = `/${candidate}/auth/signin`;
+        url.searchParams.set('redirect', pathname);
+        return NextResponse.redirect(url);
+      }
+    }
     return NextResponse.next();
   }
 

@@ -93,6 +93,10 @@ export const restaurant = pgTable("restaurant", {
   phone: text("phone"),
   email: text("email"),
   website: text("website"),
+  // Weight & boosting fields for ordering
+  weight: integer("weight").default(0).notNull(),
+  popularityScore: integer("popularity_score").default(0).notNull(),
+  lastBoostAt: timestamp("last_boost_at"),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
@@ -108,6 +112,9 @@ export const category = pgTable("category", {
   restaurantId: text("restaurant_id")
     .notNull()
     .references(() => restaurant.id, { onDelete: "cascade" }),
+  weight: integer("weight").default(0).notNull(),
+  popularityScore: integer("popularity_score").default(0).notNull(),
+  lastBoostAt: timestamp("last_boost_at"),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
@@ -129,6 +136,9 @@ export const product = pgTable("product", {
   restaurantId: text("restaurant_id")
     .notNull()
     .references(() => restaurant.id, { onDelete: "cascade" }),
+  weight: integer("weight").default(0).notNull(),
+  popularityScore: integer("popularity_score").default(0).notNull(),
+  lastBoostAt: timestamp("last_boost_at"),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
