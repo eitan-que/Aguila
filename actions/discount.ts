@@ -672,13 +672,3 @@ export async function getMostRedeemedDiscounts(limit = 10) {
 
   return { discounts: rows };
 }
-
-// Simple helper to list discounts by restaurant (dashboard use)
-export async function getDiscountsByRestaurant(restaurantId: string) {
-  try {
-    const rows = await db.query.discount.findMany({ where: eq(discount.restaurantId, restaurantId) });
-    return { discounts: rows };
-  } catch (e) {
-    return { error: 'Failed to fetch discounts' };
-  }
-}

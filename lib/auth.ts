@@ -5,7 +5,7 @@ import { magicLink } from "better-auth/plugins";
 import { sendMagicLink } from "@/actions/email"
 import { admin as adminPlugin } from "better-auth/plugins"
 import { nextCookies } from "better-auth/next-js";
-import { ac, admin, restaurantOwner, user } from "@/lib/permissions";
+import { ac, admin, user } from "@/lib/permissions";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -22,7 +22,6 @@ export const auth = betterAuth({
       ac,
       roles: {
         user,
-        restaurantOwner,
         admin,
       }
     }),

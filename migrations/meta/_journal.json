@@ -15,20 +15,6 @@
       "when": 1756939725628,
       "tag": "0001_careful_doctor_doom",
       "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1757020000000,
-      "tag": "0002_boosting_fields",
-      "breakpoints": false
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1756947048165,
-      "tag": "0003_medical_killer_shrike",
-      "breakpoints": true
     }
   ]
 }

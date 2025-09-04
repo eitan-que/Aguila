@@ -1,5 +1,5 @@
 import { db } from '@/db/drizzle';
-import { restaurant, category, product } from '@/db/schema';
+import { restaurant } from '@/db/schema';
 import { auth } from '@/lib/auth';
 import { and, AnyColumn, asc, count, desc, eq, gte, sql, SQLWrapper } from 'drizzle-orm';
 import { headers } from 'next/headers';
@@ -33,67 +33,49 @@ type RestaurantFormData = z.infer<typeof restaurantSchema>;
  */
 export async function getRestaurants() {
   try {
-    const rows = await db.query.restaurant.findMany();
-    const now = Date.now();
-    const scored = rows.map(r => {
-      const ageHours = (now - new Date(r.createdAt).getTime()) / 36e5;
-      const newBoost = ageHours < 48 ? Math.max(0, 48 - ageHours) : 0;
-      const base = (r as any).weight ?? 0;
-      const popularity = (r as any).popularityScore ?? 0;
-      const random = Math.random();
-      const raw = base + popularity + newBoost * 2 + random;
-      return { ...r, _scoreRaw: raw };
+    const restaurants = await db.query.restaurant.findMany({
+      orderBy: (restaurant) => [asc(restaurant.name)],
     });
-    const max = Math.max(...scored.map(s => s._scoreRaw), 0);
-    const min = Math.min(...scored.map(s => s._scoreRaw), 0);
-    const normed = scored.map(s => {
-      const normalized = max === min ? 50 : ((s._scoreRaw - min) / (max - min)) * 100;
-      return { ...s, _score: Number(normalized.toFixed(2)) };
-    }).sort((a,b)=> b._score - a._score);
-    return { restaurants: normed };
+    
+    return { restaurants };
   } catch (error) {
-    console.error('Failed to fetch restaurants:', error);
-    if ((error as any)?.code === '42703') {
-      return { error: 'Missing boosting columns. Run migrations (pnpm drizzle-kit push).' };
-    }
-    return { error: 'Failed to fetch restaurants' };
+    console.error("Failed to fetch restaurants:", error);
+    return { error: "Failed to fetch restaurants" };
   }
 }
 
 /**
  * Get a single restaurant by ID or slug (public info only)
  */
-export async function getRestaurant(restaurantIdOrSlug: string, opts?: { recordVisit?: boolean }) {
+export async function getRestaurant(restaurantIdOrSlug: string) {
   try {
-    // Fetch restaurant only
-    const base = await db.query.restaurant.findFirst({
-      where: (r, { or }) => or(eq(r.id, restaurantIdOrSlug), eq(r.slug, restaurantIdOrSlug.toLowerCase()))
+    const result = await db.query.restaurant.findFirst({
+      where: (restaurant, { or }) => 
+        or(
+          eq(restaurant.id, restaurantIdOrSlug),
+          eq(restaurant.slug, restaurantIdOrSlug.toLowerCase())
+        ),
+      with: {
+        // Include categories with their products
+        // Note: These would need to be defined in your Drizzle schema
+        categories: {
+          with: {
+            products: true
+          },
+          orderBy: (category: { updatedAt: SQLWrapper | AnyColumn; }) => [desc(category.updatedAt)]
+        }
+      }
     });
-    if (!base) return { restaurant: null };
-    // Manual categories fetch
-    const cats = await db.query.category.findMany({
-      where: eq(category.restaurantId, base.id),
-    });
-    // Manual products per category (batch)
-    const catIds = cats.map(c => c.id);
-    let prods: any[] = [];
-    if (catIds.length) {
-      prods = await db.query.product.findMany({
-        where: (p, { inArray }) => inArray(p.categoryId, catIds)
-      });
+
+    // Log analytics for restaurant view
+    if (result) {
+      await recordRestaurantVisit(result.id);
     }
-    const categoriesWithProducts = cats.map(c => ({
-      ...c,
-      products: prods.filter(p => p.categoryId === c.id)
-    }));
-    const result: any = { ...base, categories: categoriesWithProducts };
-    if (opts?.recordVisit !== false) {
-      await recordRestaurantVisit(base.id);
-    }
+
     return { restaurant: result };
   } catch (error) {
     console.error(`Failed to fetch restaurant ${restaurantIdOrSlug}:`, error);
-    return { error: 'Failed to fetch restaurant' };
+    return { error: `Failed to fetch restaurant` };
   }
 }
 
@@ -102,25 +84,17 @@ export async function getRestaurant(restaurantIdOrSlug: string, opts?: { recordV
  */
 export async function getPopularRestaurants(limit = 10) {
   try {
-    const rows = await db.query.restaurant.findMany();
-    const scored = rows.map(r => {
-      const recency = (Date.now() - new Date(r.updatedAt).getTime()) / 36e5;
-      const recencyBoost = Math.max(0, 72 - recency);
-      const base = (r as any).weight ?? 0;
-      const popularity = (r as any).popularityScore ?? 0;
-      const raw = base + popularity + recencyBoost + Math.random();
-      return { ...r, _scoreRaw: raw };
+    // This would ideally use analytics data to sort by actual visit count
+    // For now, we're using a placeholder query
+    const restaurants = await db.query.restaurant.findMany({
+      orderBy: (restaurant) => [desc(restaurant.updatedAt)],
+      limit
     });
-    const max = Math.max(...scored.map(s => s._scoreRaw), 0);
-    const min = Math.min(...scored.map(s => s._scoreRaw), 0);
-    const normed = scored.map(s => {
-      const normalized = max === min ? 50 : ((s._scoreRaw - min) / (max - min)) * 100;
-      return { ...s, _score: Number(normalized.toFixed(2)) };
-    }).sort((a,b)=> b._score - a._score).slice(0, limit);
-    return { restaurants: normed };
+    
+    return { restaurants };
   } catch (error) {
-    console.error('Failed to fetch popular restaurants:', error);
-    return { error: 'Failed to fetch popular restaurants' };
+    console.error("Failed to fetch popular restaurants:", error);
+    return { error: "Failed to fetch popular restaurants" };
   }
 }
 

@@ -196,7 +196,7 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
                   <span className="bg-background px-2 text-muted-foreground">{dict.auth.orContinueWith}</span>
                 </div>
               </div>
-              <div className="gap-2 grid grid-cols-1">
+              <div className="gap-2 grid grid-cols-2">
                 <Button
                   variant="outline"
                   size={"default"}
@@ -223,7 +223,7 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
                     />
                     <path d="M1 1h22v22H1z" fill="none" />
                   </svg>
-                  <span className="ml-1.5">{loading === "google" ? dict.auth.signinIn : dict.auth.signInWithGoogle}</span>
+                  <span className="hidden sm:block ml-1.5">{loading === "google" ? dict.auth.signinIn : dict.auth.signInWithGoogle}</span>
                 </Button>
               </div>
             </>
