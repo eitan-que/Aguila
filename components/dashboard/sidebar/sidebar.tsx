@@ -3,7 +3,6 @@ import * as React from "react"
 import { ChevronLeft, ChevronRight, Home, Utensils } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useTheme } from "next-themes"
 import logo from '@/public/logo_256x256_light.png'
 
 import {
