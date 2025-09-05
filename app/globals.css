@@ -100,6 +100,12 @@
   --warning: #FBBF24;                /* Advertencia (ámbar para mensajes de atención) */
   --warning-foreground: #171717;     /* Texto sobre fondo de advertencia (oscuro sobre ámbar claro) */
   --sidebar: var(--card);
+
+  --chart-1: #F97316; /* Naranja primario */
+  --chart-2: #10B981; /* Verde teal secundario */
+  --chart-3: #C20C0C; /* Rojo destructivo */
+  --chart-4: #FBBF24; /* Amarillo de advertencia */
+  --chart-5: #16A34A; /* Verde de éxito */
 }
 
 .dark {
@@ -129,6 +135,12 @@
   --success-foreground: #FFFFFF;     /* Texto sobre fondo de éxito (si se usa como fondo) */
   --warning: #FBBF24;                /* Advertencia (ámbar para mensajes de atención) */
   --warning-foreground: #171717;     /* Texto sobre fondo de advertencia (oscuro sobre ámbar claro) */     --sidebar: hsl(240 5.9% 10%);     --sidebar-foreground: hsl(240 4.8% 95.9%);     --sidebar-primary: hsl(224.3 76.3% 48%);     --sidebar-primary-foreground: hsl(0 0% 100%);     --sidebar-accent: hsl(240 3.7% 15.9%);     --sidebar-accent-foreground: hsl(240 4.8% 95.9%);     --sidebar-border: hsl(240 3.7% 15.9%);     --sidebar-ring: hsl(217.2 91.2% 59.8%);
+
+  --chart-1: #DC2626; /* Naranja vibrante para modo oscuro */
+  --chart-2: #10B981; /* Verde teal claro en oscuro */
+  --chart-3: #FBBF24; /* Amarillo para advertencias en oscuro */
+  --chart-4: #FFEC1A; /* Amarillo acento brillante */
+  --chart-5: #16A34A; /* Verde de éxito */
 }
 
 @layer base {
