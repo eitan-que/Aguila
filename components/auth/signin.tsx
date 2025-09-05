@@ -196,7 +196,7 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
                   <span className="bg-background px-2 text-muted-foreground">{dict.auth.orContinueWith}</span>
                 </div>
               </div>
-              <div className="gap-2 grid grid-cols-2">
+              <div className="gap-2 grid grid-cols-1">
                 <Button
                   variant="outline"
                   size={"default"}

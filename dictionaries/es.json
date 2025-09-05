@@ -73,5 +73,24 @@
     "home": "Inicio",
     "orders": "Pedidos",
     "profile": "Perfil"
+  },
+  "dashboard": {
+    "sidebar": {
+      "home": "Inicio",
+      "restaurants": "Restaurantes",
+      "navuser": {
+        "account": "Cuenta",
+        "signOut": "Cerrar Sesión"
+      },
+      "backToSite": "Volver al Sitio"
+    },
+    "home": {
+      "title": "Inicio",
+      "description": "Bienvenido al panel de control"
+    },
+    "restaurants": {
+      "title": "Restaurantes",
+      "description": "Gestiona los restaurantes"
+    }
   }
 }

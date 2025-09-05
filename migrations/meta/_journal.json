@@ -15,6 +15,13 @@
       "when": 1756939725628,
       "tag": "0001_careful_doctor_doom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1757026546540,
+      "tag": "0002_fresh_puff_adder",
+      "breakpoints": true
     }
   ]
 }

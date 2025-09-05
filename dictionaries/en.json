@@ -73,5 +73,24 @@
     "home": "Home",
     "orders": "Orders",
     "profile": "Profile"
+  },
+  "dashboard": {
+    "sidebar": {
+      "home": "Home",
+      "restaurants": "Restaurants",
+      "navuser": {
+        "account": "Account",
+        "signOut": "Logout"
+      },
+      "backToSite": "Back to Site"
+    },
+    "home": {
+      "title": "Home",
+      "description": "Welcome to the dashboard"
+    },
+    "restaurants": {
+      "title": "Restaurants",
+      "description": "Manage the restaurants"
+    }
   }
 }

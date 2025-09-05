@@ -43,6 +43,11 @@ export type Restaurant = {
         weight: number;
     }[];
     tags?: Tag[];
+    address?: string;
+    coordinates?: {
+        lat: number;
+        lon: number;
+    };
 };
 
 export default function Restaurants(

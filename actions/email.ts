@@ -38,14 +38,16 @@ export async function sendMagicLink({
 
     const dict = await getDictionary(lang)
 
+    const isDev = process.env.NODE_ENV === 'development';
+
     await resend.emails.send({
-      from: `${process.env.APP_NAME || 'nBeast'} <noreply@${process.env.APP_DOMAIN || 'restoman.tech'}>`,
+      from: `${process.env.APP_NAME || 'Aguila'} ${isDev ? "<onboarding@resend.dev>" : `<noreply@${process.env.APP_DOMAIN || 'restoman.tech'}>`}`,
       to: email,
-      subject: `${dict.email.signInSubject} - ${process.env.APP_NAME || 'nBeast'}`,
+      subject: `${dict.email.signInSubject} - ${process.env.APP_NAME || 'Aguila'}`,
       react: await EmailTemplate({
         username,
         url,
-        productName: process.env.APP_NAME || 'nBeast',
+        productName: process.env.APP_NAME || 'Aguila',
         dict
       }),
     })

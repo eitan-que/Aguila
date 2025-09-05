@@ -99,6 +99,7 @@
   --success-foreground: #FFFFFF;     /* Texto sobre fondo de éxito (si se usa como fondo) */
   --warning: #FBBF24;                /* Advertencia (ámbar para mensajes de atención) */
   --warning-foreground: #171717;     /* Texto sobre fondo de advertencia (oscuro sobre ámbar claro) */
+  --sidebar: var(--card);
 }
 
 .dark {
@@ -127,7 +128,7 @@
   --success: #16A34A;                /* Éxito: mensajes o íconos de éxito (verde) */
   --success-foreground: #FFFFFF;     /* Texto sobre fondo de éxito (si se usa como fondo) */
   --warning: #FBBF24;                /* Advertencia (ámbar para mensajes de atención) */
-  --warning-foreground: #171717;     /* Texto sobre fondo de advertencia (oscuro sobre ámbar claro) */
+  --warning-foreground: #171717;     /* Texto sobre fondo de advertencia (oscuro sobre ámbar claro) */     --sidebar: hsl(240 5.9% 10%);     --sidebar-foreground: hsl(240 4.8% 95.9%);     --sidebar-primary: hsl(224.3 76.3% 48%);     --sidebar-primary-foreground: hsl(0 0% 100%);     --sidebar-accent: hsl(240 3.7% 15.9%);     --sidebar-accent-foreground: hsl(240 4.8% 95.9%);     --sidebar-border: hsl(240 3.7% 15.9%);     --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
 @layer base {
@@ -136,5 +137,29 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer base {
+  :root {
+    --sidebar: var(--card);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
+  }
+
+  .dark {
+    --sidebar: var(--card);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--primary);
+    --sidebar-primary-foreground: var(--primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
   }
 }

@@ -19,7 +19,9 @@ export const restaurants: RestaurantType[] = [
       { type: "text", text: "Vegetariano" },
       { type: "text", text: "Sin Gluten" },
       { type: "text", text: "Kosher" }
-    ]
+    ],
+    address: "123 Calle Falsa, Ciudad",
+    coordinates: { lat: 40.7128, lon: -74.0060 }
   },
   {
     id: "2",
