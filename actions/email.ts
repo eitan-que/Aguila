@@ -41,7 +41,7 @@ export async function sendMagicLink({
     const isDev = process.env.NODE_ENV === 'development';
 
     await resend.emails.send({
-      from: `${process.env.APP_NAME || 'Aguila'} ${isDev ? "<onboarding@resend.dev>" : `<noreply@${process.env.EMAIL_DOMAIN || 'restoman.tech'}>`}`,
+      from: `${process.env.APP_NAME || 'Aguila'} ${isDev ? "<onboarding@resend.dev>" : `<noreply@${process.env.EMAIL_DOMAIN || 'aguila.lat'}>`}`,
       to: email,
       subject: `${dict.email.signInSubject} - ${process.env.APP_NAME || 'Aguila'}`,
       react: await EmailTemplate({
