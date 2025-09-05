@@ -3,7 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner"
 import { ThemeProvider } from "@/components/primitives/theme-provider"
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
 import { baseUrl } from '@/lib/utils';
 import { Lang } from "@/actions/dictionaries";
 
@@ -49,6 +50,8 @@ export default async function RootLayout({
           {children}
           <Toaster richColors position="top-right" />
         </ThemeProvider>
+        <SpeedInsights />
+        <Analytics/>
       </body>
     </html>
   );
