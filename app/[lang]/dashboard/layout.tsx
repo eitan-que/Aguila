@@ -10,9 +10,9 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { lang: Lang }
+  params: Promise<{ lang: Lang; }>
 }>) {
-    const { lang } = params;
+    const { lang } = await params;
     const dict = await getDictionary(lang)
     const sessionData = await auth.api.getSession({
         headers: await headers(),

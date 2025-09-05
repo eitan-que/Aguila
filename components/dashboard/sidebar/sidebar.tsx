@@ -59,14 +59,14 @@ export function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+              <div>
                 <div className="flex justify-center items-center bg-white rounded-lg size-8 aspect-square text-sidebar-primary-foreground">
                   <Image src={logo} alt="Aguila Logo" width={256} height={256} className="w-full h-full object-contain" />
                 </div>
                 <div className="flex-1 grid text-sm text-left leading-tight">
                   <span className="font-semibold truncate">{dict.metadata.title}</span>
                 </div>
-              </a>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -158,18 +158,20 @@ function RestaurantsTree({
 
   return (
     <SidebarMenuItem>
-      <Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90" defaultOpen>
+      <Collapsible className="group/collapsible">
         <CollapsibleTrigger asChild>
           <SidebarMenuButton 
             className="data-[active=true]:bg-primary data-[active=true]:font-semibold data-[active=true]:text-primary-foreground" 
             asChild
             isActive={pathName === `/${lang}/dashboard/r`}
           >
-            <Link href={rootHref} className="flex items-center gap-2 overflow-hidden">
-              <ChevronRight className="transition-transform" />
-              <Utensils />
-              <span className="truncate">Restaurants</span>
-            </Link>
+            <div className="flex items-center gap-2">
+              <ChevronRight className="group-data-[state=open]/collapsible:rotate-90 transition-transform shrink-0"  />
+              <Link href={rootHref} className="flex flex-1 items-center gap-2 overflow-hidden">
+                <Utensils className="size-4 shrink-0"/>
+                <span className="truncate">{dict.restaurants}</span>
+              </Link>
+            </div>
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>
