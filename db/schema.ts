@@ -5,8 +5,8 @@ import {
   boolean,
   index,
   integer,
-  primaryKey,
   json,
+  numeric,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -27,9 +27,11 @@ export const user = pgTable("user", {
   banned: boolean("banned"),
   banReason: text("ban_reason"),
   banExpires: timestamp("ban_expires"),
-}, (table) => ([
-  index('user_email_idx').on(table.email),
-]));
+}, (table) => ({
+  indexes: [
+    index('user_email_idx').on(table.email),
+  ],
+}));
 
 export const session = pgTable("session", {
   id: text("id").primaryKey(),
@@ -64,9 +66,11 @@ export const account = pgTable("account", {
   password: text("password"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
-}, (table) => ([
-  index('account_user_id_idx').on(table.userId),
-]));
+}, (table) => ({
+  indexes: [
+    index('account_user_id_idx').on(table.userId),
+  ],
+}));
 
 export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
@@ -83,13 +87,76 @@ export const verification = pgTable("verification", {
   index('verification_identifier_idx').on(table.identifier),
 ]);
 
-// --------------------------------------------------
-// Discount (moved above product so product can FK it)
-// --------------------------------------------------
+// ---------------------
+// Restaurantes
+// ---------------------
+export const restaurant = pgTable("restaurant", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  slug: text("slug").notNull().unique(),
+  description: text("description"),
+  address: text("address"),
+  // Campos para UI
+  pictureUrl: text("picture_url"),
+  pictureAlt: text("picture_alt"),
+  prepTimeMin: integer("prep_time_min"),
+  prepTimeMax: integer("prep_time_max"),
+  weight: integer("weight").default(0).notNull(),
+  tags: json("tags").$type<{ type: 'text'; text?: string }[]>(),
+  lat: numeric("lat", { precision: 18, scale: 14 }),
+  lon: numeric("lon", { precision: 18, scale: 14 }),
+  phone: text("phone"),
+  email: text("email"),
+  website: text("website"),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+}, (table) => ({
+  indexes: [
+    index('restaurant_slug_idx').on(table.slug),
+    index('restaurant_weight_idx').on(table.weight),
+  ],
+}));
+
+// ---------------------
+// Categorías (para restaurantes)
+// ---------------------
+export const category = pgTable("category", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  restaurantId: text("restaurant_id")
+    .notNull()
+    .references(() => restaurant.id, { onDelete: "cascade" }),
+  pictureUrl: text("picture_url"),
+  pictureAlt: text("picture_alt"),
+  iconUrl: text("icon_url"),
+  iconAlt: text("icon_alt"),
+  weight: integer("weight").default(0).notNull(),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+}, (table) => [
+  index('category_restaurant_id_idx').on(table.restaurantId),
+  index('category_weight_idx').on(table.weight),
+]);
+
+// ---------------------
+// Descuentos (pertenecen a restaurantes; actúan como items mostrables)
+// ---------------------
 export const discount = pgTable("discount", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
+  // Imagen para representar el descuento como “item”
+  imageUrl: text("image_url"),
+  imageAlt: text("image_alt"),
   type: text("type").notNull(), // 'percentage' | 'fixed'
   value: integer("value").notNull(),
   buyQuantity: integer("buy_quantity"),
@@ -117,7 +184,9 @@ export const discount = pgTable("discount", {
     saturday: true,
     sunday: true,
   }),
+  // Solo se asignan a restaurantes (no a categorías)
   restaurantId: text("restaurant_id")
+    .notNull()
     .references(() => restaurant.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
@@ -128,86 +197,4 @@ export const discount = pgTable("discount", {
 }, (table) => [
   index('discount_restaurant_id_idx').on(table.restaurantId),
   index('discount_date_range_idx').on(table.startDate, table.endDate),
-]);
-
-export const restaurant = pgTable("restaurant", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  slug: text("slug").notNull().unique(),
-  description: text("description"),
-  address: text("address"),
-  // Extra fields required by UI components (see components/menu/sections/restaurants.tsx & banner.tsx)
-  location: text("location"), // potentially different from full address, short location label
-  pictureUrl: text("picture_url"),
-  pictureAlt: text("picture_alt"),
-  prepTimeMin: integer("prep_time_min"),
-  prepTimeMax: integer("prep_time_max"),
-  highestPercentageDiscount: integer("highest_percentage_discount"),
-  weight: integer("weight").default(0).notNull(),
-  tags: json("tags").$type<{ type: 'text'; text?: string }[]>(),
-  lat: integer("lat"), // If higher precision is needed switch to doublePrecision
-  lon: integer("lon"),
-  phone: text("phone"),
-  email: text("email"),
-  website: text("website"),
-  createdAt: timestamp("created_at")
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  updatedAt: timestamp("updated_at")
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
-}, (table) => ([
-  index('restaurant_slug_idx').on(table.slug),
-  index('restaurant_weight_idx').on(table.weight),
-]));
-
-export const category = pgTable("category", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description"),
-  restaurantId: text("restaurant_id")
-    .notNull()
-    .references(() => restaurant.id, { onDelete: "cascade" }),
-  pictureUrl: text("picture_url"),
-  pictureAlt: text("picture_alt"),
-  iconUrl: text("icon_url"),
-  iconAlt: text("icon_alt"),
-  weight: integer("weight").default(0).notNull(),
-  createdAt: timestamp("created_at")
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  updatedAt: timestamp("updated_at")
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
-}, (table) => [
-  index('category_restaurant_id_idx').on(table.restaurantId),
-  index('category_weight_idx').on(table.weight),
-]);
-
-export const product = pgTable("product", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description"),
-  price: integer("price").notNull(),
-  imageUrl: text("image_url"),
-  imageAlt: text("image_alt"),
-  categoryId: text("category_id")
-    .references(() => category.id, { onDelete: "set null" }),
-  restaurantId: text("restaurant_id")
-    .notNull()
-    .references(() => restaurant.id, { onDelete: "cascade" }),
-  // Relación 1:N directa: un producto puede tener un descuento principal activo.
-  discountId: text("discount_id").references(() => discount.id, { onDelete: "set null" }),
-  tags: json("tags").$type<{ type: 'text'; text?: string }[]>(),
-  rating: integer("rating"), // consider decimal for precision later
-  createdAt: timestamp("created_at")
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  updatedAt: timestamp("updated_at")
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
-}, (table) => [
-  index('product_category_id_idx').on(table.categoryId),
-  index('product_restaurant_id_idx').on(table.restaurantId),
-  index('product_discount_id_idx').on(table.discountId),
 ]);
