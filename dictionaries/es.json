@@ -105,6 +105,10 @@
         "instagramClicks": "Clicks en Instagram",
         "shareClicks": "Clicks en Compartir"
       },
+      "labels": {
+        "visits": "Visitas",
+        "clicks": "Clicks"
+      },
       "daysShort": {
         "mon": "Lun",
         "tue": "Mar",
@@ -154,13 +158,6 @@
       "values": {
         "busiestDay": "Jueves",
         "busiestHour": "12:00-13:00"
-      },
-      "labels": {
-        "visits": "Visitas",
-        "users": "Usuarios",
-        "clicks": "Clicks",
-        "instagram": "Instagram",
-        "share": "Compartir"
       }
     },
     "restaurants": {

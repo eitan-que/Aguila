@@ -157,12 +157,6 @@
       "values": {
         "busiestDay": "Thursday",
         "busiestHour": "12:00-13:00"
-      },
-      "labels": {
-        "visits": "Visits",
-        "clicks": "Clicks",
-        "instagram": "Instagram",
-        "share": "Share"
       }
     },
     "restaurants": {
