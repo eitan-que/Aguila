@@ -68,7 +68,7 @@ export default function Header(props: HeaderProps) {
 
         const currentUrl = "https://aguila.lat" + pathname;
         const shareData = {
-            title: props?.restaurant ? `${props.restaurant} en Aguila` : "Aguila",
+            title: props?.restaurant?.trim() ? `${props.restaurant} en Aguila` : "Aguila",
             text:
                 pathname === "/"
                     ? "Descubre Aguila, la app para descubrir los mejores lugares y promociones para comer."
