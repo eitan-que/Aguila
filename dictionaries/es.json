@@ -23,7 +23,7 @@
     "checkSpamFolder": "Si no ves el email, fijate en la carpeta de spam",
     "orContinueWith": "O continua con",
     "signOut": "Cerrar Sesión",
-    "byContinuingYouAgreeToOurTermsAndConditions": "Al continuar aceptas nuestros ##Términos## y ##Condiciones##",
+    "disclaimer": "Al continuar aceptas nuestros ##Términos y Condiciones## & ##Política de Privacidad##",
     "logInTo": "Iniciar sesión en",
     "resendEmail": "Reenviar email",
     "didntReciveTheEmail": "No recibiste el email?",
@@ -163,6 +163,130 @@
     "restaurants": {
       "title": "Restaurantes",
       "description": "Gestiona los restaurantes"
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Términos y Condiciones de Uso",
+      "sections": [
+        {
+          "id": "acceptance",
+          "title": "1. Aceptación de los Términos",
+          "body": [
+            "El presente documento establece los términos y condiciones (en adelante, los “Términos”) que regulan el acceso, navegación, utilización y permanencia en la plataforma digital denominada “Águila” (en adelante, la “Plataforma”), propiedad de [nombre del equipo/proyecto], con domicilio en [ciudad/país].",
+            "El mero acceso o utilización de la Plataforma implica la aceptación expresa, plena e incondicional de todos y cada uno de los Términos aquí establecidos, independientemente de que el Usuario se registre o no. En caso de desacuerdo, el Usuario deberá abstenerse de utilizar la Plataforma."
+          ]
+        },
+        {
+          "id": "modifications",
+          "title": "2. Modificaciones",
+          "body": [
+            "Águila se reserva el derecho de modificar, actualizar, ampliar, sustituir o eliminar, en cualquier momento y sin necesidad de notificación previa, cualquier disposición contenida en los presentes Términos. La continuación en el uso de la Plataforma tras la publicación de modificaciones implicará la aceptación irrevocable de las mismas."
+          ]
+        },
+        {
+          "id": "scope",
+          "title": "3. Alcance del Servicio",
+          "body": [
+            "Águila es una plataforma de carácter meramente informativo y de difusión, destinada a brindar visibilidad a locales gastronómicos y comerciales cercanos a instituciones educativas y oficinas. La Plataforma podrá incluir, de forma enunciativa pero no limitativa, menús, promociones, horarios, precios, imágenes, datos de contacto y demás información relacionada con los locales participantes.",
+            "En ningún caso Águila será responsable por la veracidad, exactitud, actualización o disponibilidad de la información publicada, ni por la calidad de los productos o servicios ofrecidos por los locales."
+          ]
+        },
+        {
+          "id": "ip",
+          "title": "4. Propiedad Intelectual",
+          "body": [
+            "Todos los derechos de propiedad intelectual e industrial relativos a la Plataforma, su diseño gráfico, logotipos, marcas, software, bases de datos, nombres comerciales y demás elementos protegibles, son titularidad exclusiva de Águila o de terceros que han autorizado su uso. Queda prohibida la reproducción, copia, distribución, modificación, transformación o comunicación pública sin autorización expresa y por escrito."
+          ]
+        },
+        {
+          "id": "liability",
+          "title": "5. Limitación de Responsabilidad",
+          "body": [
+            "El Usuario reconoce y acepta que:"
+          ],
+          "points": [
+            "Águila no garantiza la disponibilidad ininterrumpida de la Plataforma, pudiendo suspenderse por mantenimiento, fallos técnicos o causas ajenas.",
+            "Los precios, promociones y menús publicados son responsabilidad exclusiva de cada local y pueden variar sin previo aviso.",
+            "Cualquier relación contractual, transacción, reclamo, queja, inconveniente o litigio que surja entre el Usuario y un local, será ajeno a la responsabilidad de Águila."
+          ]
+        },
+        {
+          "id": "law",
+          "title": "6. Jurisdicción y Ley Aplicable",
+          "body": [
+            "Los presentes Términos se regirán e interpretarán conforme a las leyes de la República Argentina, sin perjuicio de la aplicación de normativas internacionales en materia de protección de datos y derechos de los consumidores. Para cualquier controversia derivada, las partes se someten a los tribunales ordinarios de la Ciudad Autónoma de Buenos Aires, renunciando a cualquier otro fuero o jurisdicción que pudiera corresponder."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Política de Privacidad",
+      "sections": [
+        {
+          "id": "intro",
+          "title": "1. Introducción",
+          "body": [
+            "La presente Política de Privacidad (en adelante, la “Política”) tiene por objeto informar a los Usuarios sobre la manera en que Águila recopila, utiliza, almacena, procesa y protege la información personal y no personal obtenida a través de la Plataforma."
+          ]
+        },
+        {
+          "id": "data",
+          "title": "2. Información que se recopila",
+          "body": [
+            "De manera general, la Plataforma no requiere que los Usuarios proporcionen datos personales para acceder a la información disponible. No obstante, Águila podrá recopilar de manera directa o indirecta, en caso de que el Usuario así lo decida: nombre, correo electrónico, número de teléfono, preferencias de consumo, historial de interacción y otros datos que el Usuario facilite voluntariamente.",
+            "Asimismo, se podrán recopilar datos técnicos de forma automática, tales como dirección IP, tipo de dispositivo, sistema operativo, navegador utilizado, cookies y estadísticas de navegación."
+          ]
+        },
+        {
+          "id": "purpose",
+          "title": "3. Finalidad del tratamiento",
+          "body": [
+            "La información recopilada podrá ser utilizada, entre otros fines:"
+          ],
+          "points": [
+            "Para mejorar la experiencia del Usuario en la Plataforma.",
+            "Para remitir comunicaciones, promociones o novedades, previa aceptación del Usuario.",
+            "Para realizar estudios estadísticos, de mercado o de comportamiento.",
+            "Para cumplir con disposiciones legales o requerimientos de autoridades competentes."
+          ]
+        },
+        {
+          "id": "consent",
+          "title": "4. Consentimiento y Transferencias",
+          "body": [
+            "El uso de la Plataforma implica el consentimiento expreso del Usuario respecto del tratamiento de su información conforme a esta Política. En ningún caso Águila venderá, cederá o transferirá los datos personales a terceros sin autorización previa, salvo obligación legal o requerimiento judicial. Los datos podrán almacenarse en servidores ubicados dentro o fuera del territorio nacional, bajo estándares razonables de seguridad."
+          ]
+        },
+        {
+          "id": "security",
+          "title": "5. Seguridad de la Información",
+          "body": [
+            "Águila adopta medidas técnicas, administrativas y organizativas razonables para proteger los datos del Usuario contra accesos no autorizados, alteraciones, pérdidas o destrucciones. No obstante, el Usuario reconoce que ningún sistema puede garantizar seguridad absoluta."
+          ]
+        },
+        {
+          "id": "rights",
+          "title": "6. Derechos del Usuario",
+          "body": [
+            "El Usuario podrá ejercer en cualquier momento sus derechos de acceso, rectificación, actualización y supresión de datos, de conformidad con lo previsto en la Ley 25.326 de Protección de Datos Personales de la República Argentina y, en lo que resultare aplicable, el Reglamento General de Protección de Datos (RGPD) de la Unión Europea."
+          ]
+        },
+        {
+          "id": "changes",
+          "title": "7. Modificaciones de la Política",
+          "body": [
+            "Águila podrá modificar, actualizar o sustituir la presente Política en cualquier momento. Se entenderá que el Usuario acepta dichas modificaciones al continuar utilizando la Plataforma tras su publicación."
+          ]
+        },
+        {
+          "id": "contact",
+          "title": "8. Contacto",
+          "body": [
+            "Para ejercer sus derechos o plantear cualquier duda, el Usuario podrá comunicarse a través de aguila.startup@gmail.com"
+          ]
+        }
+      ]
     }
   }
 }

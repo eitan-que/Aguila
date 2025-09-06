@@ -1,5 +1,5 @@
 import { getDictionary, Lang, locales } from "@/actions/dictionaries"
-import Header from "@/components/menu/header";
+import Header from "@/components/shared/header";
 import Navbar from "@/components/menu/navbar/navbar";
 import Banner from "@/components/menu/sections/banner";
 import Categories from "@/components/menu/sections/categories";
@@ -32,6 +32,7 @@ export default async function Restaurant({
       <Header
         title={restaurantSlug}
         backUrl={`/${lang}/`}
+        share={true}
       />
       <Banner imageUrl="https://placehold.co/1920x1080/png" restaurant={{ name: "Restaurant Name", location: "Calle 123", coordinates: { lat: 0, lon: 0 }, prepTimeRange: { min: 10, max: 30 }, tags: ["tag1", "tag2"] }} />
       <Categories

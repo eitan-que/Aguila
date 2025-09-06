@@ -1,5 +1,5 @@
 import { getDictionary, Lang, locales } from "@/actions/dictionaries";
-import Header from "@/components/menu/header";
+import Header from "@/components/shared/header";
 import Navbar from "@/components/menu/navbar/navbar";
 import { Home, LayoutDashboard, User } from "lucide-react";
 import { auth } from "@/lib/auth";

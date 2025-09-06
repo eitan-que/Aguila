@@ -1,4 +1,4 @@
-import { HeaderSkeleton } from "@/components/menu/header";
+import { HeaderSkeleton } from "@/components/shared/header";
 import { NavbarSkeleton } from "@/components/menu/navbar/navbar";
 import { SearchbarSkeleton } from "@/components/menu/searchbar";
 import { BannerSkeleton } from "@/components/menu/sections/banner";

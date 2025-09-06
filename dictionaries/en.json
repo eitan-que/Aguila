@@ -23,7 +23,7 @@
     "checkSpamFolder": "If you don't see the email, check your spam folder",
     "orContinueWith": "Or continue with",
     "signOut": "Sign Out",
-    "byContinuingYouAgreeToOurTermsAndConditions": "By continuing, you agree to our ##Terms## & ##Conditions##",
+    "disclaimer": "By continuing, you agree to our ##Terms & Conditions## & ##Privacy Policy##",
     "logInTo": "Log in to",
     "resendEmail": "Resend email",
     "didntReciveTheEmail": "Didn’t receive the email?",
@@ -162,6 +162,130 @@
     "restaurants": {
       "title": "Restaurants",
       "description": "Manage the restaurants"
+    }
+  },
+  "legal": {
+    "terms": {
+      "title": "Terms and Conditions of Use",
+      "sections": [
+        {
+          "id": "acceptance",
+          "title": "1. Acceptance of the Terms",
+          "body": [
+            "This document sets forth the terms and conditions (the “Terms”) that govern access to, browsing, use of, and presence on the digital platform called “Águila” (the “Platform”), owned by [team/project name], domiciled in [city/country].",
+            "Mere access to or use of the Platform constitutes the express, full, and unconditional acceptance of each and every one of the Terms set forth herein, regardless of whether the User registers or not. In case of disagreement, the User must refrain from using the Platform."
+          ]
+        },
+        {
+          "id": "modifications",
+          "title": "2. Modifications",
+          "body": [
+            "Águila reserves the right to modify, update, expand, replace, or delete, at any time and without prior notice, any provision contained in these Terms. Continued use of the Platform after the publication of modifications shall imply irrevocable acceptance thereof."
+          ]
+        },
+        {
+          "id": "scope",
+          "title": "3. Scope of the Service",
+          "body": [
+            "Águila is an informational and promotional platform intended to provide visibility to food service and retail venues located near educational institutions and offices. The Platform may include, by way of example and without limitation, menus, promotions, hours, prices, images, contact details, and other information related to participating venues.",
+            "In no event shall Águila be responsible for the truthfulness, accuracy, updating, or availability of the information published, nor for the quality of the products or services offered by the venues."
+          ]
+        },
+        {
+          "id": "ip",
+          "title": "4. Intellectual Property",
+          "body": [
+            "All intellectual and industrial property rights related to the Platform, its graphic design, logos, trademarks, software, databases, trade names, and other protectable elements are the exclusive property of Águila or third parties that have authorized their use. Reproduction, copying, distribution, modification, transformation, or public communication without express written authorization is prohibited."
+          ]
+        },
+        {
+          "id": "liability",
+          "title": "5. Limitation of Liability",
+          "body": [
+            "The User acknowledges and agrees that:"
+          ],
+          "points": [
+            "Águila does not guarantee the uninterrupted availability of the Platform, which may be suspended for maintenance, technical failures, or causes beyond its control.",
+            "The prices, promotions, and menus published are the sole responsibility of each venue and may change without prior notice.",
+            "Any contractual relationship, transaction, claim, complaint, issue, or dispute arising between the User and a venue shall be outside Águila’s responsibility."
+          ]
+        },
+        {
+          "id": "law",
+          "title": "6. Jurisdiction and Governing Law",
+          "body": [
+            "These Terms shall be governed by and interpreted in accordance with the laws of the Argentine Republic, without prejudice to the application of international regulations regarding data protection and consumer rights. For any dispute arising herefrom, the parties submit to the ordinary courts of the Autonomous City of Buenos Aires, waiving any other venue or jurisdiction that may correspond."
+          ]
+        }
+      ]
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "sections": [
+        {
+          "id": "intro",
+          "title": "1. Introduction",
+          "body": [
+            "This Privacy Policy (the “Policy”) is intended to inform Users about how Águila collects, uses, stores, processes, and protects personal and non-personal information obtained through the Platform."
+          ]
+        },
+        {
+          "id": "data",
+          "title": "2. Information Collected",
+          "body": [
+            "In general, the Platform does not require Users to provide personal data to access the available information. However, Águila may collect, directly or indirectly, if the User chooses to do so: name, email address, phone number, consumption preferences, interaction history, and other data the User voluntarily provides.",
+            "Technical data may also be collected automatically, such as IP address, device type, operating system, browser used, cookies, and browsing statistics."
+          ]
+        },
+        {
+          "id": "purpose",
+          "title": "3. Purpose of Processing",
+          "body": [
+            "The information collected may be used, among other purposes:"
+          ],
+          "points": [
+            "To improve the User’s experience on the Platform.",
+            "To send communications, promotions, or news, subject to the User’s prior consent.",
+            "To conduct statistical, market, or behavioral studies.",
+            "To comply with legal provisions or requests from competent authorities."
+          ]
+        },
+        {
+          "id": "consent",
+          "title": "4. Consent and Transfers",
+          "body": [
+            "Use of the Platform implies the User’s express consent to the processing of their information in accordance with this Policy. Under no circumstances will Águila sell, assign, or transfer personal data to third parties without prior authorization, except in the case of a legal obligation or court order. Data may be stored on servers located inside or outside the national territory, under reasonable security standards."
+          ]
+        },
+        {
+          "id": "security",
+          "title": "5. Information Security",
+          "body": [
+            "Águila adopts reasonable technical, administrative, and organizational measures to protect User data against unauthorized access, alteration, loss, or destruction. However, the User acknowledges that no system can guarantee absolute security."
+          ]
+        },
+        {
+          "id": "rights",
+          "title": "6. User Rights",
+          "body": [
+            "The User may, at any time, exercise their rights to access, rectify, update, and delete data, in accordance with Argentine Personal Data Protection Law No. 25,326 and, where applicable, the European Union’s General Data Protection Regulation (GDPR)."
+          ]
+        },
+        {
+          "id": "changes",
+          "title": "7. Changes to the Policy",
+          "body": [
+            "Águila may modify, update, or replace this Policy at any time. It shall be understood that the User accepts such changes by continuing to use the Platform after their publication."
+          ]
+        },
+        {
+          "id": "contact",
+          "title": "8. Contact",
+          "body": [
+            "To exercise their rights or raise any questions, the User may contact: aguila.startup@gmail.com"
+          ]
+        }
+      ]
     }
   }
 }

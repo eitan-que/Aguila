@@ -5,28 +5,48 @@ import { ChevronLeft, Instagram, Share2 } from "lucide-react";
 import Link from "next/link";
 import { Lang } from "@/actions/dictionaries";
 import { toast } from "sonner";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+
+type BackUrl =
+  | `/${Lang}`
+  | `/${Lang}/`
+  | `/${Lang}/${string}`
+  | `/${Lang}/${string}/`
+  | `/${Lang}/${string}/${string}`
+  | "goBack";
 
 type HeaderProps = {
     ref?: Ref<HTMLElement>;
     restaurant?: string;
     title?: string;
     variant?: "default" | "sticky";
-    backUrl?: `/${Lang}/` | `/${Lang}/${string}/`;
+    backUrl?: BackUrl;
     shareAction?: () => void;
+    share?: boolean;
 };
 
 function HeaderComponent(
     { ref, title, variant="default", backUrl, shareAction }: HeaderProps
 ) {
+    const router = useRouter();
     return (
         <header ref={ref || undefined} className={`flex justify-between items-center w-full ${variant === "sticky" ? "py-5 px-4 bg-card shadow-xs rounded-b-2xl border-b-2 border-background" : ""}`}>
             {backUrl && (
-                <Link 
-                href={backUrl}
-                className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square text-muted-foreground hover:text-card-foreground transition-colors duration-150`}>
-                    <ChevronLeft className={`${variant === "sticky" ? "size-5" : "size-6"}`} />
-                </Link>
+                backUrl === "goBack" ? (
+                    <button
+                        onClick={() => router.back()}
+                        className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square text-muted-foreground hover:text-card-foreground transition-colors duration-150 cursor-pointer`}
+                    >
+                        <ChevronLeft className={`${variant === "sticky" ? "size-5" : "size-6"}`} />
+                    </button>
+                ) : (
+                    <Link
+                        href={backUrl}
+                        className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square text-muted-foreground hover:text-card-foreground transition-colors duration-150`}
+                    >
+                        <ChevronLeft className={`${variant === "sticky" ? "size-5" : "size-6"}`} />
+                    </Link>
+                )
             )}
             <h1 className={`font-bold ${variant === "sticky" ? "text-xl/6" : "text-[1.75rem]/10"}`}>{title || "Aguila"}</h1>
             <div className="flex gap-3">
@@ -46,6 +66,11 @@ function HeaderComponent(
                     >
                         <Share2 className={`${variant === "sticky" ? "size-5" : "size-6"}`} />
                     </button>
+                )}
+                {backUrl && !shareAction && (
+                    <div className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square`}>
+                        <div className={`${variant === "sticky" ? "w-5 h-5" : "w-6 h-6"}`} />
+                    </div>
                 )}
             </div>
         </header>
@@ -68,7 +93,7 @@ export default function Header(props: HeaderProps) {
 
         const currentUrl = "https://aguila.lat" + pathname;
         const shareData = {
-            title: props?.restaurant?.trim() ? `${props.restaurant} en Aguila` : "Aguila",
+            title: "Aguila",
             text:
                 pathname === "/"
                     ? "Descubre Aguila, la app para descubrir los mejores lugares y promociones para comer."
@@ -146,7 +171,7 @@ export default function Header(props: HeaderProps) {
 
     return (
         <>
-            <HeaderComponent ref={headerRef} restaurant={props?.restaurant} title={props?.title || undefined} backUrl={props?.backUrl || undefined} shareAction={handleShare} />
+            <HeaderComponent ref={headerRef} restaurant={props?.restaurant} title={props?.title || undefined} backUrl={props?.backUrl || undefined} shareAction={props.share ? handleShare : undefined} />
             <div
                 aria-hidden={!showSticky}
                 className={`
@@ -156,7 +181,7 @@ export default function Header(props: HeaderProps) {
                         : "-translate-y-full pointer-events-none"
                     }`}
             >
-                <HeaderComponent restaurant={props?.restaurant} variant="sticky" title={props?.title || undefined} backUrl={props?.backUrl || undefined} shareAction={handleShare} />
+                <HeaderComponent restaurant={props?.restaurant} variant="sticky" title={props?.title || undefined} backUrl={props?.backUrl || undefined} shareAction={props.share ? handleShare : undefined} />
             </div>
         </>
     );

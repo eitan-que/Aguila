@@ -10,14 +10,14 @@ import { Dictionary, Lang } from "@/actions/dictionaries"
 import { setCookie } from 'cookies-next'
 import { Mail } from "lucide-react"
 import { renderTextWithActions } from "@/components/primitives/dicTextWithAction"
-import { BackButton } from "@/components/primitives/backButton"
 
 type SignInFormProps = {
   dict: Dictionary;
-  lang: Lang
+  lang: Lang;
+  onEmailSent?: () => void; // Optional callback when email is sent
 }
 
-export function SignInForm({ dict, lang }: SignInFormProps) {
+export function SignInForm({ dict, lang, onEmailSent }: SignInFormProps) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState<false | "email" | "google" | "github">(false)
   // Added state for sent view + countdown + resend btn loading
@@ -66,6 +66,7 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
     });
     setLastSentEmail(normalizeEmail(email));
     setEmailSent(true);
+    onEmailSent?.();
     startTimer(120);
   };
 
@@ -91,6 +92,7 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
     const normalizedInput = normalizeEmail(email);
     if (lastSentEmail && normalizedInput === lastSentEmail && secondsLeft > 0) {
       setEmailSent(true);
+      onEmailSent?.();
       setLoading(false);
       return;
     }
@@ -134,19 +136,8 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
     }
   };
 
-  // Reset to login (keep countdown running; do not clear)
-  const handleBackToLogin = () => {
-    setEmailSent(false);
-    // Keep existing timer and secondsLeft so the countdown persists
-  };
-
   return (
     <>
-      {emailSent ? (
-        <BackButton as="function" onClick={handleBackToLogin} />
-      ) : (
-        <BackButton as="link" href="goBack" />
-      )}
       <Card className="bg-card/0 shadow-none border-border/0 w-full max-w-[95%] sm:max-w-md">
         <CardHeader className="space-y-4">
           <div className="space-y-1 text-center">
@@ -267,9 +258,9 @@ export function SignInForm({ dict, lang }: SignInFormProps) {
             <p>
               {
                 renderTextWithActions({
-                  text: dict.auth.byContinuingYouAgreeToOurTermsAndConditions,
+                  text: dict.auth.disclaimer,
                   as: 'link',
-                  href: ["/terms", "/conditions"],
+                  href: ["/terms-and-conditions", "/privacy-policy"],
                   className: "underline underline-offset-4"
                 })
               }
