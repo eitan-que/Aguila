@@ -88,6 +88,83 @@
       "title": "Home",
       "description": "Welcome to the dashboard"
     },
+    "analytics": {
+      "intro": "Dashboard metrics mock organized by sections.",
+      "sections": {
+        "summary": "Summary",
+        "traffic": "Traffic & visits",
+        "users": "Users",
+        "interactions": "Interactions",
+        "highlights": "Highlights",
+        "performance": "Performance"
+      },
+      "charts": {
+        "visitsByDay": "Visits by day",
+        "usersDistribution": "Users distribution",
+        "clicksBySource": "Clicks by source",
+        "instagramClicks": "Instagram clicks",
+        "shareClicks": "Share clicks"
+      },
+      "labels": {
+        "visits": "Visits",
+        "clicks": "Clicks"
+      },
+      "daysShort": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      },
+      "notes": {
+        "totalRegistered": "Total registered",
+        "inMenu": "In the menu",
+        "activePromos": "Active promotions",
+        "scannedAtCashier": "Scanned at cashier",
+        "dailyTotal": "Daily total",
+        "weeklyTotal": "Weekly total",
+        "monthlyTotal": "Monthly total",
+        "total": "Total",
+        "thisMonth": "This month",
+        "thisWeek": "This week",
+        "returningUsers": "Returning users",
+        "last30Days": "Last 30 days"
+      },
+      "metrics": {
+        "restaurants": "Restaurants",
+        "products": "Products",
+        "discounts": "Discounts",
+        "scannedQrs": "Scanned QRs",
+        "dailyVisits": "Daily visits",
+        "weeklyVisits": "Weekly visits",
+        "monthlyVisits": "Monthly visits",
+        "registeredUsers": "Registered users",
+        "totalUsers": "Total users",
+        "unregisteredUsers": "Unregistered",
+        "registeredPercent": "Registered %",
+        "retentionPercent": "Return rate",
+        "monthlyUsersIncrease": "Monthly users growth",
+        "weeklyUsersIncrease": "Weekly users growth",
+        "mostVisitedRestaurant": "Most visited restaurant",
+        "leastVisitedRestaurant": "Least visited restaurant",
+        "mostVisitedPromo": "Most visited promo",
+        "conversionRate": "Conversion rate to action",
+        "busiestHour": "Busiest hour",
+        "busiestDay": "Busiest day"
+      },
+      "values": {
+        "busiestDay": "Thursday",
+        "busiestHour": "12:00-13:00"
+      },
+      "labels": {
+        "visits": "Visits",
+        "clicks": "Clicks",
+        "instagram": "Instagram",
+        "share": "Share"
+      }
+    },
     "restaurants": {
       "title": "Restaurants",
       "description": "Manage the restaurants"

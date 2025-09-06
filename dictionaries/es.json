@@ -88,6 +88,81 @@
       "title": "Inicio",
       "description": "Bienvenido al panel de control"
     },
+    "analytics": {
+      "intro": "Panel con métricas de ejemplo organizado por secciones.",
+      "sections": {
+        "summary": "Resumen",
+        "traffic": "Tráfico y visitas",
+        "users": "Usuarios",
+        "interactions": "Interacciones",
+        "highlights": "Destacados",
+        "performance": "Rendimiento"
+      },
+      "charts": {
+        "visitsByDay": "Visitas por día",
+        "usersDistribution": "Distribución de usuarios",
+        "clicksBySource": "Clicks por origen",
+        "instagramClicks": "Clicks en Instagram",
+        "shareClicks": "Clicks en Compartir"
+      },
+      "daysShort": {
+        "mon": "Lun",
+        "tue": "Mar",
+        "wed": "Mie",
+        "thu": "Jue",
+        "fri": "Vie",
+        "sat": "Sab",
+        "sun": "Dom"
+      },
+      "notes": {
+        "totalRegistered": "Totales registrados",
+        "inMenu": "En el menú",
+        "activePromos": "Promociones activas",
+        "scannedAtCashier": "Escaneados en caja",
+        "dailyTotal": "Totales diarias",
+        "weeklyTotal": "Totales semanales",
+        "monthlyTotal": "Totales mensuales",
+        "total": "Totales",
+        "thisMonth": "Este mes",
+        "thisWeek": "Esta semana",
+        "returningUsers": "Usuarios que regresan",
+        "last30Days": "Últimos 30 días"
+      },
+      "metrics": {
+        "restaurants": "Restaurantes",
+        "products": "Productos",
+        "discounts": "Descuentos",
+        "scannedQrs": "QRs Escaneados",
+        "dailyVisits": "Visitas Diarias",
+        "weeklyVisits": "Visitas Semanales",
+        "monthlyVisits": "Visitas Mensuales",
+        "registeredUsers": "Usuarios registrados",
+        "totalUsers": "Usuarios totales",
+        "unregisteredUsers": "No registrados",
+        "registeredPercent": "% de Registrados",
+        "retentionPercent": "Porcentaje de Retorno",
+        "monthlyUsersIncrease": "Aumento Usuarios Mensual",
+        "weeklyUsersIncrease": "Aumento Usuarios Semanal",
+        "mostVisitedRestaurant": "Restaurante Más Visitado",
+        "leastVisitedRestaurant": "Restaurante Menos Visitado",
+        "mostVisitedPromo": "Promo Más Visitada",
+        "leastVisitedPromo": "Promo Menos Visitada",
+        "conversionRate": "Tasa de Conversión a Acción",
+        "busiestHour": "Horario de Mayor Actividad",
+        "busiestDay": "Día con más visitas"
+      },
+      "values": {
+        "busiestDay": "Jueves",
+        "busiestHour": "12:00-13:00"
+      },
+      "labels": {
+        "visits": "Visitas",
+        "users": "Usuarios",
+        "clicks": "Clicks",
+        "instagram": "Instagram",
+        "share": "Compartir"
+      }
+    },
     "restaurants": {
       "title": "Restaurantes",
       "description": "Gestiona los restaurantes"
