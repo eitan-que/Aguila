@@ -29,13 +29,6 @@ function HeaderComponent(
             )}
             <h1 className={`font-bold ${variant === "sticky" ? "text-xl/6" : "text-[1.75rem]/10"}`}>{title || "Aguila"}</h1>
             <div className="flex gap-3">
-                {!backUrl && (
-                    <Link
-                        href={`/${lang}/notifications`}
-                        className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square text-muted-foreground hover:text-card-foreground transition-colors duration-150`}>
-                        <Bell className={`${variant === "sticky" ? "size-5" : "size-6"}`} />
-                    </Link> 
-                )}
                 {searchFilter && (
                     <Link 
                         href={`/${lang}/search?${searchFilter}`}
