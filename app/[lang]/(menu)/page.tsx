@@ -1,7 +1,6 @@
 import { getDictionary, Lang, locales } from "@/actions/dictionaries";
 import Header from "@/components/menu/header";
 import Navbar from "@/components/menu/navbar/navbar";
-import Searchbar from "@/components/menu/searchbar";
 import Banner from "@/components/menu/sections/banner";
 import Categories from "@/components/menu/sections/categories";
 import Category from "@/components/menu/sections/category";
@@ -50,10 +49,7 @@ export default async function Place({
 
   return (
     <main className="flex flex-col justify-start items-start gap-8 p-5 w-full min-h-screen">
-        <Header
-          lang={lang}
-        />
-        <Searchbar placeholder={dict.menu.search.placeholder} />
+        <Header/>
         <Banner imageUrl="https://placehold.co/1920x1080/png" />
         <Restaurants
           sectionTitle={{

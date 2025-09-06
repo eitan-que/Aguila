@@ -30,10 +30,8 @@ export default async function Restaurant({
   return (
     <main className="flex flex-col justify-start items-start gap-8 p-5 w-full min-h-screen">
       <Header
-        lang={lang}
         title={restaurantSlug}
         backUrl={`/${lang}/`}
-        searchFilter={`restaurantId=${restaurantSlug}`}
       />
       <Banner imageUrl="https://placehold.co/1920x1080/png" restaurant={{ name: "Restaurant Name", location: "Calle 123", coordinates: { lat: 0, lon: 0 }, prepTimeRange: { min: 10, max: 30 }, tags: ["tag1", "tag2"] }} />
       <Categories

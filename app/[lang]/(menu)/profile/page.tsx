@@ -49,9 +49,7 @@ export default async function Profile({
 
   return (
     <main className="flex flex-col justify-start items-start gap-8 p-5 w-full min-h-screen">
-        <Header
-          lang={lang}
-        />
+        <Header />
         
         <Navbar
           items={navItems}

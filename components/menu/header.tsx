@@ -1,22 +1,23 @@
 "use client";
 import { Ref, useEffect, useRef, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Bell, ChevronLeft, Search } from "lucide-react";
+import { ChevronLeft, Instagram, Share2 } from "lucide-react";
 import Link from "next/link";
 import { Lang } from "@/actions/dictionaries";
+import { toast } from "sonner";
+import { usePathname } from "next/navigation";
 
 type HeaderProps = {
     ref?: Ref<HTMLElement>;
-    lang: string;
     restaurant?: string;
     title?: string;
     variant?: "default" | "sticky";
     backUrl?: `/${Lang}/` | `/${Lang}/${string}/`;
-    searchFilter?: string;
+    shareAction?: () => void;
 };
 
 function HeaderComponent(
-    { ref, lang, title, variant="default", backUrl, searchFilter }: HeaderProps
+    { ref, title, variant="default", backUrl, shareAction }: HeaderProps
 ) {
     return (
         <header ref={ref || undefined} className={`flex justify-between items-center w-full ${variant === "sticky" ? "py-5 px-4 bg-card shadow-xs rounded-b-2xl border-b-2 border-background" : ""}`}>
@@ -29,12 +30,22 @@ function HeaderComponent(
             )}
             <h1 className={`font-bold ${variant === "sticky" ? "text-xl/6" : "text-[1.75rem]/10"}`}>{title || "Aguila"}</h1>
             <div className="flex gap-3">
-                {searchFilter && (
-                    <Link 
-                        href={`/${lang}/search?${searchFilter}`}
-                        className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square text-muted-foreground hover:text-card-foreground transition-colors duration-150`}>
-                        <Search className={`${variant === "sticky" ? "size-5" : "size-6"}`} />
+                {!backUrl && (
+                    <Link
+                        href={`https://www.instagram.com/aguila.lat/?utm_source=aguila.lat&utm_medium=referral`}
+                        className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square text-[#DD2A7B] hover:text-[#DD2A7B]/50 transition-colors duration-150`}
+                        target="_blank"
+                    >
+                        <Instagram className={`${variant === "sticky" ? "size-5" : "size-6"}`} />
                     </Link>
+                )}
+                {shareAction && (
+                    <button
+                        onClick={shareAction}
+                        className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square text-muted-foreground hover:text-card-foreground transition-colors duration-150 cursor-pointer`}
+                    >
+                        <Share2 className={`${variant === "sticky" ? "size-5" : "size-6"}`} />
+                    </button>
                 )}
             </div>
         </header>
@@ -45,11 +56,46 @@ export default function Header(props: HeaderProps) {
     const headerRef = useRef<HTMLElement | null>(null);
     const [showSticky, setShowSticky] = useState(false);
     const [isOutOfView, setIsOutOfView] = useState(false);
+    const pathname = usePathname();
 
     const lastScrollY = useRef(0);
     const scrollDir = useRef<"up" | "down">("down");
     const stopTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const DELAY = 180; // ms después de dejar de scrollear
+
+    
+    const handleShare = async () => {
+
+        const currentUrl = "https://aguila.lat" + pathname;
+        const shareData = {
+            title: props?.restaurant ? `${props.restaurant} en Aguila` : "Aguila",
+            text:
+                pathname === "/"
+                    ? "Descubre Aguila, la app para descubrir los mejores lugares y promociones para comer."
+                    : `Mira el menú de ${props?.restaurant} en Aguila.`,
+            currentUrl,
+        };
+
+        if (navigator.share) {
+            try {
+                await navigator.share(shareData);
+            } catch (error) {
+                console.error("Error al compartir:", error);
+            }
+        } else {
+            try {
+                if (typeof navigator !== "undefined" && navigator.clipboard) {
+                    await navigator.clipboard.writeText(currentUrl);
+                    toast.success("¡Enlace copiado al portapapeles!");
+                    return;
+                }
+            } catch {
+                // ignore
+            }
+            toast.error("Error al copiar el enlace. Intenta compartirlo manualmente.");
+            console.warn("La API de compartir no está soportada en este navegador.");
+        }
+    }
 
     useEffect(() => {
         const el = headerRef.current;
@@ -100,7 +146,7 @@ export default function Header(props: HeaderProps) {
 
     return (
         <>
-            <HeaderComponent ref={headerRef} lang={props.lang} restaurant={props?.restaurant} title={props?.title || undefined} backUrl={props?.backUrl || undefined} searchFilter={props?.searchFilter || undefined} />
+            <HeaderComponent ref={headerRef} restaurant={props?.restaurant} title={props?.title || undefined} backUrl={props?.backUrl || undefined} shareAction={handleShare} />
             <div
                 aria-hidden={!showSticky}
                 className={`
@@ -110,7 +156,7 @@ export default function Header(props: HeaderProps) {
                         : "-translate-y-full pointer-events-none"
                     }`}
             >
-                <HeaderComponent lang={props.lang} restaurant={props?.restaurant} variant="sticky" title={props?.title || undefined} backUrl={props?.backUrl || undefined} searchFilter={props?.searchFilter || undefined} />
+                <HeaderComponent restaurant={props?.restaurant} variant="sticky" title={props?.title || undefined} backUrl={props?.backUrl || undefined} shareAction={handleShare} />
             </div>
         </>
     );
