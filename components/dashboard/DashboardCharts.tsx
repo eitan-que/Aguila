@@ -7,14 +7,14 @@ export function VisitsLineChart({
   data,
   label
 }: {
-  data: { day: string; visitas: number }[]
+  data: { day: string; visits: number }[]
   label: string
 }) {
   return (
     <ChartContainer
       className="w-full max-w-full overflow-hidden"
       style={{ width: '100%', aspectRatio: '16/6' }}
-      config={{ visitas: { label, color: "var(--chart-1)" } }}
+      config={{ visits: { label, color: "var(--chart-1)" } }}
     >
       <LineChart data={data}>
         <XAxis dataKey="day" />
