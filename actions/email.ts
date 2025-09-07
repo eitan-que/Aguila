@@ -1,3 +1,4 @@
+"use server"
 import { Resend } from 'resend'
 import { EmailTemplate } from '@/components/email/signin-template'
 import { auth } from '@/lib/auth'

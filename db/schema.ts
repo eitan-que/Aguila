@@ -102,12 +102,13 @@ export const restaurant = pgTable("restaurant", {
   prepTimeMin: integer("prep_time_min"),
   prepTimeMax: integer("prep_time_max"),
   weight: integer("weight").default(0).notNull(),
-  tags: json("tags").$type<{ type: 'text'; text?: string }[]>(),
+  tags: json("tags").$type<string[]>(),
   lat: numeric("lat", { precision: 18, scale: 14 }),
   lon: numeric("lon", { precision: 18, scale: 14 }),
   phone: text("phone"),
   email: text("email"),
   website: text("website"),
+  menuPictureUrl: json("menu_picture_url").$type<string[]>(),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),

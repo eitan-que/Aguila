@@ -20,7 +20,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import Image from "next/image"
-import { ImagePlus } from "lucide-react"
+import { ImagePlus, X } from "lucide-react"
+import { CreateRestaurant } from "@/actions/restaurant"
+import { Tag, TagInput } from "emblor"
 
 type OSMAddress = {
   country_code?: string
@@ -52,33 +54,6 @@ type Suggestion = {
 type UserLoc = {
   country_code?: string
   city?: string
-}
-
-// Helper para consumir la API JSON
-async function createRestaurantFromForm(fd: FormData): Promise<{ success: boolean; message?: string }> {
-  try {
-    const res = await fetch("/api/restaurant/create", {
-      method: "POST",
-      body: fd,
-    })
-    const json = await res.json().catch(() => null)
-    if (!res.ok) {
-      return { success: false, message: json?.message || `Request failed (${res.status})` }
-    }
-    return (json ?? { success: false, message: "Empty response" })
-  } catch {
-    return { success: false, message: "Network error" }
-  }
-}
-
-// Convertir archivo a Data URL (base64) en el cliente
-function fileToDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onerror = () => reject(new Error("Failed to read file"))
-    reader.onload = () => resolve(String(reader.result))
-    reader.readAsDataURL(file)
-  })
 }
 
 function AddressAutocomplete(props: {
@@ -271,6 +246,10 @@ function AddressAutocomplete(props: {
 
 
 export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["form"]) {
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+
   const createRestaurantSchema = z.object({
     name: z.string().min(3, {
       message: t.errors.nameMin || "Name must be at least 3 characters.",
@@ -312,17 +291,14 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
       message: t.errors.prepTimeRange || "Preparation time must be at least 0 minutes.",
     })),
     // Aceptar URL http(s) o Data URL base64
-    pictureUrl: z.union([
-      z.string().url({ message: "Picture URL must be a valid URL." }),
-      z.string().regex(/^data:[^;]+;base64,[A-Za-z0-9+/=]+$/i, { message: "Picture must be a valid base64 data URL." }),
-    ]).optional(),
+    picture: z.instanceof(File),
     pictureAlt: z.string().optional().or(z.string().max(300, {
       message: t.errors.pictureAltMax || "Picture alt text must be at most 300 characters.",
     })),
     tags: z.array(
       z.object({
-        type: z.enum(['text']),
-        text: z.string().optional()
+        id: z.string(),
+        text: z.string()
       })
     ).optional(),
   })
@@ -332,16 +308,17 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
     defaultValues: {
       name: "",
       slug: "",
-      description: undefined,
+      description: "",
       location: {
-        address: undefined,
+        address: "",
       },
-      phone: undefined,
-      email: undefined,
-      website: undefined,
+      phone: "",
+      email: "",
+      website: "",
       prepTimeMin: undefined,
       prepTimeMax: undefined,
-      pictureAlt: undefined,
+      picture: undefined,
+      pictureAlt: "",
       tags: undefined,
     },
   })
@@ -370,42 +347,37 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
   }, [preview])
 
   const onSubmit = async (values: z.infer<typeof createRestaurantSchema>) => {
-    const fd = new FormData()
-    fd.append("name", values.name)
-    fd.append("slug", values.slug)
-    if (values.description) fd.append("description", values.description)
-    if (values.location?.address) fd.append("address", values.location.address)
-    if (values.location?.lat != null) fd.append("lat", values.location.lat.toString())
-    if (values.location?.lon != null) fd.append("lon", values.location.lon.toString())
-    if (values.phone) fd.append("phone", values.phone)
-    if (values.email) fd.append("email", values.email)
-    if (values.website) fd.append("website", values.website)
-    if (values.prepTimeMin != null) fd.append("prepTimeMin", values.prepTimeMin.toString())
-    if (values.prepTimeMax != null) fd.append("prepTimeMax", values.prepTimeMax.toString())
-    if (values.pictureAlt) fd.append("pictureAlt", values.pictureAlt)
+    if (isCreating) return
+    setIsCreating(true)
 
-    // Convertir a base64 (data URL) y mandar como pictureUrl
-    const file = fileRef.current?.files?.[0] || null
-    if (file && file.size > 0) {
-      try {
-        const dataUrl = await fileToDataUrl(file)
-        fd.append("pictureUrl", dataUrl)
-      } catch (e: any) {
-        toast.error(e?.message || "Error reading image")
-        return
+    const result = await toast.promise(
+      CreateRestaurant({
+        name: values.name,
+        slug: values.slug,
+        description: values.description,
+        address: values.location?.address,
+        lat: values.location?.lat,
+        lon: values.location?.lon,
+        website: values.website,
+        phone: values.phone,
+        email: values.email,
+        prepTimeMin: values.prepTimeMin != null ? Number(values.prepTimeMin) : undefined,
+        prepTimeMax: values.prepTimeMax != null ? Number(values.prepTimeMax) : undefined,
+        picture: values.picture as File,             // <- clave
+        pictureAlt: values.pictureAlt,
+        tags: tags.map(t => t.text),
+      }),
+      {
+        loading: "Creating restaurant...",
+        success: "Restaurant created successfully!",
+        error: (err) => err?.message || "Error creating restaurant",
       }
-    } else if (values.pictureUrl) {
-      // Si ya viene seteada (por algún otro flujo), se respeta
-      fd.append("pictureUrl", values.pictureUrl)
-    }
-
-    const result = await createRestaurantFromForm(fd)
-
-    if (!result.success) {
-      toast.error(result.message || "Error creating restaurant")
+    )
+    if (!result) {
+      setIsCreating(false)
       return
     }
-    toast.success("Restaurant created successfully")
+    setIsCreating(false)
     form.reset()
     if (fileRef.current) fileRef.current.value = ""
     if (preview) {
@@ -474,21 +446,59 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
             <h1 className="font-semibold text-lg">
                 {t.sections.picture || "Picture"}
             </h1>
-            <FormItem>
-                <FormLabel className="font-semibold">{t.fields.pictureUrl?.label || "Picture File"}</FormLabel>
-                <FormControl>
-                    {preview ? (
-                        <div className="relative flex sm:flex-row flex-col justify-center items-center sm:items-center gap-4 bg-muted border border-border rounded-md w-full aspect-video overflow-hidden">
-                            <Image src={preview} alt="Preview" className="w-full h-full object-cover" width={1920} height={1080}/>
-                        </div>
-                    ) : (
-                        <label className="flex sm:flex-row flex-col justify-center items-center sm:items-center gap-4 bg-muted border border-border rounded-md w-full aspect-video overflow-hidden">
-                            <ImagePlus className="w-10 h-10 text-muted-foreground" />
-                            <Input type="file" accept="image/*" ref={fileRef} onChange={handleFileChange} className="hidden"/>
-                        </label>
-                    )}
-                </FormControl>
-            </FormItem>
+            <FormField
+                control={form.control}
+                name="picture"
+                render={({ field }) => (
+                  <FormItem>
+                      <FormLabel className="font-semibold">{t.fields.pictureUrl?.label || "Picture File"}</FormLabel>
+                      <FormControl>
+                          {preview ? (
+                              <div className="relative flex sm:flex-row flex-col justify-center items-center sm:items-center gap-4 bg-muted border border-border rounded-md w-full aspect-video overflow-hidden">
+                                  <button 
+                                    className="top-2 right-2 z-10 absolute bg-card opacity-50 hover:opacity-100 p-2 rounded-full transition-opacity" 
+                                    onClick={() => {
+                                      // limpiar preview + RHF + input
+                                      setPreview((old) => { if (old) URL.revokeObjectURL(old); return null })
+                                      if (fileRef.current) fileRef.current.value = ""
+                                      field.onChange(undefined) // <- importante
+                                    }}
+                                    type="button"
+                                    title="Remove image"
+                                  >
+                                      <X className="w-4 h-4 text-card-foreground" />
+                                  </button>
+                                  <Image src={preview} alt="Preview" className="w-full h-full object-cover" width={1920} height={1080}/>
+                              </div>
+                          ) : (
+                              <label className="flex sm:flex-row flex-col justify-center items-center sm:items-center gap-4 bg-muted border border-border rounded-md w-full aspect-video overflow-hidden">
+                                  <ImagePlus className="w-10 h-10 text-muted-foreground" />
+                                  <Input 
+                                    type="file"
+                                    accept="image/*"
+                                    ref={fileRef}
+                                    className="hidden"
+                                    onChange={(e) => {
+                                      const file = e.target.files?.[0]
+                                      // actualizar RHF
+                                      field.onChange(file)
+                                      // manejar preview como antes
+                                      setPreview((old) => { if (old) URL.revokeObjectURL(old); return old })
+                                      if (file && file.size > 0) {
+                                        const url = URL.createObjectURL(file)
+                                        setPreview(url)
+                                      } else {
+                                        setPreview(null)
+                                      }
+                                    }}
+                                    name="picture"
+                                  />
+                              </label>
+                          )}
+                      </FormControl>
+                  </FormItem>
+                )}
+            />
             <FormField
                 control={form.control}
                 name="pictureAlt"
@@ -579,8 +589,46 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
         </div>
         <div className="space-y-2">
             <h1 className="font-semibold text-lg">
-                {t.sections.prepTime || "Preparation Time"}
+                {t.sections.additional || "Additional Information"}
             </h1>
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                  <FormItem>
+                      <FormLabel className="font-semibold">{t.fields.tags.label || "Tags"}</FormLabel>
+                      <FormControl>
+                          <TagInput
+                            {...field}
+                            placeholder={t.fields.tags.itemPlaceholder || "Enter tags"}
+                            styleClasses={{
+                              tagList: {
+                                container: "gap-1",
+                              },
+                              input:
+                                "rounded-md transition-[color,box-shadow] placeholder:text-muted-foreground/70 focus-visible:border-ring outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
+                              tag: {
+                                body: "relative h-7 bg-background border border-input hover:bg-background rounded-md font-medium text-xs text-muted-foreground ps-2 pe-7",
+                                closeButton:
+                                  "absolute -inset-y-px -end-px p-0 rounded-s-none rounded-e-md flex size-7 transition-[color,box-shadow] outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] text-muted-foreground/80 hover:text-foreground",
+                              },
+                            }}
+                            activeTagIndex={activeTagIndex}
+                            setActiveTagIndex={setActiveTagIndex}
+                            inlineTags={false}
+                            inputFieldPosition="top"
+                            tags={tags}
+                            setTags={(newTags) => {
+                              setTags(newTags);
+                              form.setValue('tags', newTags as [Tag, ...Tag[]]);
+                            }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                  </FormItem>
+              )}
+            >
+            </FormField>
             <div className="gap-4 grid sm:grid-cols-2">
                 <FormField
                     control={form.control}
@@ -612,7 +660,9 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
                 />
             </div>
         </div>
-        <Button type="submit" className="w-full">{t.submit || "Submit"}</Button>
+        <Button type="submit" className="w-full" disabled={isCreating}>
+          {t.submit || "Submit"}
+        </Button>
     </form>
     </Form>
   )

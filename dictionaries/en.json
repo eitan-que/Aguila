@@ -173,7 +173,7 @@
           "general": "General",
           "location": "Location",
           "contact": "Contact",
-          "prepTime": "Preparation Time",
+          "additional": "Additional Information",
           "picture": "Picture",
           "tags": "Tags"
         },
