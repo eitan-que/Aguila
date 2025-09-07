@@ -4,10 +4,6 @@ import { SiteHeader } from "@/components/dashboard/siteHeader";
 import { RestaurantAnalytics } from "@/components/dashboard/restaurants/RestaurantAnalytics";
 import { notFound } from "next/navigation";
 
-export async function generateStaticParams() {
-  return locales.map((lang) => ({ lang }))
-}
-
 export default async function RestaurantPage({
   params,
 }: {
