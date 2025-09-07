@@ -250,6 +250,14 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [isDraggingPicture, setIsDraggingPicture] = useState(false); // New state for restaurant picture drag
+  const fileRef = useRef<HTMLInputElement | null>(null)
+  const menuFileRef = useRef<HTMLInputElement | null>(null);  // Make sure this ref is available
+  const [preview, setPreview] = useState<string | null>(null)
+  const [menuPreviews, setMenuPreviews] = useState<Array<{
+    id: string,
+    file: File,
+    preview: string
+  }>>([]);
 
   const createRestaurantSchema = z.object({
     name: z.string().min(3, {
@@ -302,7 +310,9 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
         text: z.string()
       })
     ).optional(),
-    menuPictures: z.array(z.instanceof(File)).optional(),
+    menuPictures: z.array(z.instanceof(File)).min(1, {
+      message: t.errors.menuPicturesRequired || "At least one menu picture is required.",
+    }),
   })
 
   const form = useForm<z.infer<typeof createRestaurantSchema>>({
@@ -325,8 +335,6 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
       menuPictures: [],
     },
   })
-  const fileRef = useRef<HTMLInputElement | null>(null)
-  const [preview, setPreview] = useState<string | null>(null)
 
   useEffect(() => {
     return () => {
@@ -351,9 +359,10 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
         email: values.email,
         prepTimeMin: values.prepTimeMin != null ? Number(values.prepTimeMin) : undefined,
         prepTimeMax: values.prepTimeMax != null ? Number(values.prepTimeMax) : undefined,
-        picture: values.picture as File,             // <- clave
+        picture: values.picture as File,
         pictureAlt: values.pictureAlt,
         tags: tags.map(t => t.text),
+        menuPictures: values.menuPictures,
       }),
       {
         loading: "Creating restaurant...",
@@ -365,13 +374,25 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
       setIsCreating(false)
       return
     }
-    setIsCreating(false)
-    form.reset()
+    
+    // Clean up main picture
     if (fileRef.current) fileRef.current.value = ""
     if (preview) {
       URL.revokeObjectURL(preview)
       setPreview(null)
     }
+    
+    // Clean up menu pictures
+    if (menuFileRef.current) menuFileRef.current.value = ""
+    menuPreviews.forEach(item => {
+      URL.revokeObjectURL(item.preview)
+    })
+    setMenuPreviews([])
+    
+    // Reset form
+    setIsCreating(false)
+    form.reset()
+    setTags([])
   }
 
   return (
@@ -565,12 +586,6 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
                   // Create state for file handling
                   const [isDragging, setIsDragging] = useState(false);
                   const [errors, setErrors] = useState<string[]>([]);
-                  const menuFileRef = useRef<HTMLInputElement | null>(null);
-                  const [menuPreviews, setMenuPreviews] = useState<Array<{
-                    id: string,
-                    file: File,
-                    preview: string
-                  }>>([]);
                   
                   // Maximum file size (5MB)
                   const maxSize = 5 * 1024 * 1024;

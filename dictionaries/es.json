@@ -269,7 +269,8 @@
           "prepTimeInvalid": "El tiempo de preparación debe ser un número válido.",
           "prepTimeRange": "El tiempo máx. debe ser mayor o igual al mín.",
           "urlInvalid": "La URL debe ser válida.",
-          "pictureAltMax": "El texto alternativo debe tener como máximo 300 caracteres."
+          "pictureAltMax": "El texto alternativo debe tener como máximo 300 caracteres.",
+          "menuPicturesRequired": "Se requiere al menos una imagen del menú."
         }
       },
       "list": {

@@ -268,7 +268,8 @@
           "prepTimeInvalid": "Preparation time must be a valid number.",
           "prepTimeRange": "Max prep time must be greater than or equal to min.",
           "urlInvalid": "URL must be valid.",
-          "pictureAltMax": "Picture alt text must be at most 300 characters."
+          "pictureAltMax": "Picture alt text must be at most 300 characters.",
+          "menuPicturesRequired": "At least one menu picture is required."
         }
       },
       "list": {

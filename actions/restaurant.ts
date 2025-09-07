@@ -42,7 +42,7 @@ function uploadFileToBlob(restaurantName: string, file?: File | null): Promise<s
         try {
             const fileName = `${crypto.randomUUID()}_${encodeURIComponent(restaurantName)}`;
             const blob = await put(
-                `restaurants/${fileName}`,
+                `restaurants/banners/${fileName}`,
                 file,
                 { access: 'public' }
             );
@@ -51,6 +51,35 @@ function uploadFileToBlob(restaurantName: string, file?: File | null): Promise<s
             reject(error);
         }
     });
+}
+
+// Add this function to handle multiple file uploads
+async function uploadMenuFilesToBlob(restaurantSlug: string, files?: File[] | null): Promise<string[]> {
+    if (!files || files.length === 0) {
+        return [];
+    }
+    
+    const uploadPromises = files.map(async (file, index) => {
+        if (file.size === 0) return "";
+        if (file.size > 5 * 1024 * 1024) {
+            throw new Error("Image size must be less than 5MB");
+        }
+        
+        try {
+            const fileName = `${crypto.randomUUID()}_${encodeURIComponent(restaurantSlug)}_menu_${index}`;
+            const blob = await put(
+                `restaurants/menus/${fileName}`, // Store in menus subdirectory
+                file,
+                { access: 'public' }
+            );
+            return blob.url;
+        } catch (error) {
+            console.error("Menu image upload error:", error);
+            throw error;
+        }
+    });
+    
+    return Promise.all(uploadPromises);
 }
 
 export async function CreateRestaurant(data: CreateRestaurantParsed) {
@@ -118,11 +147,22 @@ export async function CreateRestaurant(data: CreateRestaurantParsed) {
             return { success: false, message: "Slug already exists. Please choose another one." }
         }
 
+        // Upload restaurant picture
         const pictureUrl = await uploadFileToBlob(data.slug, data.picture);
         if (!pictureUrl) {
-            return { success: false, message: "Error uploading image" }
+            return { success: false, message: "Error uploading restaurant image" }
         }
-
+        
+        // Upload menu pictures
+        let menuPictureUrls: string[] = [];
+        if (data.menuPictures && data.menuPictures.length > 0) {
+            try {
+                menuPictureUrls = await uploadMenuFilesToBlob(data.slug, data.menuPictures);
+            } catch (error) {
+                return { success: false, message: "Error uploading menu images: " + (error as Error).message }
+            }
+        }
+        
         await db.insert(restaurant).values({
             id: crypto.randomUUID(),
             name: data.name,
@@ -139,6 +179,7 @@ export async function CreateRestaurant(data: CreateRestaurantParsed) {
             email: data.email ?? undefined,
             website: data.website ?? undefined,
             tags: data.tags ?? undefined,
+            menuPictureUrl: menuPictureUrls.length > 0 ? menuPictureUrls : undefined, // Save menu picture URLs
         })
 
         return { success: true }
