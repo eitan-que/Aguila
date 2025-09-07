@@ -4,10 +4,6 @@ import { CategoryRestaurants } from "@/components/dashboard/categories/categoryR
 import { SiteHeader } from "@/components/dashboard/siteHeader"
 import { notFound } from "next/navigation"
 
-export async function generateStaticParams() {
-  return locales.map((lang) => ({ lang }))
-}
-
 export default async function CategoryPage({
   params,
 }: {
