@@ -1,6 +1,6 @@
 "use client"
 import * as React from "react"
-import { ChevronLeft, ChevronRight, Home, Utensils } from "lucide-react"
+import { ChevronLeft, ChevronRight, Home, Utensils, FolderTree } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import logo from '@/public/logo_256x256_light.png'
@@ -98,6 +98,20 @@ export function AppSidebar({
                 lang={lang}
                 pathName={pathname}
               />
+            </SidebarMenu>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === `/${lang}/dashboard/c`}
+                  className="data-[active=true]:bg-primary data-[active=true]:font-semibold data-[active=true]:text-primary-foreground"
+                >
+                  <Link href="/dashboard/c" className="flex items-center gap-2 overflow-hidden">
+                    <FolderTree />
+                    <span className="truncate">{dict.dashboard.sidebar.categories || "Categories"}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

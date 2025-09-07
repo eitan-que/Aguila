@@ -78,6 +78,7 @@
     "sidebar": {
       "home": "Home",
       "restaurants": "Restaurants",
+      "categories": "Categories",
       "navuser": {
         "account": "Account",
         "signOut": "Logout"
@@ -511,6 +512,94 @@
             "general": "General",
             "picture": "Picture"
           }
+        }
+      }
+    },
+    "categories": {
+      "title": "Categories",
+      "description": "Manage categories for restaurants",
+      "add": {
+        "trigger": "Add Category",
+        "title": "Create New Category",
+        "description": "Add a new category to organize restaurants."
+      },
+      "form": {
+        "submit": "Save",
+        "fields": {
+          "name": {
+            "label": "Name",
+            "placeholder": "Enter category name",
+            "description": "The name of the category as it will appear in the dashboard and app."
+          }
+        },
+        "errors": {
+          "nameMin": "Name must be at least 2 characters."
+        },
+        "actions": {
+          "creating": "Creating...",
+          "create": "Create Category"
+        },
+        "toasts": {
+          "creating": "Creating category...",
+          "success": "Category created successfully!",
+          "error": "Error creating category",
+          "deleteSuccess": "Category deleted successfully",
+          "deleteError": "Error deleting category"
+        }
+      },
+      "list": {
+        "timeFormatting": {
+          "today": "Today",
+          "yesterday": "Yesterday",
+          "daysAgo": "{days} days ago",
+          "weeksAgo": "{weeks} weeks ago",
+          "monthsAgo": "{months} months ago",
+          "yearsAgo": "{years} years ago"
+        },
+        "columns": {
+          "name": "Name",
+          "created": "Created",
+          "restaurantCount": "Restaurants"
+        },
+        "actions": {
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "states": {
+          "loading": "Loading categories...",
+          "error": "Error",
+          "noCategories": "No categories found."
+        },
+        "placeholders": {
+          "filterByName": "Filter by name..."
+        },
+        "buttons": {
+          "columns": "Columns"
+        },
+        "pagination": {
+          "previous": "Previous",
+          "next": "Next",
+          "selectedCount": "{selected} of {total} row(s) selected"
+        },
+        "deleteDialog": {
+          "title": "Delete Category",
+          "description": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+          "cancel": "Cancel",
+          "confirm": "Delete",
+          "deleting": "Deleting..."
+        },
+        "messages": {
+          "deleteSuccess": "Category deleted successfully"
+        },
+        "errors": {
+          "loadFailed": "Failed to load categories",
+          "deleteFailed": "Failed to delete category",
+          "editNotImplemented": "Edit functionality is not yet implemented",
+          "unexpected": "An unexpected error occurred"
+        },
+        "aria": {
+          "selectAll": "Select all",
+          "selectRow": "Select row"
         }
       }
     }

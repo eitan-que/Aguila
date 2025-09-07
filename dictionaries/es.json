@@ -78,6 +78,7 @@
     "sidebar": {
       "home": "Inicio",
       "restaurants": "Restaurantes",
+      "categories": "Categorías",
       "navuser": {
         "account": "Cuenta",
         "signOut": "Cerrar Sesión"
@@ -513,6 +514,94 @@
             "create": "Crear Descuento",
             "submit": "Guardar"
           }
+        }
+      }
+    },
+    "categories": {
+      "title": "Categorías",
+      "description": "Gestiona las categorías de restaurantes",
+      "add": {
+        "trigger": "Agregar Categoría",
+        "title": "Crear Nueva Categoría",
+        "description": "Agrega una nueva categoría para organizar restaurantes."
+      },
+      "form": {
+        "submit": "Guardar",
+        "fields": {
+          "name": {
+            "label": "Nombre",
+            "placeholder": "Ingresa el nombre de la categoría",
+            "description": "El nombre de la categoría tal como aparecerá en el panel y la aplicación."
+          }
+        },
+        "errors": {
+          "nameMin": "El nombre debe tener al menos 2 caracteres."
+        },
+        "actions": {
+          "creating": "Creando...",
+          "create": "Crear Categoría"
+        },
+        "toasts": {
+          "creating": "Creando categoría...",
+          "success": "¡Categoría creada exitosamente!",
+          "error": "Error al crear la categoría",
+          "deleteSuccess": "¡Categoría eliminada exitosamente!",
+          "deleteError": "Error al eliminar la categoría"
+        }
+      },
+      "list": {
+        "timeFormatting": {
+          "today": "Hoy",
+          "yesterday": "Ayer",
+          "daysAgo": "Hace {days} días",
+          "weeksAgo": "Hace {weeks} semanas",
+          "monthsAgo": "Hace {months} meses",
+          "yearsAgo": "Hace {years} años"
+        },
+        "columns": {
+          "name": "Nombre",
+          "created": "Creado",
+          "restaurantCount": "Restaurantes"
+        },
+        "actions": {
+          "edit": "Editar",
+          "delete": "Eliminar"
+        },
+        "states": {
+          "loading": "Cargando categorías...",
+          "error": "Error",
+          "noCategories": "No se encontraron categorías."
+        },
+        "placeholders": {
+          "filterByName": "Filtrar por nombre..."
+        },
+        "buttons": {
+          "columns": "Columnas"
+        },
+        "pagination": {
+          "previous": "Anterior",
+          "next": "Siguiente",
+          "selectedCount": "{selected} de {total} fila(s) seleccionada(s)"
+        },
+        "deleteDialog": {
+          "title": "Eliminar Categoría",
+          "description": "¿Estás seguro de que deseas eliminar \"{name}\"? Esta acción no se puede deshacer.",
+          "cancel": "Cancelar",
+          "confirm": "Eliminar",
+          "deleting": "Eliminando..."
+        },
+        "messages": {
+          "deleteSuccess": "¡Categoría eliminada exitosamente!"
+        },
+        "errors": {
+          "loadFailed": "Error al cargar las categorías",
+          "deleteFailed": "Error al eliminar la categoría",
+          "editNotImplemented": "La funcionalidad de edición no está implementada aún",
+          "unexpected": "Ocurrió un error inesperado"
+        },
+        "aria": {
+          "selectAll": "Seleccionar todo",
+          "selectRow": "Seleccionar fila"
         }
       }
     }
