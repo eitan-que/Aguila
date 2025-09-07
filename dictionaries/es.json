@@ -603,6 +603,32 @@
           "selectAll": "Seleccionar todo",
           "selectRow": "Seleccionar fila"
         }
+      },
+      "categoryPage": {
+        "title": "Restaurantes en Categoría",
+        "description": "Gestionar restaurantes en esta categoría",
+        "addButton": "Agregar Restaurante",
+        "noRestaurants": "Aún no hay restaurantes en esta categoría",
+        "addDialog": {
+          "title": "Agregar Restaurante a Categoría",
+          "description": "Buscar un restaurante para agregar a {category}",
+          "searchPlaceholder": "Buscar restaurante por nombre",
+          "closeButton": "Cerrar"
+        },
+        "messages": {
+          "restaurantAdded": "{name} añadido a la categoría",
+          "restaurantRemoved": "{name} eliminado de la categoría"
+        },
+        "errors": {
+          "restaurantNotFound": "Restaurante no encontrado"
+        },
+        "table": {
+          "columns": {
+            "name": "Nombre",
+            "added": "Añadido"
+          },
+          "removeButton": "Eliminar"
+        }
       }
     }
   },

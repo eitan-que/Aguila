@@ -1,5 +1,7 @@
 "use client"
 
+import { useParams } from 'next/navigation'
+import Link from 'next/link'
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
 import {
@@ -49,6 +51,9 @@ type CategoriesListProps = {
 }
 
 export function CategoriesList({ t }: CategoriesListProps) {
+  const params = useParams()
+  const lang = params.lang as string
+  
   const [data, setData] = useState<CategoryWithStats[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -170,9 +175,12 @@ export function CategoriesList({ t }: CategoriesListProps) {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="font-medium">
+        <Link 
+          href={`/${lang}/dashboard/c/${row.original.id}`} 
+          className="font-medium hover:underline"
+        >
           {row.getValue("name")}
-        </div>
+        </Link>
       ),
     },
     {
