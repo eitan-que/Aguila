@@ -1,6 +1,5 @@
 import { getDictionary, Lang, locales } from "@/actions/dictionaries";
 import Header from "@/components/shared/header";
-import Navbar from "@/components/menu/navbar/navbar";
 import Banner from "@/components/menu/sections/banner";
 import Categories from "@/components/menu/sections/categories";
 import Category from "@/components/menu/sections/category";
@@ -22,30 +21,30 @@ export default async function Place({
 }) {
   const { lang } = await params
   const dict = await getDictionary(lang)
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
-  const navItems: NavbarItemProps[] = [
-    {
-      icon: Home,
-      label: dict.navbar.home,
-      url: `/${lang}/` as NavbarItemProps["url"],
-      isActive: true
-    },
-    {
-      icon: User,
-      label: dict.navbar.profile,
-      url: `/${lang}/profile/` as NavbarItemProps["url"]
-    }
-  ]
+  // const session = await auth.api.getSession({
+  //   headers: await headers()
+  // })
+  // const navItems: NavbarItemProps[] = [
+  //   {
+  //     icon: Home,
+  //     label: dict.navbar.home,
+  //     url: `/${lang}/` as NavbarItemProps["url"],
+  //     isActive: true
+  //   },
+  //   {
+  //     icon: User,
+  //     label: dict.navbar.profile,
+  //     url: `/${lang}/profile/` as NavbarItemProps["url"]
+  //   }
+  // ]
 
-  if ((session && session.user.role === 'admin') || session?.user.role === 'restaurantOwner') {
-    navItems.push({
-      icon: LayoutDashboard,
-      label: "Dashboard",
-      url: `/${lang}/dashboard/` as NavbarItemProps["url"]
-    })
-  }
+  // if ((session && session.user.role === 'admin') || session?.user.role === 'restaurantOwner') {
+  //   navItems.push({
+  //     icon: LayoutDashboard,
+  //     label: "Dashboard",
+  //     url: `/${lang}/dashboard/` as NavbarItemProps["url"]
+  //   })
+  // }
 
   return (
     <main className="flex flex-col justify-start items-start gap-8 p-5 w-full min-h-screen">
@@ -95,9 +94,9 @@ export default async function Place({
           variant="large"
           category={categories[1]}
         />
-        <Navbar
+        {/* <Navbar
           items={navItems}
-        />
+        /> */}
     </main>
   )
 }

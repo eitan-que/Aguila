@@ -332,14 +332,16 @@
           "overview": "Overview",
           "traffic": "Traffic",
           "engagement": "Engagement",
-          "performance": "Performance"
+          "performance": "Performance",
+          "discounts": "Discounts"
         },
         "sections": {
           "marketPosition": "Market Position",
           "clickEngagement": "Click Engagement",
           "costEfficiencyMetrics": "Cost Efficiency Metrics",
           "performanceSummary": "Performance Summary",
-          "recommendations": "Recommendations"
+          "recommendations": "Recommendations",
+          "discounts": "Restaurant Discounts"
         },
         "charts": {
           "marketShare": "Market Share",
@@ -379,7 +381,9 @@
           "ofTotal": "of",
           "avgCostPerView": "Average cost per customer view",
           "estimatedMonthlyViews": "Estimated monthly views",
-          "cost": "Cost"
+          "cost": "Cost",
+          "loadingDiscounts": "Loading discounts...",
+          "noDiscounts": "No active discounts available for this restaurant."
         },
         "engagement": {
           "whatsappClicks": "WhatsApp Clicks",
@@ -429,6 +433,71 @@
           "increaseMenuHighlights": "Increase menu highlights to improve engagement",
           "updateWhatsapp": "Update WhatsApp contact information for better visibility",
           "reviewLocation": "Review location data accuracy to improve map clicks"
+        }
+      },
+      "discounts": {
+        "title": "Discounts",
+        "description": "Manage restaurant discounts",
+        "add": {
+          "trigger": "Add Discount",
+          "title": "Create New Discount",
+          "description": "Create a new discount to attract more customers."
+        },
+        "form": {
+          "submit": "Save",
+          "forRestaurant": "Creating discount for",
+          "fields": {
+            "name": {
+              "label": "Name",
+              "placeholder": "Enter discount name",
+              "description": "This is the discount's name."
+            },
+            "description": {
+              "label": "Description",
+              "placeholder": "Enter discount description",
+              "description": "Short description of the discount."
+            },
+            "restaurant": {
+              "label": "Restaurant",
+              "placeholder": "Select a restaurant",
+              "description": "The restaurant offering this discount."
+            },
+            "pictureUrl": {
+              "label": "Picture of the Discount",
+              "description": "Drag and drop your image here, or click to select a file.",
+              "format": "JPG or PNG, max 5MB"
+            },
+            "pictureAlt": {
+              "label": "Description of the image",
+              "placeholder": "Briefly describe the content of the image",
+              "description": "Used for accessibility and SEO."
+            }
+          },
+          "errors": {
+            "nameMin": "Name must be at least 3 characters.",
+            "descriptionMax": "Description must be at most 300 characters.",
+            "restaurantRequired": "Restaurant is required.",
+            "urlInvalid": "URL must be valid.",
+            "pictureAltMax": "Picture alt text must be at most 300 characters.",
+            "pictureRequired": "Discount picture is required.",
+            "fileFormat": "File must be a JPG or PNG image.",
+            "fileSize": "File size must be less than 5MB."
+          },
+          "actions": {
+            "create": "Create Discount",
+            "creating": "Creating...",
+            "removeImage": "Remove Image",
+            "submit": "Save"
+          },
+          "toasts": {
+            "creating": "Creating discount...",
+            "success": "Discount created successfully!",
+            "error": "Error creating discount"
+          },
+          "sections": {
+            "general": "General",
+            "picture": "Picture"
+          }
         }
       }
     }

@@ -18,7 +18,7 @@ export default function Loading() {
         <CategorySkeleton variant="medium" />
         <RestaurantsSkeleton variant="secondary" />
         <CategorySkeleton variant="large" />
-        <NavbarSkeleton />
+        {/* <NavbarSkeleton /> */}
     </main>
   )
 }

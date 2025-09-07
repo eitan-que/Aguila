@@ -5,23 +5,68 @@ import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis } fro
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { CalendarDays, TrendingUp, Clock, Share2, Award } from "lucide-react"
+import { CalendarDays, TrendingUp, Clock, Share2, Award, Ticket } from "lucide-react"
 import { Dictionary } from "@/actions/dictionaries"
+import Image from "next/image"
+import { useEffect, useState } from "react"
+import { listDiscounts } from "@/actions/discounts"
+import { AddDiscountDialog } from "./AddDiscountDialog"
+
+// Define the type for discounts
+type Discount = {
+  id: string;
+  name: string;
+  description: string | null;
+  imageUrl: string | null;
+  imageAlt: string | null;
+  restaurantId: string | null;
+}
 
 // Define the props for our component
 type RestaurantAnalyticsProps = {
   restaurantId: string
   restaurantName: string
   createdAt: Date
-  t: Dictionary["dashboard"]["restaurants"]
+  dict: Dictionary["dashboard"]
 }
 
 export function RestaurantAnalytics({ 
   restaurantId, 
   restaurantName,
   createdAt,
-  t 
+  dict
 }: RestaurantAnalyticsProps) {
+  // State for discounts
+  const [discounts, setDiscounts] = useState<Discount[]>([])
+  const [isLoadingDiscounts, setIsLoadingDiscounts] = useState(false)
+  const [discountError, setDiscountError] = useState<string | null>(null)
+  const t = dict.restaurants
+
+  // Function to fetch discounts
+  const fetchDiscounts = async () => {
+    setIsLoadingDiscounts(true)
+    setDiscountError(null)
+    
+    try {
+      const response = await listDiscounts(restaurantId)
+      if (response.success && response.data) {
+        setDiscounts(response.data)
+      } else {
+        setDiscountError(response.message || "Failed to load discounts")
+      }
+    } catch (error) {
+      setDiscountError("An error occurred while loading discounts")
+      console.error("Error loading discounts:", error)
+    } finally {
+      setIsLoadingDiscounts(false)
+    }
+  }
+
+  // Fetch discounts when component mounts
+  useEffect(() => {
+    fetchDiscounts()
+  }, [restaurantId])
+
   // Calculate restaurant age
   const calculateAge = (date: Date) => {
     const now = new Date()
@@ -95,11 +140,12 @@ export function RestaurantAnalytics({
   return (
     <div className="space-y-6">
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 w-full h-auto">
+        <TabsList className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 w-full h-auto">
           <TabsTrigger value="overview">{t.analytics?.tabs?.overview || "Overview"}</TabsTrigger>
           <TabsTrigger value="traffic">{t.analytics?.tabs?.traffic || "Traffic"}</TabsTrigger>
           <TabsTrigger value="engagement">{t.analytics?.tabs?.engagement || "Engagement"}</TabsTrigger>
           <TabsTrigger value="performance">{t.analytics?.tabs?.performance || "Performance"}</TabsTrigger>
+          <TabsTrigger value="discounts">{t.analytics?.tabs?.discounts || "Discounts"}</TabsTrigger>
         </TabsList>
         
         {/* OVERVIEW TAB */}
@@ -511,6 +557,63 @@ export function RestaurantAnalytics({
                   </ul>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        {/* DISCOUNTS TAB */}
+        <TabsContent value="discounts" className="space-y-2">
+          <Card>
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle className="flex items-center">
+                  <Ticket className="mr-2 w-5 h-5" />
+                  {t.analytics?.sections?.discounts || "Restaurant Discounts"}
+                </CardTitle>
+                <AddDiscountDialog 
+                  restaurantId={restaurantId}
+                  restaurantName={restaurantName}
+                  t={dict}
+                  onSuccess={fetchDiscounts} // Refresh discounts after creating
+                />
+              </div>
+            </CardHeader>
+            <CardContent>
+              {isLoadingDiscounts ? (
+                <div className="flex justify-center items-center h-40">
+                  <p>{t.analytics?.labels?.loadingDiscounts || "Loading discounts..."}</p>
+                </div>
+              ) : discountError ? (
+                <div className="flex justify-center items-center h-40">
+                  <p className="text-red-500">{discountError}</p>
+                </div>
+              ) : discounts.length === 0 ? (
+                <div className="flex justify-center items-center h-40">
+                  <p>{t.analytics?.labels?.noDiscounts || "No discounts available for this restaurant."}</p>
+                </div>
+              ) : (
+                <div className="gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-auto">
+                  {discounts.map((discount) => (
+                    <div key={discount.id} className="relative flex col-span-1 rounded-md aspect-video overflow-hidden">
+                      <Image
+                        src={discount.imageUrl || "https://placehold.co/1920x1080/png"}
+                        alt={discount.imageAlt || discount.name}
+                        width={1920}
+                        height={1080}
+                        className="object-cover hover:scale-105 transition-transform duration-300 ease-in-out transform"
+                      />
+                      {(discount.name || discount.description) && (
+                        <div className="right-0 bottom-0 left-0 absolute flex flex-col justify-end bg-gradient-to-t from-card-foreground/70 to-transparent p-4 w-full h-full text-card">
+                          <h2 className="font-semibold text-lg">{discount.name}</h2>
+                          {discount.description && (
+                            <p className="text-sm">{discount.description}</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </CardContent>
           </Card>
         </TabsContent>

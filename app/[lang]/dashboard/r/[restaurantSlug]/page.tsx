@@ -58,7 +58,7 @@ export default async function RestaurantPage({
           restaurantId={restaurant.data.id}
           restaurantName={restaurant.data.name}
           createdAt={new Date(restaurant.data.createdAt)}
-          t={dict.dashboard.restaurants}
+          dict={dict.dashboard}
         />
       </div>
     </>

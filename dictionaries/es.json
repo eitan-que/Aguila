@@ -333,14 +333,16 @@
           "overview": "Resumen",
           "traffic": "Tráfico",
           "engagement": "Interacción",
-          "performance": "Rendimiento"
+          "performance": "Rendimiento",
+          "discounts": "Descuentos"
         },
         "sections": {
           "marketPosition": "Posición en el Mercado",
           "clickEngagement": "Interacción de Clics",
           "costEfficiencyMetrics": "Métricas de Eficiencia de Costos",
           "performanceSummary": "Resumen de Rendimiento",
-          "recommendations": "Recomendaciones"
+          "recommendations": "Recomendaciones",
+          "discounts": "Descuentos del Restaurante"
         },
         "charts": {
           "marketShare": "Cuota de Mercado",
@@ -380,7 +382,9 @@
           "ofTotal": "de",
           "avgCostPerView": "Costo promedio por vista de cliente",
           "estimatedMonthlyViews": "Vistas mensuales estimadas",
-          "cost": "Costo"
+          "cost": "Costo",
+          "loadingDiscounts": "Cargando descuentos...",
+          "noDiscounts": "No hay descuentos activos para este restaurante."
         },
         "engagement": {
           "whatsappClicks": "Clics en WhatsApp",
@@ -430,6 +434,77 @@
           "increaseMenuHighlights": "Aumentar destacados del menú para mejorar la interacción",
           "updateWhatsapp": "Actualizar la información de contacto de WhatsApp para mejor visibilidad",
           "reviewLocation": "Revisar la precisión de los datos de ubicación para mejorar los clics en el mapa"
+        }
+      },
+      "discounts": {
+        "title": "Descuentos",
+        "description": "Gestiona los descuentos del restaurante",
+        "add": {
+          "trigger": "Agregar Descuento",
+          "title": "Crear Nuevo Descuento",
+          "description": "Crea un nuevo descuento para atraer más clientes."
+        },
+        "form": {
+          "title": "Crear Nuevo Descuento",
+          "description": "Crear un descuento promocional para tu restaurante",
+          "forRestaurant": "Creando descuento para",
+          "fields": {
+            "name": {
+              "label": "Nombre del Descuento",
+              "placeholder": "Ingresa el nombre del descuento",
+              "description": "El nombre del descuento como aparecerá a los clientes."
+            },
+            "description": {
+              "label": "Descripción",
+              "placeholder": "Ingresa la descripción del descuento",
+              "description": "Describe los términos o detalles de este descuento."
+            },
+            "restaurant": {
+              "label": "Restaurante",
+              "placeholder": "Selecciona un restaurante",
+              "description": "El restaurante que ofrece este descuento."
+            },
+            "pictureUrl": {
+              "label": "Imagen del Descuento",
+              "description": "Arrastra y suelta tu imagen aquí, o haz clic para seleccionar un archivo.",
+              "format": "JPG o PNG, máximo 5MB"
+            },
+            "pictureAlt": {
+              "label": "Descripción de la Imagen",
+              "placeholder": "Describe brevemente el contenido de la imagen",
+              "description": "Usado para accesibilidad y SEO."
+            }
+          },
+          "errors": {
+            "nameMin": "El nombre debe tener al menos 3 caracteres.",
+            "descriptionMax": "La descripción debe tener como máximo 300 caracteres.",
+            "restaurantRequired": "El restaurante es requerido.",
+            "urlInvalid": "La URL debe ser válida.",
+            "pictureAltMax": "La descripción de la imagen debe tener como máximo 300 caracteres.",
+            "pictureRequired": "Se requiere una imagen para el descuento.",
+            "fileFormat": "El archivo debe ser una imagen JPG o PNG",
+            "fileSize": "El tamaño de la imagen debe ser menor a 5MB"
+          },
+          "actions": {
+            "create": "Crear Descuento",
+            "creating": "Creando...",
+            "removeImage": "Eliminar imagen",
+            "submit": "Guardar"
+          },
+          "toasts": {
+            "creating": "Creando descuento...",
+            "success": "¡Descuento creado exitosamente!",
+            "error": "Error al crear el descuento"
+          },
+          "sections": {
+            "general": "General",
+            "picture": "Imagen"
+          }
+        },
+        "actions": {
+          "add": "Agregar Descuento",
+          "edit": "Editar Descuento",
+          "delete": "Eliminar Descuento"
         }
       }
     }

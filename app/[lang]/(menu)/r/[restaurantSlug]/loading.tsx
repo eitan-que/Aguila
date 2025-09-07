@@ -14,7 +14,7 @@ export default function Loading() {
         <BannerSkeleton />
         <CategorySkeleton variant="grid" />
         <CategorySkeleton variant="list" />
-        <NavbarSkeleton />
+        {/* <NavbarSkeleton /> */}
     </main>
   )
 }
