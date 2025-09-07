@@ -1,4 +1,4 @@
-import { getDictionary, Lang, locales } from "@/actions/dictionaries";
+import { getDictionary, Lang } from "@/actions/dictionaries";
 import { getRestaurantBySlug } from "@/actions/restaurant";
 import { SiteHeader } from "@/components/dashboard/siteHeader";
 import { RestaurantAnalytics } from "@/components/dashboard/restaurants/RestaurantAnalytics";
