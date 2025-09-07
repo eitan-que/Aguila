@@ -10,7 +10,8 @@ import { Dictionary } from "@/actions/dictionaries"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { listDiscounts } from "@/actions/discounts"
-import { AddDiscountDialog } from "./AddDiscountDialog"
+import { DrawerDialogTemplate } from "@/components/dashboard/drawerDialogTemplate"
+import { CreateDiscountForm } from "@/components/dashboard/forms/createDiscount"
 
 // Define the type for discounts
 type Discount = {
@@ -65,7 +66,7 @@ export function RestaurantAnalytics({
   // Fetch discounts when component mounts
   useEffect(() => {
     fetchDiscounts()
-  }, [restaurantId])
+  }, [restaurantId, fetchDiscounts])
 
   // Calculate restaurant age
   const calculateAge = (date: Date) => {
@@ -570,11 +571,18 @@ export function RestaurantAnalytics({
                   <Ticket className="mr-2 w-5 h-5" />
                   {t.analytics?.sections?.discounts || "Restaurant Discounts"}
                 </CardTitle>
-                <AddDiscountDialog 
-                  restaurantId={restaurantId}
-                  restaurantName={restaurantName}
-                  t={dict}
-                  onSuccess={fetchDiscounts} // Refresh discounts after creating
+                <DrawerDialogTemplate
+                  triggerText={dict.restaurants.discounts?.add.trigger || "Add Discount"}
+                  title={dict.restaurants.discounts?.add?.title || "Create New Discount"}
+                  description={dict.restaurants.discounts?.add?.description || `Create a new discount for ${restaurantName}`}
+                  form={
+                    <CreateDiscountForm
+                      restaurantId={restaurantId}
+                      restaurantName={restaurantName}
+                      t={dict.restaurants.discounts?.form}
+                      onSuccess={fetchDiscounts}
+                    />
+                  }
                 />
               </div>
             </CardHeader>

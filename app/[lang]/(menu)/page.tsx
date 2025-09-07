@@ -4,11 +4,7 @@ import Banner from "@/components/menu/sections/banner";
 import Categories from "@/components/menu/sections/categories";
 import Category from "@/components/menu/sections/category";
 import Restaurants from "@/components/menu/sections/restaurants";
-import { Home, LayoutDashboard, User } from "lucide-react";
 import { restaurants, categories } from "@/lib/mocks/menu";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { NavbarItemProps } from "@/components/menu/navbar/navbarItem";
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }))

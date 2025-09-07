@@ -1,11 +1,9 @@
 import { getDictionary, Lang, locales } from "@/actions/dictionaries"
 import Header from "@/components/shared/header";
-import Navbar from "@/components/menu/navbar/navbar";
 import Banner from "@/components/menu/sections/banner";
 import Categories from "@/components/menu/sections/categories";
 import Category from "@/components/menu/sections/category";
-import { Home, User } from "lucide-react";
-import { categories } from "@/lib/mocks/menu"; // antes: ../../page
+import { categories } from "@/lib/mocks/menu";
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang, restaurantSlug: "restaurante-1" }))
@@ -67,7 +65,7 @@ export default async function Restaurant({
         bestSellerLabel={dict.menu.tags.bestSeller}
         anchorId={anchors[2].anchorId}
       />
-      <Navbar
+      {/* <Navbar
         items={[
           {
             icon: Home,
@@ -81,7 +79,7 @@ export default async function Restaurant({
             url: `/${lang}/profile/`
           }
         ]}
-      />
+      /> */}
     </main>
   )
 }
