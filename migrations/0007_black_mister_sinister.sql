@@ -1,0 +1,1 @@
+ALTER TABLE "restaurant" ADD COLUMN "menu_picture_url" json;

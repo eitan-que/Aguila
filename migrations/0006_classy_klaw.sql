@@ -1,0 +1,1 @@
+ALTER TABLE "restaurant" DROP COLUMN "highest_percentage_discount";

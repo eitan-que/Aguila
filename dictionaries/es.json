@@ -162,7 +162,109 @@
     },
     "restaurants": {
       "title": "Restaurantes",
-      "description": "Gestiona los restaurantes"
+      "description": "Gestiona los restaurantes",
+      "add": {
+        "trigger": "Agregar Restaurante",
+        "title": "Agregar Restaurante",
+        "description": "Agrega los datos de tu restaurante y empieza a conseguir clientes hoy."
+      },
+      "form": {
+        "submit": "Guardar",
+        "sections": {
+          "general": "General",
+          "location": "Ubicación",
+          "contact": "Contacto",
+          "additional": "Información Adicional",
+          "picture": "Imagen",
+          "tags": "Etiquetas"
+        },
+        "fields": {
+          "name": {
+            "label": "Nombre",
+            "placeholder": "Ingresa el nombre del restaurante",
+            "description": "Este es el nombre del restaurante."
+          },
+          "slug": {
+            "label": "Slug",
+            "placeholder": "slug-del-restaurante",
+            "description": "Se usa en la URL. Solo letras, números y guiones."
+          },
+          "description": {
+            "label": "Descripción",
+            "placeholder": "Ingresa la descripción del restaurante",
+            "description": "Descripción breve del restaurante."
+          },
+          "location": {
+            "label": "Ubicación",
+            "description": "Ubicación del restaurante.",
+            "address": {
+              "label": "Dirección",
+              "placeholder": "Calle 123, Ciudad"
+            },
+            "lat": {
+              "label": "Latitud",
+              "placeholder": "-34.6037"
+            },
+            "lon": {
+              "label": "Longitud",
+              "placeholder": "-58.3816"
+            }
+          },
+          "phone": {
+            "label": "Teléfono",
+            "placeholder": "+54 11 5555 1234",
+            "description": "Teléfono de contacto."
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "contacto@ejemplo.com",
+            "description": "Email de contacto."
+          },
+          "website": {
+            "label": "Sitio web",
+            "placeholder": "https://ejemplo.com",
+            "description": "URL del sitio público."
+          },
+          "prepTimeMin": {
+            "label": "Tiempo prep. mín (min)",
+            "placeholder": "0",
+            "description": "Tiempo mínimo de preparación en minutos."
+          },
+          "prepTimeMax": {
+            "label": "Tiempo prep. máx (min)",
+            "placeholder": "0",
+            "description": "Tiempo máximo de preparación en minutos."
+          },
+          "pictureUrl": {
+            "label": "Imagen del Restaurante"
+          },
+          "pictureAlt": {
+            "label": "Describe la imagen"
+          },
+          "tags": {
+            "label": "Tags",
+            "add": "Agregar tag",
+            "remove": "Eliminar",
+            "itemPlaceholder": "p. ej. Vegano"
+          }
+        },
+        "errors": {
+          "nameMin": "El nombre debe tener al menos 3 caracteres.",
+          "slugMin": "El slug debe tener al menos 3 caracteres.",
+          "descriptionMax": "La descripción debe tener como máximo 300 caracteres.",
+          "addressMax": "La dirección debe tener como máximo 300 caracteres.",
+          "latRange": "La latitud debe estar entre -90 y 90.",
+          "lonRange": "La longitud debe estar entre -180 y 180.",
+          "phoneMin": "El teléfono debe tener al menos 7 caracteres.",
+          "emailInvalid": "El email debe ser válido.",
+          "websiteInvalid": "El sitio web debe ser una URL válida.",
+          "prepTimeMin": "El tiempo de preparación debe ser al menos 0 minutos.",
+          "prepTimeInvalid": "El tiempo de preparación debe ser un número válido.",
+          "prepTimeRange": "El tiempo máx. debe ser mayor o igual al mín.",
+          "urlInvalid": "La URL debe ser válida.",
+          "pictureAltMax": "El texto alternativo debe tener como máximo 300 caracteres."
+        }
+      }
     }
   },
   "legal": {

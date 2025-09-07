@@ -161,7 +161,109 @@
     },
     "restaurants": {
       "title": "Restaurants",
-      "description": "Manage the restaurants"
+      "description": "Manage the restaurants",
+      "add": {
+        "trigger": "Add Restaurant",
+        "title": "Add Restaurant",
+        "description": "Add your restaurant details and start gaining customers today."
+      },
+      "form": {
+        "submit": "Save",
+        "sections": {
+          "general": "General",
+          "location": "Location",
+          "contact": "Contact",
+          "additional": "Additional Information",
+          "picture": "Picture",
+          "tags": "Tags"
+        },
+        "fields": {
+          "name": {
+            "label": "Name",
+            "placeholder": "Enter restaurant name",
+            "description": "This is the restaurant's name."
+          },
+          "slug": {
+            "label": "Slug",
+            "placeholder": "enter-restaurant-slug",
+            "description": "Used in the URL. Only letters, numbers and hyphens."
+          },
+          "description": {
+            "label": "Description",
+            "placeholder": "Enter restaurant description",
+            "description": "Short description of the restaurant."
+          },
+          "location": {
+            "label": "Location",
+            "description": "Restaurant location.",
+            "address": {
+              "label": "Address",
+              "placeholder": "123 Main St, City"
+            },
+            "lat": {
+              "label": "Latitude",
+              "placeholder": "-34.6037"
+            },
+            "lon": {
+              "label": "Longitude",
+              "placeholder": "-58.3816"
+            }
+          },
+          "phone": {
+            "label": "Phone",
+            "placeholder": "+1 555 123 4567",
+            "description": "Contact phone number."
+          },
+          "email": {
+            "label": "Email",
+            "placeholder": "contact@example.com",
+            "description": "Contact email address."
+          },
+          "website": {
+            "label": "Website",
+            "placeholder": "https://example.com",
+            "description": "Public website URL."
+          },
+          "prepTimeMin": {
+            "label": "Min prep time",
+            "placeholder": "0",
+            "description": "Minimum preparation time in minutes."
+          },
+          "prepTimeMax": {
+            "label": "Max prep time",
+            "placeholder": "0",
+            "description": "Maximum preparation time in minutes."
+          },
+          "pictureUrl": {
+            "label": "Restaurant Picture"
+          },
+          "pictureAlt": {
+            "label": "Describe the image"
+          },
+          "tags": {
+            "label": "Tags",
+            "add": "Add tag",
+            "remove": "Remove",
+            "itemPlaceholder": "e.g. Vegan"
+          }
+        },
+        "errors": {
+          "nameMin": "Name must be at least 3 characters.",
+          "slugMin": "Slug must be at least 3 characters.",
+          "descriptionMax": "Description must be at most 300 characters.",
+          "addressMax": "Address must be at most 300 characters.",
+          "latRange": "Latitude must be between -90 and 90.",
+          "lonRange": "Longitude must be between -180 and 180.",
+          "phoneMin": "Phone must be at least 7 characters.",
+          "emailInvalid": "Email must be a valid email address.",
+          "websiteInvalid": "Website must be a valid URL.",
+          "prepTimeMin": "Preparation time must be at least 0 minutes.",
+          "prepTimeInvalid": "Preparation time must be a valid number.",
+          "prepTimeRange": "Max prep time must be greater than or equal to min.",
+          "urlInvalid": "URL must be valid.",
+          "pictureAltMax": "Picture alt text must be at most 300 characters."
+        }
+      }
     }
   },
   "legal": {
