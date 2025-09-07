@@ -66,7 +66,7 @@ export function RestaurantAnalytics({
   // Fetch discounts when component mounts
   useEffect(() => {
     fetchDiscounts()
-  }, [restaurantId, fetchDiscounts])
+  }, [restaurantId])
 
   // Calculate restaurant age
   const calculateAge = (date: Date) => {
