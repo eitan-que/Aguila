@@ -7,6 +7,7 @@ import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { db } from "@/db/drizzle";
 import { put } from "@vercel/blob";
+import { eq } from "drizzle-orm";
 
 type Discount = {
     id: string;
@@ -73,10 +74,10 @@ export async function listDiscounts(restaurantId: string): Promise<{ success: bo
             return { success: false, message: "Not authorized" }
         }
 
-        // In a real implementation, you would query the database for discounts
-        // Example: const results = await db.select().from(discount).where(eq(discount.restaurantId, restaurantId))
+        // Query the database for discounts
+        const results = await db.select().from(discount).where(eq(discount.restaurantId, restaurantId));
         
-        return { success: true, data: mockedDiscounts };
+        return { success: true, data: results };
     } catch (error) {
         console.error("Error listing discounts:", error);
         return { success: false, message: "Failed to fetch discounts" }
