@@ -443,6 +443,13 @@
           "title": "Create New Discount",
           "description": "Create a new discount to attract more customers."
         },
+        "deleteDialog": {
+          "title": "Delete Discount",
+          "description": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+          "cancel": "Cancel",
+          "confirm": "Delete",
+          "deleting": "Deleting..."
+        },
         "form": {
           "submit": "Save",
           "forRestaurant": "Creating discount for",
@@ -484,15 +491,21 @@
             "fileSize": "File size must be less than 5MB."
           },
           "actions": {
-            "create": "Create Discount",
-            "creating": "Creating...",
+            "add": "Add Discount",
+            "edit": "Edit Discount",
+            "delete": "Delete Discount",
             "removeImage": "Remove Image",
+            "creating": "Creating...",
+            "create": "Create Discount",
             "submit": "Save"
           },
           "toasts": {
             "creating": "Creating discount...",
             "success": "Discount created successfully!",
-            "error": "Error creating discount"
+            "error": "Error creating discount",
+            "deleteSuccess": "Discount deleted successfully",
+            "deleteError": "Failed to delete discount",
+            "unexpected": "An unexpected error occurred"
           },
           "sections": {
             "general": "General",

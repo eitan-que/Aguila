@@ -444,6 +444,13 @@
           "title": "Crear Nuevo Descuento",
           "description": "Crea un nuevo descuento para atraer más clientes."
         },
+        "deleteDialog": {
+          "title": "Eliminar Descuento",
+          "description": "¿Estás seguro de que quieres eliminar \"{name}\"? Esta acción no se puede deshacer.",
+          "cancel": "Cancelar",
+          "confirm": "Eliminar",
+          "deleting": "Eliminando..."
+        },
         "form": {
           "title": "Crear Nuevo Descuento",
           "description": "Crear un descuento promocional para tu restaurante",
@@ -485,26 +492,27 @@
             "fileFormat": "El archivo debe ser una imagen JPG o PNG",
             "fileSize": "El tamaño de la imagen debe ser menor a 5MB"
           },
-          "actions": {
-            "create": "Crear Descuento",
-            "creating": "Creando...",
-            "removeImage": "Eliminar imagen",
-            "submit": "Guardar"
-          },
           "toasts": {
             "creating": "Creando descuento...",
             "success": "¡Descuento creado exitosamente!",
-            "error": "Error al crear el descuento"
+            "error": "Error al crear el descuento",
+            "deleteSuccess": "Descuento eliminado con éxito",
+            "deleteError": "Error al eliminar el descuento",
+            "unexpected": "Ocurrió un error inesperado"
           },
           "sections": {
             "general": "General",
             "picture": "Imagen"
+          },
+          "actions": {
+            "add": "Agregar Descuento",
+            "edit": "Editar Descuento",
+            "delete": "Eliminar Descuento",
+            "removeImage": "Eliminar Imagen",
+            "creating": "Creando...",
+            "create": "Crear Descuento",
+            "submit": "Guardar"
           }
-        },
-        "actions": {
-          "add": "Agregar Descuento",
-          "edit": "Editar Descuento",
-          "delete": "Eliminar Descuento"
         }
       }
     }

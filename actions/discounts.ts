@@ -6,7 +6,7 @@ import { discount } from "@/db/schema";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { db } from "@/db/drizzle";
-import { put } from "@vercel/blob";
+import { put, del } from "@vercel/blob";
 import { eq } from "drizzle-orm";
 
 type Discount = {
@@ -148,4 +148,40 @@ export async function createDiscount(data: CreateDiscountParams): Promise<{ succ
         console.error("Error creating discount:", error);
         return { success: false, message: "An unexpected error occurred" };
     }
+}
+
+export async function deleteDiscount(id: string): Promise<{ success: boolean; message?: string }> {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    
+    if (!session) {
+      return { success: false, message: "Not authenticated" };
+    }
+    
+    if (!session.user?.role || session.user.role !== "admin") {
+      return { success: false, message: "Not authorized" };
+    }
+
+    // Get discount info before deletion for image cleanup
+    const discountToDelete = await db.select().from(discount).where(eq(discount.id, id)).limit(1);
+    
+    if (discountToDelete.length === 0) {
+      return { success: false, message: "Discount not found" };
+    }
+    
+    // Delete from database
+    await db.delete(discount).where(eq(discount.id, id));
+    
+    // Clean up image if it exists
+    if (discountToDelete[0].imageUrl) {
+      await del(discountToDelete[0].imageUrl);
+    }
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting discount:", error);
+    return { success: false, message: "An error occurred while deleting the discount" };
+  }
 }

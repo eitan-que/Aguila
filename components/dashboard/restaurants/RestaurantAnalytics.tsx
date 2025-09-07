@@ -5,13 +5,23 @@ import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis } fro
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { CalendarDays, TrendingUp, Clock, Share2, Award, Ticket } from "lucide-react"
+import { CalendarDays, TrendingUp, Clock, Share2, Award, Ticket, Trash2 } from "lucide-react"
 import { Dictionary } from "@/actions/dictionaries"
 import Image from "next/image"
 import { useEffect, useState } from "react"
-import { listDiscounts } from "@/actions/discounts"
+import { deleteDiscount, listDiscounts } from "@/actions/discounts"
 import { DrawerDialogTemplate } from "@/components/dashboard/drawerDialogTemplate"
 import { CreateDiscountForm } from "@/components/dashboard/forms/createDiscount"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { toast } from "sonner"
 
 // Define the type for discounts
 type Discount = {
@@ -41,6 +51,13 @@ export function RestaurantAnalytics({
   const [discounts, setDiscounts] = useState<Discount[]>([])
   const [isLoadingDiscounts, setIsLoadingDiscounts] = useState(false)
   const [discountError, setDiscountError] = useState<string | null>(null)
+  
+  // New state for delete dialog
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [discountToDelete, setDiscountToDelete] = useState<string | null>(null)
+  const [discountNameToDelete, setDiscountNameToDelete] = useState<string | null>(null)
+  const [deletingDiscount, setDeletingDiscount] = useState(false)
+  
   const t = dict.restaurants
 
   // Function to fetch discounts
@@ -136,6 +153,38 @@ export function RestaurantAnalytics({
     },
     costPerExposure: "$0.12",
     projectedExposure: "7,500"
+  }
+
+  // New function to handle delete button click
+  const handleDelete = (id: string, name: string) => {
+    setDiscountToDelete(id)
+    setDiscountNameToDelete(name)
+    setDeleteDialogOpen(true)
+  }
+
+  // New function to confirm deletion
+  const confirmDelete = async () => {
+    if (!discountToDelete) return
+    
+    setDeletingDiscount(true)
+    try {
+      const result = await deleteDiscount(discountToDelete)
+      if (result.success) {
+        toast.success(t.discounts?.form?.toasts?.deleteSuccess || "Discount deleted successfully")
+        // Update local data
+        setDiscounts(discounts.filter(discount => discount.id !== discountToDelete))
+      } else {
+        toast.error(result.message || t.discounts?.form?.toasts?.deleteError || "Failed to delete discount")
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error(t.discounts?.form?.toasts?.unexpected || "An unexpected error occurred")
+    } finally {
+      setDeletingDiscount(false)
+      setDeleteDialogOpen(false)
+      setDiscountToDelete(null)
+      setDiscountNameToDelete(null)
+    }
   }
 
   return (
@@ -602,7 +651,7 @@ export function RestaurantAnalytics({
               ) : (
                 <div className="gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-auto">
                   {discounts.map((discount) => (
-                    <div key={discount.id} className="relative flex col-span-1 rounded-md aspect-video overflow-hidden">
+                    <div key={discount.id} className="group relative flex col-span-1 rounded-md aspect-video overflow-hidden">
                       <Image
                         src={discount.imageUrl || "https://placehold.co/1920x1080/png"}
                         alt={discount.imageAlt || discount.name}
@@ -610,6 +659,21 @@ export function RestaurantAnalytics({
                         height={1080}
                         className="object-cover hover:scale-105 transition-transform duration-300 ease-in-out transform"
                       />
+                      {/* Delete button - show on hover */}
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        className="top-2 right-2 absolute opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(discount.id, discount.name);
+                        }}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        <span className="sr-only">
+                          {t.discounts?.form.actions.delete || "Delete Discount"}
+                        </span>
+                      </Button>
                       {(discount.name || discount.description) && (
                         <div className="right-0 bottom-0 left-0 absolute flex flex-col justify-end bg-gradient-to-t from-card-foreground/70 to-transparent p-4 w-full h-full text-card">
                           <h2 className="font-semibold text-lg">{discount.name}</h2>
@@ -624,6 +688,39 @@ export function RestaurantAnalytics({
               )}
             </CardContent>
           </Card>
+
+          {/* Delete confirmation dialog */}
+          <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>
+                  {t.discounts?.deleteDialog?.title || "Delete Discount"}
+                </DialogTitle>
+                <DialogDescription>
+                  {(t.discounts?.deleteDialog?.description || 'Are you sure you want to delete "{name}"? This action cannot be undone.')
+                    .replace("{name}", discountNameToDelete || "")}
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setDeleteDialogOpen(false)}
+                  disabled={deletingDiscount}
+                >
+                  {t.discounts?.deleteDialog?.cancel || "Cancel"}
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  onClick={confirmDelete}
+                  disabled={deletingDiscount}
+                >
+                  {deletingDiscount 
+                    ? (t.discounts?.deleteDialog?.deleting || "Deleting...") 
+                    : (t.discounts?.deleteDialog?.confirm || "Delete")}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </TabsContent>
       </Tabs>
     </div>
