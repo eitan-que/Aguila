@@ -88,6 +88,20 @@ export const verification = pgTable("verification", {
 ]);
 
 // ---------------------
+// Categorías 
+// ---------------------
+export const category = pgTable("category", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+})
+
+// ---------------------
 // Restaurantes
 // ---------------------
 export const restaurant = pgTable("restaurant", {
@@ -96,12 +110,14 @@ export const restaurant = pgTable("restaurant", {
   slug: text("slug").notNull().unique(),
   description: text("description"),
   address: text("address"),
+  // Referencia a la categoría a la que pertenece
+  categoryId: text("category_id")
+    .references(() => category.id, { onDelete: "set null" }),
   // Campos para UI
   pictureUrl: text("picture_url"),
   pictureAlt: text("picture_alt"),
   prepTimeMin: integer("prep_time_min"),
   prepTimeMax: integer("prep_time_max"),
-  weight: integer("weight").default(0).notNull(),
   tags: json("tags").$type<string[]>(),
   lat: numeric("lat", { precision: 18, scale: 14 }),
   lon: numeric("lon", { precision: 18, scale: 14 }),
@@ -118,84 +134,22 @@ export const restaurant = pgTable("restaurant", {
 }, (table) => ({
   indexes: [
     index('restaurant_slug_idx').on(table.slug),
-    index('restaurant_weight_idx').on(table.weight),
+    index('restaurant_category_id_idx').on(table.categoryId),
   ],
 }));
 
 // ---------------------
-// Categorías (para restaurantes)
-// ---------------------
-export const category = pgTable("category", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description"),
-  restaurantId: text("restaurant_id")
-    .notNull()
-    .references(() => restaurant.id, { onDelete: "cascade" }),
-  pictureUrl: text("picture_url"),
-  pictureAlt: text("picture_alt"),
-  iconUrl: text("icon_url"),
-  iconAlt: text("icon_alt"),
-  weight: integer("weight").default(0).notNull(),
-  createdAt: timestamp("created_at")
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  updatedAt: timestamp("updated_at")
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
-}, (table) => [
-  index('category_restaurant_id_idx').on(table.restaurantId),
-  index('category_weight_idx').on(table.weight),
-]);
-
-// ---------------------
-// Descuentos (pertenecen a restaurantes; actúan como items mostrables)
+// Descuentos (simplificados)
 // ---------------------
 export const discount = pgTable("discount", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   description: text("description"),
-  // Imagen para representar el descuento como “item”
   imageUrl: text("image_url"),
   imageAlt: text("image_alt"),
-  type: text("type").notNull(), // 'percentage' | 'fixed'
-  value: integer("value").notNull(),
-  buyQuantity: integer("buy_quantity"),
-  getQuantity: integer("get_quantity"),
-  startDate: timestamp("start_date").notNull(),
-  endDate: timestamp("end_date").notNull(),
-  maxUses: integer("max_uses"),
-  maxUsesPerUser: integer("max_uses_per_user"),
-  currentUses: integer("current_uses").default(0),
-  requiresAuth: boolean("requires_auth").default(false).notNull(),
-  validDays: json("valid_days").$type<{
-    monday: boolean;
-    tuesday: boolean;
-    wednesday: boolean;
-    thursday: boolean;
-    friday: boolean;
-    saturday: boolean;
-    sunday: boolean;
-  }>().default({
-    monday: true,
-    tuesday: true,
-    wednesday: true,
-    thursday: true,
-    friday: true,
-    saturday: true,
-    sunday: true,
-  }),
-  // Solo se asignan a restaurantes (no a categorías)
   restaurantId: text("restaurant_id")
     .notNull()
     .references(() => restaurant.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at")
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
-  updatedAt: timestamp("updated_at")
-    .$defaultFn(() => /* @__PURE__ */ new Date())
-    .notNull(),
 }, (table) => [
   index('discount_restaurant_id_idx').on(table.restaurantId),
-  index('discount_date_range_idx').on(table.startDate, table.endDate),
 ]);

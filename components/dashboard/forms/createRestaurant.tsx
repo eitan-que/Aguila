@@ -301,6 +301,7 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
         text: z.string()
       })
     ).optional(),
+    menuPictures: z.array(z.instanceof(File)).optional(),
   })
 
   const form = useForm<z.infer<typeof createRestaurantSchema>>({
@@ -320,25 +321,11 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
       picture: undefined,
       pictureAlt: "",
       tags: undefined,
+      menuPictures: [],
     },
   })
   const fileRef = useRef<HTMLInputElement | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
-
-  const handleFileChange = () => {
-    const file = fileRef.current?.files?.[0]
-    // revocar preview anterior
-    setPreview((old) => {
-      if (old) URL.revokeObjectURL(old)
-      return old
-    })
-    if (file && file.size > 0) {
-      const url = URL.createObjectURL(file)
-      setPreview(url)
-    } else {
-      setPreview(null)
-    }
-  }
 
   useEffect(() => {
     return () => {
@@ -471,11 +458,28 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
                                   <Image src={preview} alt="Preview" className="w-full h-full object-cover" width={1920} height={1080}/>
                               </div>
                           ) : (
-                              <label className="flex sm:flex-row flex-col justify-center items-center sm:items-center gap-4 bg-muted border border-border rounded-md w-full aspect-video overflow-hidden">
-                                  <ImagePlus className="w-10 h-10 text-muted-foreground" />
+                              <label className="relative flex flex-col justify-center not-data-[files]:justify-center items-center data-[dragging=true]:bg-accent/50 hover:bg-accent/20 p-4 border border-muted-foreground has-[input:focus]:border-ring border-dashed rounded-xl has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 h-min min-h-52 aspect-video overflow-hidden transition-colors cursor-pointer">
+                                  <div className="flex flex-col justify-center items-center px-4 py-3 text-center">
+                                    <div
+                                      className="flex justify-center items-center bg-background mb-2 border border-input rounded-full size-11 shrink-0"
+                                      // data-state={isDragging ? "dragging" : undefined}
+                                    >
+                                      <ImagePlus className="w-5 h-5 text-muted-foreground" />
+                                    </div>
+                                    <p className="text-muted-foreground text-sm">
+                                      {t.fields.pictureUrl.description || "Drag and drop your menu pictures here, or click to select files."}
+                                    </p>
+                                    {/* {errors.length > 0 && (
+                                      <div className="mt-2 text-red-600 text-sm">
+                                        {errors.map((error, idx) => (
+                                          <div key={idx}>{error}</div>
+                                        ))}
+                                      </div>
+                                    )} */}
+                                  </div>
                                   <Input 
                                     type="file"
-                                    accept="image/*"
+                                    accept="image/png,image/jpeg,image/jpg"
                                     ref={fileRef}
                                     className="hidden"
                                     onChange={(e) => {
@@ -586,6 +590,202 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
                     </FormItem>
                 )}
             />
+        </div>
+        <div className="space-y-2">
+            <h1 className="font-semibold text-lg">
+                {t.sections.menuPictures || "Menu Pictures"}
+            </h1>
+            <FormField
+                control={form.control}
+                name="menuPictures"
+                render={({ field }) => {
+                  // Create state for file handling
+                  const [isDragging, setIsDragging] = useState(false);
+                  const [errors, setErrors] = useState<string[]>([]);
+                  const menuFileRef = useRef<HTMLInputElement | null>(null);
+                  const [menuPreviews, setMenuPreviews] = useState<Array<{
+                    id: string,
+                    file: File,
+                    preview: string
+                  }>>([]);
+                  
+                  // Maximum file size (5MB)
+                  const maxSize = 5 * 1024 * 1024;
+                  const maxFiles = 6;
+                  
+                  // Handle file validation
+                  const validateFiles = (fileList: FileList) => {
+                    const newErrors: string[] = [];
+                    
+                    if (menuPreviews.length + fileList.length > maxFiles) {
+                      newErrors.push(`You can upload a maximum of ${maxFiles} files.`);
+                      return newErrors;
+                    }
+                    
+                    Array.from(fileList).forEach(file => {
+                      if (!file.type.match(/^image\/(jpeg|jpg|png|gif)$/)) {
+                        newErrors.push(`File "${file.name}" is not a supported image format.`);
+                      } else if (file.size > maxSize) {
+                        newErrors.push(`File "${file.name}" is too large. Maximum size is 5MB.`);
+                      }
+                    });
+                    
+                    return newErrors;
+                  };
+                  
+                  // Handle file addition
+                  const addFiles = (fileList: FileList) => {
+                    const validationErrors = validateFiles(fileList);
+                    if (validationErrors.length > 0) {
+                      setErrors(validationErrors);
+                      return;
+                    }
+                    
+                    setErrors([]);
+                    const newFiles = Array.from(fileList).map(file => {
+                      const id = `${file.name}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+                      return {
+                        id,
+                        file,
+                        preview: URL.createObjectURL(file)
+                      };
+                    });
+                    
+                    const updatedPreviews = [...menuPreviews, ...newFiles];
+                    setMenuPreviews(updatedPreviews);
+                    
+                    // Update form field value with the actual File objects
+                    field.onChange(updatedPreviews.map(item => item.file));
+                  };
+                  
+                  // Cleanup previews on unmount
+                  useEffect(() => {
+                    return () => {
+                      menuPreviews.forEach(item => {
+                        URL.revokeObjectURL(item.preview);
+                      });
+                    };
+                  }, [menuPreviews]);
+                  
+                  // Remove a file
+                  const removeFile = (id: string) => {
+                    const updatedPreviews = menuPreviews.filter(item => item.id !== id);
+                    setMenuPreviews(updatedPreviews);
+                    field.onChange(updatedPreviews.map(item => item.file));
+                  };
+                  
+                  // Format file size
+                  const formatBytes = (bytes: number) => {
+                    if (bytes === 0) return '0 Bytes';
+                    const k = 1024;
+                    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+                  };
+                  
+                  return (
+                    <FormItem>
+                      <FormLabel className="font-semibold">
+                        {t.fields.menuPictures?.label || "Menu Pictures"}
+                      </FormLabel>
+                      <FormControl>
+                        <div className="flex flex-col gap-2">
+                          {/* Drop area */}
+                          <label
+                            onDragEnter={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setIsDragging(true);
+                            }}
+                            onDragLeave={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setIsDragging(false);
+                            }}
+                            onDragOver={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                            onDrop={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setIsDragging(false);
+                              
+                              if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                                addFiles(e.dataTransfer.files);
+                              }
+                            }}
+                            data-dragging={isDragging || undefined}
+                            data-files={menuPreviews.length > 0 || undefined}
+                            className="relative flex flex-col justify-center not-data-[files]:justify-center items-center data-[dragging=true]:bg-accent/50 hover:bg-accent/20 p-4 border border-muted-foreground has-[input:focus]:border-ring border-dashed rounded-xl has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 h-min min-h-52 overflow-hidden transition-colors cursor-pointer"
+                          >
+                            <input
+                              ref={menuFileRef}
+                              type="file"
+                              className="hidden"
+                              multiple
+                              accept="image/png,image/jpeg,image/jpg"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files.length > 0) {
+                                  addFiles(e.target.files);
+                                }
+                              }}
+                              aria-label="Upload menu image files"
+                            />
+                            <div className="flex flex-col justify-center items-center px-4 py-3 text-center">
+                              <div
+                                className="flex justify-center items-center bg-background mb-2 border border-input rounded-full size-11 shrink-0"
+                                data-state={isDragging ? "dragging" : undefined}
+                              >
+                                <ImagePlus className="w-5 h-5 text-muted-foreground" />
+                              </div>
+                              <p className="text-muted-foreground text-sm">
+                                {t.fields.menuPictures.description || "Drag and drop your menu pictures here, or click to select files."}
+                              </p>
+                              {errors.length > 0 && (
+                                <div className="mt-2 text-red-600 text-sm">
+                                  {errors.map((error, idx) => (
+                                    <div key={idx}>{error}</div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </label>
+                          {/* Previews */}
+                          {menuPreviews.length > 0 && (
+                            <div className="gap-2 grid grid-cols-2 sm:grid-cols-3">
+                              {menuPreviews.map((item) => (
+                                <div key={item.id} className="group relative">
+                                  <button
+                                    type="button"
+                                    onClick={() => removeFile(item.id)}
+                                    className="top-2 right-2 z-10 absolute bg-card opacity-70 hover:opacity-100 p-1 rounded-full transition-opacity"
+                                    title="Remove image"
+                                  >
+                                    <X className="w-4 h-4 text-card-foreground" />
+                                  </button>
+                                  <Image
+                                    src={item.preview}
+                                    alt="Menu Picture Preview"
+                                    className="rounded-lg w-full h-auto object-cover aspect-[1/1.414]"
+                                    width={1080}
+                                    height={1920}
+                                  />
+                                  <div className="mt-1 text-muted-foreground text-sm text-center">
+                                    {item.file.name} ({formatBytes(item.file.size)})
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )
+                }}
+            >
+            </FormField>
         </div>
         <div className="space-y-2">
             <h1 className="font-semibold text-lg">

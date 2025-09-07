@@ -21,6 +21,7 @@ type CreateRestaurantParsed = {
     picture?: File | null
     pictureAlt?: string
     tags?: string[]
+    menuPictures?: File[] | null
 }
 
 function isValidEmail(s?: string) {

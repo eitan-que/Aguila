@@ -176,6 +176,7 @@
           "contact": "Contacto",
           "additional": "Información Adicional",
           "picture": "Imagen",
+          "menuPictures": "Imágenes del Menú",
           "tags": "Etiquetas"
         },
         "fields": {
@@ -236,7 +237,9 @@
             "description": "Tiempo máximo de preparación en minutos."
           },
           "pictureUrl": {
-            "label": "Imagen del Restaurante"
+            "label": "Imagen del Restaurante",
+            "placeholder": "Subir imagen del restaurante",
+            "description": "Sube una imagen que represente tu restaurante."
           },
           "pictureAlt": {
             "label": "Describe la imagen"
@@ -246,6 +249,11 @@
             "add": "Agregar tag",
             "remove": "Eliminar",
             "itemPlaceholder": "p. ej. Vegano"
+          },
+          "menuPictures": {
+            "label": "Imágenes del Menú",
+            "placeholder": "Sube imágenes del menú",
+            "description": "Sube imágenes de tu menú."
           }
         },
         "errors": {
