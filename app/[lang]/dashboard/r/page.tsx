@@ -1,6 +1,7 @@
 import { getDictionary, Lang, locales } from "@/actions/dictionaries";
 import { DrawerDialogTemplate } from "@/components/dashboard/drawerDialogTemplate";
 import { CreateRestaurantForm } from "@/components/dashboard/forms/createRestaurant";
+import { RestaurantsList } from "@/components/dashboard/restaurants/restaurantsList";
 import { SiteHeader } from "@/components/dashboard/siteHeader";
 
 export async function generateStaticParams() {
@@ -24,13 +25,13 @@ export default async function Place({
             {dict.dashboard.restaurants.title}
           </h1>
           <DrawerDialogTemplate 
-            triggerText="Add Restaurant"
-            title={"Add Restaurant"}
-            description={"Add your restaurant details and start gaining customers today."}
+            triggerText={dict.dashboard.restaurants.add?.trigger || "Add Restaurant"}
+            title={dict.dashboard.restaurants.add?.title || "Add Restaurant"}
+            description={dict.dashboard.restaurants.add?.description || "Add your restaurant details and start gaining customers today."}
             form={<CreateRestaurantForm {...dict.dashboard.restaurants.form} />}
           />
-          
         </header>
+        <RestaurantsList t={dict.dashboard.restaurants.list} />
       </div>
     </>
   )

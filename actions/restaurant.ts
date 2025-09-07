@@ -4,7 +4,7 @@ import { restaurant } from "@/db/schema"
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { eq } from "drizzle-orm";
-import { put } from "@vercel/blob";
+import { del, put } from "@vercel/blob";
 
 type CreateRestaurantParsed = {
     name: string
@@ -145,4 +145,82 @@ export async function CreateRestaurant(data: CreateRestaurantParsed) {
         console.error("Create restaurant error:", err)
         return { success: false, message: "Internal Server Error" }
     }
+}
+
+export type RestaurantWithStats = {
+  id: string
+  name: string
+  slug: string
+  description?: string
+  address?: string
+  pictureUrl?: string
+  createdAt: Date
+  weeklyVisits: number
+}
+
+export async function listRestaurants() {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    })
+    
+    if (!session) {
+      return { success: false, message: "Not authenticated", data: [] }
+    }
+    
+    if (!session.user?.role || session.user.role !== "admin") {
+      return { success: false, message: "Not authorized", data: [] }
+    }
+
+    const restaurants = await db.select({
+      id: restaurant.id,
+      name: restaurant.name,
+      slug: restaurant.slug,
+      description: restaurant.description,
+      address: restaurant.address,
+      pictureUrl: restaurant.pictureUrl,
+      createdAt: restaurant.createdAt,
+    }).from(restaurant)
+    
+    // Add mock weekly visits data
+    const restaurantsWithStats: RestaurantWithStats[] = restaurants.map(r => ({
+      ...r,
+      description: r.description ?? undefined,
+      address: r.address ?? undefined,
+      pictureUrl: r.pictureUrl ?? undefined,
+      weeklyVisits: Math.floor(Math.random() * 1000) // Mock data
+    }))
+    
+    return { success: true, data: restaurantsWithStats }
+  } catch (err) {
+    console.error("Fetch restaurants error:", err)
+    return { success: false, message: "Internal Server Error", data: [] }
+  }
+}
+
+export async function deleteRestaurant(id: string) {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    })
+    
+    if (!session) {
+      return { success: false, message: "Not authenticated" }
+    }
+    
+    if (!session.user?.role || session.user.role !== "admin") {
+      return { success: false, message: "Not authorized" }
+    }
+    const restaurantToDelete = await db.select().from(restaurant).where(eq(restaurant.id, id)).limit(1)
+    if (restaurantToDelete.length === 0) {
+      return { success: false, message: "Restaurant not found" }
+    }
+    await db.delete(restaurant).where(eq(restaurant.id, id))
+    await del(restaurantToDelete[0].pictureUrl || "")
+    
+    return { success: true }
+  } catch (err) {
+    console.error("Delete restaurant error:", err)
+    return { success: false, message: "Internal Server Error" }
+  }
 }

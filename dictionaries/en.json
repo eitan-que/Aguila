@@ -263,6 +263,61 @@
           "urlInvalid": "URL must be valid.",
           "pictureAltMax": "Picture alt text must be at most 300 characters."
         }
+      },
+      "list": {
+        "columns": {
+          "name": "Name",
+          "created": "Created",
+          "weeklyVisits": "Weekly Visits"
+        },
+        "actions": {
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "states": {
+          "loading": "Loading restaurants...",
+          "error": "Error",
+          "noRestaurants": "No restaurants found."
+        },
+        "placeholders": {
+          "filterByName": "Filter by name..."
+        },
+        "buttons": {
+          "columns": "Columns"
+        },
+        "pagination": {
+          "previous": "Previous",
+          "next": "Next",
+          "selectedCount": "{selected} of {total} row(s) selected"
+        },
+        "deleteDialog": {
+          "title": "Delete Restaurant",
+          "description": "Are you sure you want to delete \"{name}\"? This action cannot be undone.",
+          "cancel": "Cancel",
+          "confirm": "Delete",
+          "deleting": "Deleting..."
+        },
+        "messages": {
+          "deleteSuccess": "Restaurant deleted successfully"
+        },
+        "errors": {
+          "loadFailed": "Failed to load restaurants",
+          "deleteFailed": "Failed to delete restaurant",
+          "editNotImplemented": "Edit functionality is not yet implemented",
+          "unexpected": "An unexpected error occurred"
+        },
+        "aria": {
+          "selectAll": "Select all",
+          "selectRow": "Select row"
+        },
+        "timeFormatting": {
+          "today": "Today",
+          "yesterday": "Yesterday",
+          "daysAgo": "{days} days ago",
+          "weeksAgo": "{weeks} weeks ago",
+          "monthsAgo": "{months} months ago",
+          "yearsAgo": "{years} years ago"
+        }
       }
     }
   },

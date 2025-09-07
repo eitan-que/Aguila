@@ -60,14 +60,6 @@ export const statement = {
         "delete:category:own",     // Delete category from own restaurant
         "delete:category:any",     // Admin-only permission to delete any category
     ],
-    product: [
-        "read:product:public",     // Public permission to view products
-        "create:product",          // Create new product
-        "update:product:own",      // Update product in own restaurant
-        "update:product:any",      // Admin-only permission to update any product
-        "delete:product:own",      // Delete product from own restaurant
-        "delete:product:any",      // Admin-only permission to delete any product
-    ],
     discount: [
         "read:discount:public",    // Public permission to view discounts
         "create:discount",         // Create new discount
@@ -110,9 +102,6 @@ export const user = ac.newRole({
     category: [
         "read:category:public",
     ],
-    product: [
-        "read:product:public",
-    ],
     discount: [
         "read:discount:public",
         "redeem:discount",
@@ -123,7 +112,6 @@ export const restaurantOwner = ac.newRole({
     ...user.statements,
     
     restaurant: [
-        "create:restaurant",
         "update:restaurant:own",
         "delete:restaurant:own",
     ],
@@ -131,11 +119,6 @@ export const restaurantOwner = ac.newRole({
         "create:category",
         "update:category:own",
         "delete:category:own",
-    ],
-    product: [
-        "create:product",
-        "update:product:own",
-        "delete:product:own",
     ],
     discount: [
         "create:discount",
@@ -167,6 +150,7 @@ export const admin = ac.newRole({
         "unban:other",
     ],
     restaurant: [
+        "create:restaurant",
         "read:restaurant:private",
         "update:restaurant:any",
         "delete:restaurant:any",
@@ -174,10 +158,6 @@ export const admin = ac.newRole({
     category: [
         "update:category:any",
         "delete:category:any",
-    ],
-    product: [
-        "update:product:any",
-        "delete:product:any",
     ],
     discount: [
         "update:discount:any",
