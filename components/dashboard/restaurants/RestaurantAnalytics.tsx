@@ -663,7 +663,7 @@ export function RestaurantAnalytics({
                       <Button
                         variant="destructive"
                         size="icon"
-                        className="top-2 right-2 absolute opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="top-2 right-2 z-10 absolute opacity-50 group-hover:opacity-100 transition-opacity"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDelete(discount.id, discount.name);
