@@ -434,207 +434,130 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
             <h1 className="font-semibold text-lg">
                 {t.sections.picture || "Picture"}
             </h1>
-            <FormField
-                control={form.control}
-                name="picture"
-                render={({ field }) => (
-                  <FormItem>
-                      <FormLabel className="font-semibold">{t.fields.pictureUrl?.label || "Picture File"}</FormLabel>
-                      <FormControl>
-                          {preview ? (
-                              <div className="relative flex sm:flex-row flex-col justify-center items-center sm:items-center gap-4 bg-muted border border-border rounded-md w-full aspect-video overflow-hidden">
-                                  <button 
-                                    className="top-2 right-2 z-10 absolute bg-card opacity-50 hover:opacity-100 p-2 rounded-full transition-opacity" 
-                                    onClick={() => {
-                                      // limpiar preview + RHF + input
-                                      setPreview((old) => { if (old) URL.revokeObjectURL(old); return null })
-                                      if (fileRef.current) fileRef.current.value = ""
-                                      field.onChange(undefined) // <- importante
-                                    }}
-                                    type="button"
-                                    title="Remove image"
-                                  >
-                                      <X className="w-4 h-4 text-card-foreground" />
-                                  </button>
-                                  <Image src={preview} alt="Preview" className="w-full h-full object-cover" width={1920} height={1080}/>
-                              </div>
-                          ) : (
-                              <label 
-                                className="relative flex flex-col justify-center not-data-[files]:justify-center items-center data-[dragging=true]:bg-accent/50 hover:bg-accent/20 p-4 border border-muted-foreground has-[input:focus]:border-ring border-dashed rounded-xl has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 h-min min-h-52 aspect-video overflow-hidden transition-colors cursor-pointer"
-                                onDragEnter={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  setIsDraggingPicture(true);
-                                }}
-                                onDragLeave={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  setIsDraggingPicture(false);
-                                }}
-                                onDragOver={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                }}
-                                onDrop={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  setIsDraggingPicture(false);
-                                  
-                                  if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                                    const file = e.dataTransfer.files[0]; // Take only the first file
-                                    
-                                    // Check file type and size
-                                    if (!file.type.match(/^image\/(jpeg|jpg|png)$/)) {
-                                      toast.error("File must be a JPG or PNG image");
-                                      return;
-                                    }
-                                    
-                                    if (file.size > 5 * 1024 * 1024) {
-                                      toast.error("Image size must be less than 5MB");
-                                      return;
-                                    }
-                                    
-                                    // Update form field
-                                    field.onChange(file);
-                                    
-                                    // Update preview
-                                    setPreview((old) => { 
-                                      if (old) URL.revokeObjectURL(old); 
-                                      return URL.createObjectURL(file);
-                                    });
-                                  }
-                                }}
-                                data-dragging={isDraggingPicture || undefined}
-                              >
-                                  <div className="flex flex-col justify-center items-center px-4 py-3 text-center">
-                                    <div
-                                      className="flex justify-center items-center bg-background mb-2 border border-input rounded-full size-11 shrink-0"
-                                      data-state={isDraggingPicture ? "dragging" : undefined}
+            <div className="flex flex-col items-center sm:items-start gap-2">
+              <FormField
+                  control={form.control}
+                  name="picture"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                        <FormLabel className="font-semibold">{t.fields.pictureUrl?.label || "Picture File"}</FormLabel>
+                        <FormControl>
+                            {preview ? (
+                                <div className="relative flex sm:flex-row flex-col justify-center items-center sm:items-center gap-4 bg-muted border border-border rounded-md w-full aspect-video overflow-hidden">
+                                    <button 
+                                      className="top-2 right-2 z-10 absolute bg-card opacity-50 hover:opacity-100 p-2 rounded-full transition-opacity" 
+                                      onClick={() => {
+                                        // limpiar preview + RHF + input
+                                        setPreview((old) => { if (old) URL.revokeObjectURL(old); return null })
+                                        if (fileRef.current) fileRef.current.value = ""
+                                        field.onChange(undefined) // <- importante
+                                      }}
+                                      type="button"
+                                      title="Remove image"
                                     >
-                                      <ImagePlus className="w-5 h-5 text-muted-foreground" />
-                                    </div>
-                                    <p className="text-muted-foreground text-sm">
-                                      {t.fields.pictureUrl.description || "Drag and drop your restaurant picture here, or click to select a file."}
-                                    </p>
-                                  </div>
-                                  <Input 
-                                    type="file"
-                                    accept="image/png,image/jpeg,image/jpg"
-                                    ref={fileRef}
-                                    className="hidden"
-                                    onChange={(e) => {
-                                      const file = e.target.files?.[0]
-                                      // actualizar RHF
-                                      field.onChange(file)
-                                      // manejar preview como antes
-                                      setPreview((old) => { if (old) URL.revokeObjectURL(old); return old })
-                                      if (file && file.size > 0) {
-                                        const url = URL.createObjectURL(file)
-                                        setPreview(url)
-                                      } else {
-                                        setPreview(null)
+                                        <X className="w-4 h-4 text-card-foreground" />
+                                    </button>
+                                    <Image src={preview} alt="Preview" className="w-full h-full object-cover" width={1920} height={1080}/>
+                                </div>
+                            ) : (
+                                <label 
+                                  className="relative flex flex-col justify-center not-data-[files]:justify-center items-center data-[dragging=true]:bg-accent/50 hover:bg-accent/20 p-4 border border-muted-foreground has-[input:focus]:border-ring border-dashed rounded-xl has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50 h-min min-h-52 aspect-video overflow-hidden transition-colors cursor-pointer"
+                                  onDragEnter={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setIsDraggingPicture(true);
+                                  }}
+                                  onDragLeave={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setIsDraggingPicture(false);
+                                  }}
+                                  onDragOver={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                  }}
+                                  onDrop={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setIsDraggingPicture(false);
+                                    
+                                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                                      const file = e.dataTransfer.files[0]; // Take only the first file
+                                      
+                                      // Check file type and size
+                                      if (!file.type.match(/^image\/(jpeg|jpg|png)$/)) {
+                                        toast.error("File must be a JPG or PNG image");
+                                        return;
                                       }
-                                    }}
-                                    name="picture"
-                                  />
-                              </label>
-                          )}
-                      </FormControl>
-                  </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="pictureAlt"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormControl>
-                            <Input placeholder={t.fields.pictureAlt.label || "Enter picture alt text"} {...field} />
+                                      
+                                      if (file.size > 5 * 1024 * 1024) {
+                                        toast.error("Image size must be less than 5MB");
+                                        return;
+                                      }
+                                      
+                                      // Update form field
+                                      field.onChange(file);
+                                      
+                                      // Update preview
+                                      setPreview((old) => { 
+                                        if (old) URL.revokeObjectURL(old); 
+                                        return URL.createObjectURL(file);
+                                      });
+                                    }
+                                  }}
+                                  data-dragging={isDraggingPicture || undefined}
+                                >
+                                    <div className="flex flex-col justify-center items-center px-4 py-3 text-center">
+                                      <div
+                                        className="flex justify-center items-center bg-background mb-2 border border-input rounded-full size-11 shrink-0"
+                                        data-state={isDraggingPicture ? "dragging" : undefined}
+                                      >
+                                        <ImagePlus className="w-5 h-5 text-muted-foreground" />
+                                      </div>
+                                      <p className="text-muted-foreground text-sm">
+                                        {t.fields.pictureUrl.description || "Drag and drop your restaurant picture here, or click to select a file."}
+                                      </p>
+                                    </div>
+                                    <Input 
+                                      type="file"
+                                      accept="image/png,image/jpeg,image/jpg"
+                                      ref={fileRef}
+                                      className="hidden"
+                                      onChange={(e) => {
+                                        const file = e.target.files?.[0]
+                                        // actualizar RHF
+                                        field.onChange(file)
+                                        // manejar preview como antes
+                                        setPreview((old) => { if (old) URL.revokeObjectURL(old); return old })
+                                        if (file && file.size > 0) {
+                                          const url = URL.createObjectURL(file)
+                                          setPreview(url)
+                                        } else {
+                                          setPreview(null)
+                                        }
+                                      }}
+                                      name="picture"
+                                    />
+                                </label>
+                            )}
                         </FormControl>
-                        <FormMessage />
                     </FormItem>
-                )}
-            />
-        </div>
-        <div className="space-y-2">
-            <h1 className="font-semibold text-lg">
-                {t.sections.location || "Location Information"}
-            </h1>
-            <FormField
-                control={form.control}
-                name="location.address"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel className="font-semibold">{t.fields.location.address.label || "Address"}</FormLabel>
-                        <FormControl>
-                            <AddressAutocomplete
-                                value={field.value ?? ""}
-                                onChange={field.onChange}
-                                onSelect={(s) => {
-                                    field.onChange(s.display_name)
-                                    form.setValue("location.lat", s.lat)
-                                    form.setValue("location.lon", s.lon)
-                                }}
-                                placeholder={t.fields.location.address.placeholder || "Buscar dirección o lugar"}
-                            />
-                        </FormControl>
-                        <FormDescription>{t.fields.location.description || "Selecciona una dirección para guardar lat/lon automáticamente."}</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-        </div>
-        <div className="space-y-2">
-            <h1 className="font-semibold text-lg">
-                {t.sections.contact || "Contact Information"}
-            </h1>
-            <FormField
-                control={form.control}
-                name="website"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel className="font-semibold">{t.fields.website.label || "Website"}</FormLabel>
-                        <FormControl>
-                            <Input placeholder={t.fields.website.placeholder || "Enter restaurant website"} {...field} />
-                        </FormControl>
-                        <FormDescription>{t.fields.website.description || "This is the restaurant's website."}</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel className="font-semibold">{t.fields.email.label || "Email"}</FormLabel>
-                        <FormControl>
-                            <Input placeholder={t.fields.email.placeholder || "Enter restaurant email"} {...field} />
-                        </FormControl>
-                        <FormDescription>{t.fields.email.description || "This is the restaurant's email."}</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel className="font-semibold">{t.fields.phone.label || "Phone"}</FormLabel>
-                        <FormControl>
-                            <Input placeholder={t.fields.phone.placeholder || "Enter restaurant phone number"} {...field} />
-                        </FormControl>
-                        <FormDescription>{t.fields.phone.description || "This is the restaurant's phone number."}</FormDescription>
-                        <FormMessage />
-                    </FormItem>
-                )}
-            />
-        </div>
-        <div className="space-y-2">
-            <h1 className="font-semibold text-lg">
-                {t.sections.menuPictures || "Menu Pictures"}
-            </h1>
+                  )}
+              />
+              <FormField
+                  control={form.control}
+                  name="pictureAlt"
+                  render={({ field }) => (
+                      <FormItem className="w-full">
+                          <FormControl>
+                              <Input placeholder={t.fields.pictureAlt.label || "Enter picture alt text"} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                      </FormItem>
+                  )}
+              />
+            </div>
+            
             <FormField
                 control={form.control}
                 name="menuPictures"
@@ -826,6 +749,81 @@ export function CreateRestaurantForm(t: Dictionary["dashboard"]["restaurants"]["
                 }}
             >
             </FormField>
+        </div>
+        <div className="space-y-2">
+            <h1 className="font-semibold text-lg">
+                {t.sections.location || "Location Information"}
+            </h1>
+            <FormField
+                control={form.control}
+                name="location.address"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel className="font-semibold">{t.fields.location.address.label || "Address"}</FormLabel>
+                        <FormControl>
+                            <AddressAutocomplete
+                                value={field.value ?? ""}
+                                onChange={field.onChange}
+                                onSelect={(s) => {
+                                    field.onChange(s.display_name)
+                                    form.setValue("location.lat", s.lat)
+                                    form.setValue("location.lon", s.lon)
+                                }}
+                                placeholder={t.fields.location.address.placeholder || "Buscar dirección o lugar"}
+                            />
+                        </FormControl>
+                        <FormDescription>{t.fields.location.description || "Selecciona una dirección para guardar lat/lon automáticamente."}</FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+        </div>
+        <div className="space-y-2">
+            <h1 className="font-semibold text-lg">
+                {t.sections.contact || "Contact Information"}
+            </h1>
+            <FormField
+                control={form.control}
+                name="website"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel className="font-semibold">{t.fields.website.label || "Website"}</FormLabel>
+                        <FormControl>
+                            <Input placeholder={t.fields.website.placeholder || "Enter restaurant website"} {...field} />
+                        </FormControl>
+                        <FormDescription>{t.fields.website.description || "This is the restaurant's website."}</FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel className="font-semibold">{t.fields.email.label || "Email"}</FormLabel>
+                        <FormControl>
+                            <Input placeholder={t.fields.email.placeholder || "Enter restaurant email"} {...field} />
+                        </FormControl>
+                        <FormDescription>{t.fields.email.description || "This is the restaurant's email."}</FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                    <FormItem>
+                        <FormLabel className="font-semibold">{t.fields.phone.label || "Phone"}</FormLabel>
+                        <FormControl>
+                            <Input placeholder={t.fields.phone.placeholder || "Enter restaurant phone number"} {...field} />
+                        </FormControl>
+                        <FormDescription>{t.fields.phone.description || "This is the restaurant's phone number."}</FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}
+            />
         </div>
         <div className="space-y-2">
             <h1 className="font-semibold text-lg">
