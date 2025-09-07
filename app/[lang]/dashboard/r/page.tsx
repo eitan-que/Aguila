@@ -8,7 +8,7 @@ export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }))
 }
 
-export default async function Place({
+export default async function RestaurantsPage({
   params,
 }: {
   params: Promise<{ lang: Lang; }>

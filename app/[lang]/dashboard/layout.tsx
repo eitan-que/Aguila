@@ -1,4 +1,5 @@
 import { getDictionary, Lang } from "@/actions/dictionaries";
+import { listRestaurants } from "@/actions/restaurant";
 import { AppSidebar } from "@/components/dashboard/sidebar/sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/lib/auth";
@@ -21,6 +22,11 @@ export default async function RootLayout({
         redirect('/auth/signin');
     }
     const user = sessionData?.user
+
+    const restaurants = await listRestaurants();
+    if (!restaurants.success || !restaurants.data) {
+        console.error("Error fetching restaurants:", restaurants.message);
+    }
     
     return (
         <SidebarProvider>
@@ -28,9 +34,7 @@ export default async function RootLayout({
                 lang={lang} 
                 variant="inset" 
                 dict={dict} 
-                restaurants={[
-                    { id: '1', name: 'Demo Restaurant', slug: 'demo-restaurant' }
-                ]}
+                restaurants={restaurants.data}
                 user={{
                     name: user?.name,
                     email: user?.email,

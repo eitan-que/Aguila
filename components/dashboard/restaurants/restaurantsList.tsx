@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -43,21 +42,23 @@ import {
 import { deleteRestaurant, listRestaurants, RestaurantWithStats } from "@/actions/restaurant"
 import { toast } from "sonner"
 import { Dictionary } from "@/actions/dictionaries"
+import Link from "next/link"
+import { useEffect, useState } from "react"
 
 type RestaurantListProps = {
   t: Dictionary["dashboard"]["restaurants"]["list"]
 }
 
 export function RestaurantsList({ t }: RestaurantListProps) {
-  const [data, setData] = React.useState<RestaurantWithStats[]>([])
-  const [loading, setLoading] = React.useState(true)
-  const [error, setError] = React.useState<string | null>(null)
-  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false)
-  const [restaurantToDelete, setRestaurantToDelete] = React.useState<string | null>(null)
-  const [restaurantNameToDelete, setRestaurantNameToDelete] = React.useState<string | null>(null)
-  const [deletingRestaurant, setDeletingRestaurant] = React.useState(false)
+  const [data, setData] = useState<RestaurantWithStats[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [restaurantToDelete, setRestaurantToDelete] = useState<string | null>(null)
+  const [restaurantNameToDelete, setRestaurantNameToDelete] = useState<string | null>(null)
+  const [deletingRestaurant, setDeletingRestaurant] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     const loadData = async () => {
       setLoading(true)
       try {
@@ -170,7 +171,9 @@ export function RestaurantsList({ t }: RestaurantListProps) {
         </Button>
       ),
       cell: ({ row }) => (
-        <div className="font-medium">{row.getValue("name")}</div>
+        <Link className="font-medium hover:underline" href={`/dashboard/r/${row.original.slug}`}>
+          {row.getValue("name")}
+        </Link>
       ),
     },
     {
@@ -237,10 +240,10 @@ export function RestaurantsList({ t }: RestaurantListProps) {
     },
   ]
 
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
     data,

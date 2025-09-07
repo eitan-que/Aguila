@@ -224,3 +224,16 @@ export async function deleteRestaurant(id: string) {
     return { success: false, message: "Internal Server Error" }
   }
 }
+
+export async function getRestaurantBySlug(slug: string) {
+  try {
+    const restaurantData = await db.select().from(restaurant).where(eq(restaurant.slug, slug)).limit(1)
+    if (restaurantData.length === 0) {
+      return { success: false, message: "Restaurant not found", data: null }
+    }
+    return { success: true, data: restaurantData[0] }
+  } catch (err) {
+    console.error("Get restaurant by slug error:", err)
+    return { success: false, message: "Internal Server Error", data: null }
+  }
+}

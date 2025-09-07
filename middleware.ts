@@ -32,6 +32,39 @@ export async function middleware(request: NextRequest) {
   const hasSupportedLocale = !!candidate && (locales as readonly string[]).includes(candidate);
 
   if (hasSupportedLocale) {
+    // Check for dashboard access - restricted to admin and restaurantOwner roles
+    if (segments.length > 1 && segments[1] === "dashboard") {
+      try {
+        const session = await auth.api.getSession({
+          headers: await headers(),
+        });
+        
+        if (!session || !session.user) {
+          // User not authenticated, redirect to signin
+          const url = request.nextUrl.clone();
+          url.pathname = `/${candidate}/auth/signin`;
+          url.searchParams.set("callbackUrl", pathname);
+          return NextResponse.redirect(url);
+        }
+        
+        // Check if user has the required role
+        const hasValidRole = session.user.role === "admin" || session.user.role === "restaurantOwner";
+        
+        if (!hasValidRole) {
+          // User doesn't have permission, redirect to home
+          const url = request.nextUrl.clone();
+          url.pathname = `/${candidate}`;
+          return NextResponse.redirect(url);
+        }
+      } catch (error) {
+        console.error("Authorization check failed in middleware:", error);
+        // On error, redirect to home as a fallback
+        const url = request.nextUrl.clone();
+        url.pathname = `/${candidate}`;
+        return NextResponse.redirect(url);
+      }
+    }
+    
     // Special logic for signin with locale already present
     const isSigninPath = pathname === `/${candidate}/auth/signin` || 
                         pathname.startsWith(`/${candidate}/auth/signin?`);

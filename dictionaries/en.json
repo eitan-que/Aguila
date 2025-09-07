@@ -318,6 +318,110 @@
           "monthsAgo": "{months} months ago",
           "yearsAgo": "{years} years ago"
         }
+      },
+      "analytics": {
+        "tabs": {
+          "overview": "Overview",
+          "traffic": "Traffic",
+          "engagement": "Engagement",
+          "performance": "Performance"
+        },
+        "sections": {
+          "marketPosition": "Market Position",
+          "clickEngagement": "Click Engagement",
+          "costEfficiencyMetrics": "Cost Efficiency Metrics",
+          "performanceSummary": "Performance Summary",
+          "recommendations": "Recommendations"
+        },
+        "charts": {
+          "marketShare": "Market Share",
+          "dailyTrafficDistribution": "Daily Traffic Distribution",
+          "weeklyVsMonthlyTrend": "Weekly vs Monthly Trend",
+          "projectedGrowth": "Projected Growth",
+          "monthlyCostProjection": "Monthly Cost Projection"
+        },
+        "metrics": {
+          "restaurantAge": "Restaurant Age",
+          "weeklyVisits": "Weekly Visits",
+          "monthlyVisits": "Monthly Visits",
+          "shareOfAttention": "Share of Attention",
+          "categoryRanking": "Category Ranking",
+          "busiestDay": "Day with Most Visits",
+          "avgDailyVisits": "Avg. Daily Visits",
+          "costPerExposure": "Cost per Exposure",
+          "projectedExposure": "Projected Exposure",
+          "engagementRate": "Engagement Rate",
+          "conversionRate": "Conversion Rate",
+          "roi": "ROI"
+        },
+        "labels": {
+          "since": "Since",
+          "visits": "Visits",
+          "clicks": "Clicks",
+          "outOf": "Out of",
+          "restaurants": "restaurants",
+          "basedOnWeeklyData": "Based on average weekly data",
+          "last7Days": "Last 7 days",
+          "last30Days": "Last 30 days",
+          "current": "Current",
+          "projected": "Projected",
+          "ofTotalEngagement": "of total engagement",
+          "top25Percent": "Top 25%",
+          "inCategory": "in",
+          "ofTotal": "of",
+          "avgCostPerView": "Average cost per customer view",
+          "estimatedMonthlyViews": "Estimated monthly views",
+          "cost": "Cost"
+        },
+        "engagement": {
+          "whatsappClicks": "WhatsApp Clicks",
+          "locationClicks": "Location Clicks",
+          "menuClicks": "Menu Clicks",
+          "location": "Location",
+          "menu": "Menu"
+        },
+        "marketShare": {
+          "competitorA": "Competitor A",
+          "competitorB": "Competitor B",
+          "others": "Others"
+        },
+        "time": {
+          "days": "days",
+          "months": "months",
+          "year": "year",
+          "yearsPlural": "years",
+          "month": "month",
+          "monthsPlural": "months"
+        },
+        "notes": {
+          "last7Days": "Last 7 days",
+          "last30Days": "Last 30 days"
+        },
+        "daysShort": {
+          "mon": "Mon",
+          "tue": "Tue",
+          "wed": "Wed",
+          "thu": "Thu",
+          "fri": "Fri",
+          "sat": "Sat",
+          "sun": "Sun"
+        },
+        "months": {
+          "jan": "Jan",
+          "feb": "Feb",
+          "mar": "Mar",
+          "apr": "Apr",
+          "may": "May",
+          "jun": "Jun"
+        },
+        "values": {
+          "busiestDay": "Friday"
+        },
+        "recommendations": {
+          "increaseMenuHighlights": "Increase menu highlights to improve engagement",
+          "updateWhatsapp": "Update WhatsApp contact information for better visibility",
+          "reviewLocation": "Review location data accuracy to improve map clicks"
+        }
       }
     }
   },
