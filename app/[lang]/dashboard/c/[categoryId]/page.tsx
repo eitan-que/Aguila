@@ -1,5 +1,5 @@
 import { getCategoryById, getRestaurantsByCategory } from "@/actions/category"
-import { getDictionary, Lang, locales } from "@/actions/dictionaries"
+import { getDictionary, Lang } from "@/actions/dictionaries"
 import { CategoryRestaurants } from "@/components/dashboard/categories/categoryRestaurants"
 import { SiteHeader } from "@/components/dashboard/siteHeader"
 import { notFound } from "next/navigation"

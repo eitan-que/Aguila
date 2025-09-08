@@ -1,4 +1,4 @@
-import { Clock } from "lucide-react";
+import { MapPin } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import SectionsTitle, { SectionsTitleSkeleton } from "@/components/menu/sections/sectionsTitle";
@@ -48,6 +48,8 @@ export type Restaurant = {
         lat: number;
         lon: number;
     };
+    // Nueva propiedad con la distancia calculada en km
+    distanceKm?: number;
 };
 
 export default function Restaurants(
@@ -67,6 +69,7 @@ export default function Restaurants(
     const featured = sorted.slice(0, 2);
     const others = sorted.slice(2);
 
+
     const getTopCategory = (r: Restaurant) =>
         r.categories?.length
         ? r.categories.reduce((prev, cur) => (cur.weight > prev.weight ? cur : prev), r.categories[0])
@@ -76,16 +79,17 @@ export default function Restaurants(
         <section className="flex flex-col gap-4 w-full">
             <SectionsTitle
                 title={sectionTitle.title}
-                viewAll={{
-                    url: `/${lang}/r/`,
-                    label: sectionTitle.viewAll.label
-                }}
+                // viewAll={{
+                //     url: `/${lang}/r/`,
+                //     label: sectionTitle.viewAll.label
+                // }}
             />
             {variant === "primary" && (
                 <>
                     {/* Primeros 2, tarjetas grandes */}
                     <div className="gap-4 grid grid-cols-2 w-full">
                         {featured.map((r) => {
+                            const meters = typeof r.distanceKm === "number" ? Math.round(r.distanceKm * 1000) : undefined;
                             return (
                             <Link
                                 key={r.id}
@@ -101,23 +105,21 @@ export default function Restaurants(
                                 />
                                 <div className="flex flex-col gap-1 px-1">
                                     <h3 className="font-bold text-sm/4">{r.name}</h3>
-                                    {r.prepTimeRange && (
-                                        <PrimitiveTag
-                                            Icon={Clock}
-                                            text={`${r.prepTimeRange!.min}-${r.prepTimeRange!.max} min`}
-                                            textColor="text-muted-foreground"
-                                            backgroundColor="bg-transparent"
-                                        />
-                                    )}
+                                    <PrimitiveTag
+                                        Icon={MapPin}
+                                        text={`${meters} m`}
+                                        textColor="text-muted-foreground"
+                                        backgroundColor="bg-transparent"
+                                    />
                                 </div>
                             </Link>
                         )})}
                     </div>
                     {/* Resto en scroller horizontal */}
-                    <div className="flex justify-start items-start gap-4 w-full overflow-x-auto snap-mandatory snap-x">
+                    <div className="flex justify-start items-start gap-4 w-full overflow-x-auto overflow-y-hidden snap-mandatory snap-x">
                         {others.map((r) => {
                             const topCategory = getTopCategory(r);
-                            const avg = Math.round((r.prepTimeRange!.min + r.prepTimeRange!.max) / 2)
+                            const meters = typeof r.distanceKm === "number" ? Math.round(r.distanceKm * 1000) : undefined;
                             return (
                             <Link
                                 key={r.id}
@@ -126,11 +128,11 @@ export default function Restaurants(
                             >
                                 <div className="relative w-full h-auto">
                                     <div className={`top-0 left-0 absolute flex flex-col justify-start items-end gap-1 p-2 w-full h-full`}> 
-                                        {r.prepTimeRange && (
+                                        {typeof r.distanceKm === "number" && (
                                             <TagComponent
                                                 tag={{
-                                                    type: "time",
-                                                    time: avg || 0
+                                                    type: "distance",
+                                                    distance: meters
                                                 }}
                                             />
                                         )}
@@ -159,7 +161,8 @@ export default function Restaurants(
                     <div className="flex justify-start items-start gap-4 w-full overflow-x-auto snap-mandatory snap-x">
                         {sorted.map((r) => {
                             const topCategory = getTopCategory(r);
-                            const hasTime = r.prepTimeRange && typeof r.prepTimeRange.min === "number" && typeof r.prepTimeRange.max === "number";
+                            const hasDistance = typeof r.distanceKm === "number";
+                            const meters = typeof r.distanceKm === "number" ? Math.round(r.distanceKm * 1000) : undefined;
                             const tags = r.tags ?? [];
 
                             return (
@@ -187,10 +190,10 @@ export default function Restaurants(
                                     </div>
                                     <div className="flex justify-between items-center gap-2 px-1">
                                         <h3 className="flex justify-start items-center font-bold text-center">{r.name}</h3>
-                                        {hasTime && (
+                                        {hasDistance && (
                                             <PrimitiveTag
-                                                Icon={Clock}
-                                                text={`${r.prepTimeRange!.min}-${r.prepTimeRange!.max} min`}
+                                                Icon={MapPin}
+                                                text={`${meters} m`}
                                                 textColor="text-muted-foreground"
                                                 backgroundColor="bg-transparent"
                                             />

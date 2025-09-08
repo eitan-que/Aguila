@@ -23,10 +23,11 @@ type HeaderProps = {
     backUrl?: BackUrl;
     shareAction?: () => void;
     share?: boolean;
+    textColor?: string;
 };
 
 function HeaderComponent(
-    { ref, title, variant="default", backUrl, shareAction }: HeaderProps
+    { ref, title, variant="default", backUrl, shareAction, textColor }: HeaderProps
 ) {
     const router = useRouter();
     return (
@@ -37,18 +38,18 @@ function HeaderComponent(
                         onClick={() => router.back()}
                         className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square text-muted-foreground hover:text-card-foreground transition-colors duration-150 cursor-pointer`}
                     >
-                        <ChevronLeft className={`${variant === "sticky" ? "size-5" : "size-6"}`} />
+                        <ChevronLeft className={`${variant === "sticky" ? "size-5" : "size-6"}`} style={{ color: textColor }} />
                     </button>
                 ) : (
                     <Link
                         href={backUrl}
                         className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square text-muted-foreground hover:text-card-foreground transition-colors duration-150`}
                     >
-                        <ChevronLeft className={`${variant === "sticky" ? "size-5" : "size-6"}`} />
+                        <ChevronLeft className={`${variant === "sticky" ? "size-5" : "size-6"}`} style={{ color: textColor }} />
                     </Link>
                 )
             )}
-            <h1 className={`font-bold ${variant === "sticky" ? "text-xl/6" : "text-[1.75rem]/10"}`}>{title || "Aguila"}</h1>
+            <h1 className={`font-bold ${variant === "sticky" ? "text-xl/6" : "text-[1.75rem]/10"}`} style={{ color: textColor }}>{title || "Aguila"}</h1>
             <div className="flex gap-3">
                 {!backUrl && (
                     <Link
@@ -64,12 +65,12 @@ function HeaderComponent(
                         onClick={shareAction}
                         className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square text-muted-foreground hover:text-card-foreground transition-colors duration-150 cursor-pointer`}
                     >
-                        <Share2 className={`${variant === "sticky" ? "size-5" : "size-6"}`} />
+                        <Share2 className={`${variant === "sticky" ? "size-5" : "size-6"}`} style={{ color: textColor }} />
                     </button>
                 )}
                 {backUrl && !shareAction && (
                     <div className={`relative ${variant === "sticky" ? "p-2" : "p-3"} h-auto aspect-square`}>
-                        <div className={`${variant === "sticky" ? "w-5 h-5" : "w-6 h-6"}`} />
+                        <div className={`${variant === "sticky" ? "w-5 h-5" : "w-6 h-6"}`}  />
                     </div>
                 )}
             </div>
@@ -171,7 +172,7 @@ export default function Header(props: HeaderProps) {
 
     return (
         <>
-            <HeaderComponent ref={headerRef} restaurant={props?.restaurant} title={props?.title || undefined} backUrl={props?.backUrl || undefined} shareAction={props.share ? handleShare : undefined} />
+            <HeaderComponent ref={headerRef} restaurant={props?.restaurant} title={props?.title || undefined} backUrl={props?.backUrl || undefined} shareAction={props.share ? handleShare : undefined} textColor={props.textColor} />
             <div
                 aria-hidden={!showSticky}
                 className={`

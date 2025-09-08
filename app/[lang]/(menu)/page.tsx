@@ -1,10 +1,9 @@
 import { getDictionary, Lang, locales } from "@/actions/dictionaries";
 import Header from "@/components/shared/header";
-import Banner from "@/components/menu/sections/banner";
-import Categories from "@/components/menu/sections/categories";
-import Category from "@/components/menu/sections/category";
 import Restaurants from "@/components/menu/sections/restaurants";
-import { restaurants, categories } from "@/lib/mocks/menu";
+import DiscountBanners from "@/components/menu/sections/discountBanners";
+import { getRandomDiscounts } from "@/actions/discounts";
+import { getMenuRestaurants } from "@/actions/restaurant";
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }))
@@ -17,37 +16,27 @@ export default async function Place({
 }) {
   const { lang } = await params
   const dict = await getDictionary(lang)
-  // const session = await auth.api.getSession({
-  //   headers: await headers()
-  // })
-  // const navItems: NavbarItemProps[] = [
-  //   {
-  //     icon: Home,
-  //     label: dict.navbar.home,
-  //     url: `/${lang}/` as NavbarItemProps["url"],
-  //     isActive: true
-  //   },
-  //   {
-  //     icon: User,
-  //     label: dict.navbar.profile,
-  //     url: `/${lang}/profile/` as NavbarItemProps["url"]
-  //   }
-  // ]
 
-  // if ((session && session.user.role === 'admin') || session?.user.role === 'restaurantOwner') {
-  //   navItems.push({
-  //     icon: LayoutDashboard,
-  //     label: "Dashboard",
-  //     url: `/${lang}/dashboard/` as NavbarItemProps["url"]
-  //   })
-  // }
+  const discounts0 = await getRandomDiscounts({
+    limit: 3
+  })
+
+  const discounts1 = await getRandomDiscounts({
+    limit: 3
+  })
+
+  // Cargar restaurantes desde la server action (orden aleatorio y distancia calculada)
+  const { data: restaurants = [] } = await getMenuRestaurants();
 
   return (
     <main className="flex flex-col justify-start items-start gap-8 p-5 w-full min-h-screen">
         <Header
           share={true}
         />
-        <Banner imageUrl="https://placehold.co/1920x1080/png" />
+        <DiscountBanners
+          discounts={discounts0.data}
+          asLinkToRestaurant={true}
+        />
         <Restaurants
           sectionTitle={{
               title: dict.menu.sections.restaurants,
@@ -58,21 +47,9 @@ export default async function Place({
           lang={lang}
           restaurants={restaurants}
         />
-        <Banner imageUrl="https://placehold.co/1920x1080/png" />
-        <Categories
-          sectionTitle={{
-              title: dict.menu.sections.categories,
-              viewAll: {
-                  label: dict.menu.sections.viewAll
-              }
-          }}
-          lang={lang}
-          categories={categories}
-        />
-        <Category
-          lang={lang}
-          variant="medium"
-          category={categories[0]}
+        <DiscountBanners
+          discounts={discounts1.data}
+          asLinkToRestaurant={true}
         />
         <Restaurants
           sectionTitle={{
@@ -84,11 +61,6 @@ export default async function Place({
           lang={lang}
           restaurants={restaurants}
           variant="secondary"
-        />
-        <Category
-          lang={lang}
-          variant="large"
-          category={categories[1]}
         />
         {/* <Navbar
           items={navItems}

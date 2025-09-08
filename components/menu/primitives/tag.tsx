@@ -59,7 +59,7 @@ export default function TagComponent({ tag }: { tag: Tag }) {
             return (
                 <PrimitiveTag
                     Icon={MapPin}
-                    text={`${tag.distance} km`}
+                    text={`${tag.distance} m`}
                     textColor="text-white"
                     backgroundColor="bg-[#10b981]"
                 />

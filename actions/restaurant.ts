@@ -279,3 +279,81 @@ export async function getRestaurantBySlug(slug: string) {
     return { success: false, message: "Internal Server Error", data: null }
   }
 }
+
+export async function getMenuRestaurants() {
+  try {
+    // Coordenadas fijas del usuario
+    const USER_LAT = -34.55024194829162;
+    const USER_LON = -58.454143897411136;
+
+    // Haversine para distancia en km
+    function toRad(v: number) { return (v * Math.PI) / 180; }
+    function distanceKm(lat1: number, lon1: number, lat2: number, lon2: number) {
+      const R = 6371; // km
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    // Selección mínima necesaria
+    const rows = await db.select({
+      id: restaurant.id,
+      name: restaurant.name,
+      slug: restaurant.slug,
+      pictureUrl: restaurant.pictureUrl,
+      pictureAlt: restaurant.pictureAlt,
+      prepTimeMin: restaurant.prepTimeMin,
+      prepTimeMax: restaurant.prepTimeMax,
+      lat: restaurant.lat,
+      lon: restaurant.lon,
+      address: restaurant.address,
+      tags: restaurant.tags,
+    }).from(restaurant);
+
+    const data = rows.map(r => {
+      const lat = r.lat != null ? parseFloat(r.lat as unknown as string) : undefined;
+      const lon = r.lon != null ? parseFloat(r.lon as unknown as string) : undefined;
+
+      const hasCoords = typeof lat === "number" && !Number.isNaN(lat) && typeof lon === "number" && !Number.isNaN(lon);
+      const dist = hasCoords ? distanceKm(USER_LAT, USER_LON, lat!, lon!) : undefined;
+
+      // Peso aleatorio para que el componente, que ordena por weight, produzca orden aleatorio
+      const weight = Math.floor(Math.random() * 1000);
+
+      const tags = Array.isArray(r.tags)
+        ? (r.tags as unknown as string[]).slice(0, 5).map(t => ({ type: "text" as const, text: t }))
+        : undefined;
+
+      return {
+        id: r.id,
+        name: r.name,
+        slug: r.slug,
+        picture: {
+          src: r.pictureUrl || "https://placehold.co/1690x840/png",
+          alt: r.pictureAlt || r.name,
+        },
+        // Mantenemos prepTimeRange por compatibilidad si en algún otro lugar se usa
+        prepTimeRange: r.prepTimeMin != null && r.prepTimeMax != null
+          ? { min: r.prepTimeMin, max: r.prepTimeMax }
+          : undefined,
+        highestPercentageDiscount: undefined,
+        weight,
+        categories: undefined,
+        tags,
+        address: r.address ?? undefined,
+        coordinates: hasCoords ? { lat: lat!, lon: lon! } : undefined,
+        distanceKm: dist, // distancia calculada
+      };
+    });
+
+    return { success: true, data };
+  } catch (err) {
+    console.error("Get menu restaurants error:", err);
+    return { success: false, message: "Internal Server Error", data: [] as any[] };
+  }
+}

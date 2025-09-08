@@ -181,6 +181,7 @@ export function CategoryRestaurants({
       const years = Math.floor(diffDays / 365)
       return (dict.list?.timeFormatting?.yearsAgo || "{years} years ago").replace("{years}", years.toString())
     } catch (error) {
+      console.error("Error formatting date:", error)
       return "Unknown date"
     }
   }

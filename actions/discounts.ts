@@ -2,12 +2,12 @@
 
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { discount } from "@/db/schema";
+import { discount, restaurant } from "@/db/schema";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { db } from "@/db/drizzle";
 import { put, del } from "@vercel/blob";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 type Discount = {
     id: string;
@@ -16,6 +16,7 @@ type Discount = {
     imageUrl: string | null;
     imageAlt: string | null;
     restaurantId: string | null;
+    restaurantSlug?: string | null; // nuevo
 }
 
 const mockedDiscounts: Discount[] = [
@@ -25,7 +26,8 @@ const mockedDiscounts: Discount[] = [
         description: "Get 20% off on all orders above $50",
         imageUrl: "https://placehold.co/600x400/png",
         imageAlt: "Summer Special Discount",
-        restaurantId: "rest1"
+        restaurantId: "rest1",
+        restaurantSlug: "rest1" // mock
     },
     {
         id: "2",
@@ -33,7 +35,8 @@ const mockedDiscounts: Discount[] = [
         description: "Get 30% off on all orders above $100",
         imageUrl: "https://placehold.co/600x400/png",
         imageAlt: "Winter Wonderland Discount",
-        restaurantId: "rest2"
+        restaurantId: "rest2",
+        restaurantSlug: "rest2" // mock
     }
 ];
 
@@ -76,8 +79,14 @@ export async function listDiscounts(restaurantId: string): Promise<{ success: bo
 
         // Query the database for discounts
         const results = await db.select().from(discount).where(eq(discount.restaurantId, restaurantId));
+
+        // Map results to Discount type, adding restaurantSlug as null (or fetch if available)
+        const discounts: Discount[] = results.map((d: any) => ({
+            ...d,
+            restaurantSlug: null // or fetch/compute the slug if you have it
+        }));
         
-        return { success: true, data: results };
+        return { success: true, data: discounts };
     } catch (error) {
         console.error("Error listing discounts:", error);
         return { success: false, message: "Failed to fetch discounts" }
@@ -132,7 +141,7 @@ export async function createDiscount(data: CreateDiscountParams): Promise<{ succ
                 description,
                 imageUrl,
                 imageAlt,
-                restaurantId,
+                restaurantId
             };
             
             return { 
@@ -183,5 +192,51 @@ export async function deleteDiscount(id: string): Promise<{ success: boolean; me
   } catch (error) {
     console.error("Error deleting discount:", error);
     return { success: false, message: "An error occurred while deleting the discount" };
+  }
+}
+
+// Devuelve 3 descuentos aleatorios, opcionalmente filtrados por restaurantId
+export async function getRandomDiscounts(params?: { restaurantId?: string; limit?: number }): Promise<{ success: boolean; data: Discount[]; message?: string }> {
+  const limit = params?.limit ?? 3;
+  const restaurantId = params?.restaurantId;
+
+  try {
+    const baseSelect = {
+      id: discount.id,
+      name: discount.name,
+      description: discount.description,
+      imageUrl: discount.imageUrl,
+      imageAlt: discount.imageAlt,
+      restaurantId: discount.restaurantId,
+      restaurantSlug: restaurant.slug,
+    };
+
+    const baseQuery = db
+      .select(baseSelect)
+      .from(discount)
+      .leftJoin(restaurant, eq(restaurant.id, discount.restaurantId));
+
+    const rows = restaurantId
+      ? await baseQuery.where(eq(discount.restaurantId, restaurantId)).orderBy(sql`random()`).limit(limit)
+      : await baseQuery.orderBy(sql`random()`).limit(limit);
+
+    if (!rows || rows.length === 0) {
+      const pool = restaurantId
+        ? mockedDiscounts.filter((d) => d.restaurantId === restaurantId)
+        : mockedDiscounts;
+
+      const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, limit);
+      return { success: true, data: shuffled };
+    }
+
+    return { success: true, data: rows as unknown as Discount[] };
+  } catch (error) {
+    console.error("Error fetching random discounts:", error);
+    const pool = restaurantId
+      ? mockedDiscounts.filter((d) => d.restaurantId === restaurantId)
+      : mockedDiscounts;
+
+    const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, limit);
+    return { success: true, data: shuffled, message: "Using fallback discounts" };
   }
 }
