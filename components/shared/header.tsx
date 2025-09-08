@@ -99,7 +99,7 @@ export default function Header(props: HeaderProps) {
         const shareData = {
             title: "Aguila",
             text:
-                pathname === `/${lang}/`
+                props?.restaurant === undefined || props?.restaurant === null
                     ? "Descubre Aguila, la app para descubrir los mejores lugares y promociones para comer."
                     : `Mira el menú de ${props?.restaurant} en Aguila.`,
             currentUrl,
