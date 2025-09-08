@@ -93,8 +93,6 @@ export default function Header(props: HeaderProps) {
     const handleShare = async () => {
 
         const currentUrl = "https://aguila.lat" + pathname;
-        // Extract lang from pathname (assumes /{lang}/... structure)
-        const lang = pathname.split("/")[1] as Lang;
 
         const shareData = {
             title: "Aguila",
