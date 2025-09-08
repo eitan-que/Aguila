@@ -98,8 +98,8 @@ export default function Header(props: HeaderProps) {
             title: "Aguila",
             text:
                 props?.restaurant === undefined || props?.restaurant === null
-                    ? "Descubre Aguila, la app para descubrir los mejores lugares y promociones para comer."
-                    : `Mira el menú de ${props?.restaurant} en Aguila.`,
+                    ? `${currentUrl + "\n"}Descubre Aguila, la app para descubrir los mejores lugares y promociones para comer.`
+                    : `${currentUrl + "\n"}Mira el menú de ${props?.restaurant} en Aguila.`,
             currentUrl,
         };
 
