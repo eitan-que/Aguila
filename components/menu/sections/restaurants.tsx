@@ -79,10 +79,10 @@ export default function Restaurants(
         <section className="flex flex-col gap-4 w-full">
             <SectionsTitle
                 title={sectionTitle.title}
-                // viewAll={{
-                //     url: `/${lang}/r/`,
-                //     label: sectionTitle.viewAll.label
-                // }}
+                viewAll={{
+                    url: `/${lang}/r/`,
+                    label: sectionTitle.viewAll.label
+                }}
             />
             {variant === "primary" && (
                 <>

@@ -7,6 +7,8 @@ import ContactInfoCard from "@/components/menu/restaurant/ContactInfoCard";
 import MenuGallery from "@/components/menu/restaurant/MenuGallery";
 import Image from "next/image";
 
+export const revalidate = 3600 // 1 hour
+
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang, restaurantSlug: "restaurante-1" }))
 }

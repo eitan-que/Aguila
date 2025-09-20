@@ -5,11 +5,13 @@ import DiscountBanners from "@/components/menu/sections/discountBanners";
 import { getRandomDiscounts } from "@/actions/discounts";
 import { getMenuRestaurants } from "@/actions/restaurant";
 
+export const revalidate = 3600 // 1 hour
+
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }))
 }
 
-export default async function Place({
+export default async function Home({
   params,
 }: {
   params: Promise<{ lang: Lang; }>

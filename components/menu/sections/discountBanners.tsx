@@ -46,7 +46,7 @@ export default function DiscountBanners({
     [count]
   );
 
-  // Auto-advance cada 3s (solo X)
+  // Auto-advance cada 5s (solo X)
   useEffect(() => {
     if (count <= 1) return;
     const id = window.setInterval(() => {
@@ -60,7 +60,7 @@ export default function DiscountBanners({
         }
         return next;
       });
-    }, 5000);
+    }, Math.random() * 2000 + 3000); // entre 3 y 5 segundos
     return () => window.clearInterval(id);
   }, [count]);
 
@@ -100,8 +100,8 @@ export default function DiscountBanners({
       <div
         ref={containerRef}
         onScroll={handleScroll}
-        // Bloquear Y y encadenamiento vertical, permitir solo paneo en X
-        className="relative flex justify-start items-start gap-4 w-full overflow-x-auto overflow-y-hidden overscroll-y-none snap-mandatory snap-x touch-pan-x"
+        // Permitir scroll vertical en la página aunque el mouse esté sobre el carrusel
+        className="relative flex justify-start items-start gap-4 w-full overflow-x-auto overflow-y-visible overscroll-y-none snap-mandatory snap-x"
         style={{ overflowAnchor: "none" }}
       >
         {discounts.map((discount) => (

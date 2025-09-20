@@ -22,6 +22,7 @@ export default function DiscountBanner({discount, asLinkToRestaurant}: {discount
                 sizes="100vw"
                 className="object-cover hover:scale-105 transition-transform duration-300 ease-in-out transform"
                 priority={false}
+                draggable={false}
               />
             {(discount.name || discount.description) && (
                 <div className="right-0 bottom-0 left-0 absolute flex flex-col justify-end bg-gradient-to-t from-card-foreground/70 to-transparent p-4 pb-7 w-full h-full text-card">
@@ -47,6 +48,7 @@ export default function DiscountBanner({discount, asLinkToRestaurant}: {discount
                 sizes="100vw"
                 className="object-cover hover:scale-105 transition-transform duration-300 ease-in-out transform"
                 priority={false}
+                draggable={false}
               />
             {(discount.name || discount.description) && (
                 <div className="right-0 bottom-0 left-0 absolute flex flex-col justify-end bg-gradient-to-t from-card-foreground/70 to-transparent p-4 pb-7 w-full h-full text-card">
