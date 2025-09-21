@@ -37,6 +37,9 @@ export default async function RootLayout({
   const { lang } = await params;
   return (
     <html lang={lang} >
+      <head>
+        <meta name="apple-mobile-web-app-title" content="Aguila" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-[100dvh]`}
       >

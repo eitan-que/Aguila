@@ -1,18 +1,22 @@
-import type { NextConfig } from "next";
+import nextPWA from 'next-pwa';
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
+        protocol: "https" as const,
         hostname: 'placehold.co',
       },
       {
-        protocol: 'https',
+        protocol: "https" as const,
         hostname: 'sjiazaffsxoxeqsw.public.blob.vercel-storage.com',
       },
     ],
   },
 };
 
-export default nextConfig;
+const withPWA = nextPWA({
+  dest: 'public'
+});
+
+export default withPWA({ ...nextConfig });
