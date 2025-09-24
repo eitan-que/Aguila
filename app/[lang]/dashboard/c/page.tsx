@@ -31,7 +31,7 @@ export default async function CategoriesPage({
             form={<CreateCategoryForm {...dict.dashboard.categories?.form} />}
           />
         </header>
-        <CategoriesList t={dict.dashboard.categories?.list} />
+        <CategoriesList t={dict.dashboard.categories} />
       </div>
     </>
   )

@@ -39,14 +39,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { deleteRestaurant, listRestaurants, RestaurantWithStats } from "@/actions/restaurant"
+import { deleteRestaurant, getRestaurantById, listRestaurants, RestaurantWithStats } from "@/actions/restaurant"
 import { toast } from "sonner"
 import { Dictionary } from "@/actions/dictionaries"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { EditRestaurantForm } from "@/components/dashboard/forms/editRestaurant"
 
 type RestaurantListProps = {
-  t: Dictionary["dashboard"]["restaurants"]["list"]
+  t: Dictionary["dashboard"]["restaurants"]
 }
 
 export function RestaurantsList({ t }: RestaurantListProps) {
@@ -57,27 +58,30 @@ export function RestaurantsList({ t }: RestaurantListProps) {
   const [restaurantToDelete, setRestaurantToDelete] = useState<string | null>(null)
   const [restaurantNameToDelete, setRestaurantNameToDelete] = useState<string | null>(null)
   const [deletingRestaurant, setDeletingRestaurant] = useState(false)
+  const [restaurantToEdit, setRestaurantToEdit] = useState<any | null>(null)
+  const [isLoadingRestaurant, setIsLoadingRestaurant] = useState(false)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
+
+  const loadData = async () => {
+    setLoading(true)
+    try {
+      const result = await listRestaurants()
+      if (result.success) {
+        setData(result.data)
+      } else {
+        setError(result.message || t?.list.errors?.loadFailed || "Failed to load restaurants")
+        toast.error(result.message || t?.list.errors?.loadFailed || "Failed to load restaurants")
+      }
+    } catch (err) {
+      console.error(err)
+      setError(t?.list.errors?.unexpected || "An unexpected error occurred")
+      toast.error(t?.list.errors?.unexpected || "An unexpected error occurred")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const loadData = async () => {
-      setLoading(true)
-      try {
-        const result = await listRestaurants()
-        if (result.success) {
-          setData(result.data)
-        } else {
-          setError(result.message || t?.errors?.loadFailed || "Failed to load restaurants")
-          toast.error(result.message || t?.errors?.loadFailed || "Failed to load restaurants")
-        }
-      } catch (err) {
-        console.error(err)
-        setError(t?.errors?.unexpected || "An unexpected error occurred")
-        toast.error(t?.errors?.unexpected || "An unexpected error occurred")
-      } finally {
-        setLoading(false)
-      }
-    }
-    
     loadData()
   }, [t])
 
@@ -94,20 +98,38 @@ export function RestaurantsList({ t }: RestaurantListProps) {
     try {
       const result = await deleteRestaurant(restaurantToDelete)
       if (result.success) {
-        toast.success(t?.messages?.deleteSuccess || "Restaurant deleted successfully")
+        toast.success(t?.list.messages?.deleteSuccess || "Restaurant deleted successfully")
         // Update local data
         setData(data.filter(restaurant => restaurant.id !== restaurantToDelete))
       } else {
-        toast.error(result.message || t?.errors?.deleteFailed || "Failed to delete restaurant")
+        toast.error(result.message || t?.list.errors?.deleteFailed || "Failed to delete restaurant")
       }
     } catch (err) {
       console.error(err)
-      toast.error(t?.errors?.unexpected || "An unexpected error occurred")
+      toast.error(t?.list.errors?.unexpected || "An unexpected error occurred")
     } finally {
       setDeletingRestaurant(false)
       setDeleteDialogOpen(false)
       setRestaurantToDelete(null)
       setRestaurantNameToDelete(null)
+    }
+  }
+
+  const handleEdit = async (id: string) => {
+    setIsLoadingRestaurant(true)
+    try {
+      const result = await getRestaurantById(id)
+      if (result.success && result.data) {
+        setRestaurantToEdit(result.data)
+        setEditDialogOpen(true)
+      } else {
+        toast.error(result.message || t?.list.errors?.loadFailed || "Failed to load restaurant")
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error(t?.list.errors?.unexpected || "An unexpected error occurred")
+    } finally {
+      setIsLoadingRestaurant(false)
     }
   }
 
@@ -119,20 +141,20 @@ export function RestaurantsList({ t }: RestaurantListProps) {
     const days = Math.floor(diff / (1000 * 60 * 60 * 24))
     
     if (days < 1) {
-      return t?.timeFormatting?.today || "Today"
+      return t?.list.timeFormatting?.today || "Today"
     } else if (days < 2) {
-      return t?.timeFormatting?.yesterday || "Yesterday"
+      return t?.list.timeFormatting?.yesterday || "Yesterday"
     } else if (days < 7) {
-      return (t?.timeFormatting?.daysAgo || "{days} days ago").replace("{days}", days.toString())
+      return (t?.list.timeFormatting?.daysAgo || "{days} days ago").replace("{days}", days.toString())
     } else if (days < 30) {
       const weeks = Math.floor(days / 7)
-      return (t?.timeFormatting?.weeksAgo || "{weeks} weeks ago").replace("{weeks}", weeks.toString())
+      return (t?.list.timeFormatting?.weeksAgo || "{weeks} weeks ago").replace("{weeks}", weeks.toString())
     } else if (days < 365) {
       const months = Math.floor(days / 30)
-      return (t?.timeFormatting?.monthsAgo || "{months} months ago").replace("{months}", months.toString())
+      return (t?.list.timeFormatting?.monthsAgo || "{months} months ago").replace("{months}", months.toString())
     } else {
       const years = Math.floor(days / 365)
-      return (t?.timeFormatting?.yearsAgo || "{years} years ago").replace("{years}", years.toString())
+      return (t?.list.timeFormatting?.yearsAgo || "{years} years ago").replace("{years}", years.toString())
     }
   }
 
@@ -146,14 +168,14 @@ export function RestaurantsList({ t }: RestaurantListProps) {
             (table.getIsSomePageRowsSelected() && "indeterminate")
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label={t?.aria?.selectAll || "Select all"}
+          aria-label={t?.list.aria?.selectAll || "Select all"}
         />
       ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label={t?.aria?.selectRow || "Select row"}
+          aria-label={t?.list.aria?.selectRow || "Select row"}
         />
       ),
       enableSorting: false,
@@ -166,7 +188,7 @@ export function RestaurantsList({ t }: RestaurantListProps) {
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          {t?.columns?.name || "Name"}
+          {t?.list.columns?.name || "Name"}
           <ArrowUpDown className="ml-2 w-4 h-4" />
         </Button>
       ),
@@ -183,7 +205,7 @@ export function RestaurantsList({ t }: RestaurantListProps) {
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          {t?.columns?.created || "Created"}
+          {t?.list.columns?.created || "Created"}
           <ArrowUpDown className="ml-2 w-4 h-4" />
         </Button>
       ),
@@ -199,7 +221,7 @@ export function RestaurantsList({ t }: RestaurantListProps) {
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          {t?.columns?.weeklyVisits || "Weekly Visits"}
+          {t?.list.columns?.weeklyVisits || "Weekly Visits"}
           <ArrowUpDown className="ml-2 w-4 h-4" />
         </Button>
       ),
@@ -219,12 +241,11 @@ export function RestaurantsList({ t }: RestaurantListProps) {
             <Button 
               variant="ghost" 
               size="icon"
-              onClick={() => {
-                toast.error(t?.errors?.editNotImplemented || "Edit functionality is not yet implemented")
-              }}
+              onClick={() => handleEdit(restaurant.id)}
+              disabled={isLoadingRestaurant}
             >
               <Pencil className="w-4 h-4" />
-              <span className="sr-only">{t?.actions?.edit || "Edit"}</span>
+              <span className="sr-only">{t?.list.actions?.edit || "Edit"}</span>
             </Button>
             <Button 
               variant="ghost" 
@@ -232,7 +253,7 @@ export function RestaurantsList({ t }: RestaurantListProps) {
               onClick={() => handleDelete(restaurant.id, restaurant.name)}
             >
               <Trash2 className="w-4 h-4" />
-              <span className="sr-only">{t?.actions?.delete || "Delete"}</span>
+              <span className="sr-only">{t?.list.actions?.delete || "Delete"}</span>
             </Button>
           </div>
         )
@@ -265,18 +286,18 @@ export function RestaurantsList({ t }: RestaurantListProps) {
   })
 
   if (loading) {
-    return <div className="flex justify-center items-center min-h-[200px]">{t?.states?.loading || "Loading restaurants..."}</div>
+    return <div className="flex justify-center items-center min-h-[200px]">{t?.list.states?.loading || "Loading restaurants..."}</div>
   }
 
   if (error) {
-    return <div className="text-red-500 text-center">{t?.states?.error || "Error"}: {error}</div>
+    return <div className="text-red-500 text-center">{t?.list.states?.error || "Error"}: {error}</div>
   }
 
   return (
     <div className="space-y-4 w-full">
       <div className="flex sm:flex-row flex-col items-center gap-2 py-4">
         <Input
-          placeholder={t?.placeholders?.filterByName || "Filter by name..."}
+          placeholder={t?.list.placeholders?.filterByName || "Filter by name..."}
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -286,7 +307,7 @@ export function RestaurantsList({ t }: RestaurantListProps) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="sm:ml-auto w-full sm:w-min">
-              {t?.buttons?.columns || "Columns"} <ChevronDown className="ml-2 w-4 h-4" />
+              {t?.list.buttons?.columns || "Columns"} <ChevronDown className="ml-2 w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -296,9 +317,9 @@ export function RestaurantsList({ t }: RestaurantListProps) {
               .map((column) => {
                 // Map column IDs to their translated labels
                 const columnLabels: Record<string, string | undefined> = {
-                  name: t?.columns?.name || "Name",
-                  createdAt: t?.columns?.created || "Created", 
-                  weeklyVisits: t?.columns?.weeklyVisits || "Weekly Visits"
+                  name: t?.list.columns?.name || "Name",
+                  createdAt: t?.list.columns?.created || "Created", 
+                  weeklyVisits: t?.list.columns?.weeklyVisits || "Weekly Visits"
                 };
                 
                 return (
@@ -355,7 +376,7 @@ export function RestaurantsList({ t }: RestaurantListProps) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  {t?.states?.noRestaurants || "No restaurants found."}
+                  {t?.list.states?.noRestaurants || "No restaurants found."}
                 </TableCell>
               </TableRow>
             )}
@@ -364,7 +385,7 @@ export function RestaurantsList({ t }: RestaurantListProps) {
       </div>
       <div className="flex sm:flex-row flex-col justify-end items-center sm:space-x-2 space-y-2 sm:space-y-0 py-4">
         <div className="sm:flex-1 order-2 sm:order-1 text-muted-foreground text-sm">
-          {(t?.pagination?.selectedCount || "{selected} of {total} row(s) selected")
+          {(t?.list.pagination?.selectedCount || "{selected} of {total} row(s) selected")
             .replace("{selected}", table.getFilteredSelectedRowModel().rows.length.toString())
             .replace("{total}", table.getFilteredRowModel().rows.length.toString())}
         </div>
@@ -375,7 +396,7 @@ export function RestaurantsList({ t }: RestaurantListProps) {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            {t?.pagination?.previous || "Previous"}
+            {t?.list.pagination?.previous || "Previous"}
           </Button>
           <Button
             variant="outline"
@@ -383,7 +404,7 @@ export function RestaurantsList({ t }: RestaurantListProps) {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            {t?.pagination?.next || "Next"}
+            {t?.list.pagination?.next || "Next"}
           </Button>
         </div>
       </div>
@@ -391,9 +412,9 @@ export function RestaurantsList({ t }: RestaurantListProps) {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{t?.deleteDialog?.title || "Delete Restaurant"}</DialogTitle>
+            <DialogTitle>{t?.list.deleteDialog?.title || "Delete Restaurant"}</DialogTitle>
             <DialogDescription>
-              {(t?.deleteDialog?.description || 'Are you sure you want to delete "{name}"? This action cannot be undone.')
+              {(t?.list.deleteDialog?.description || 'Are you sure you want to delete "{name}"? This action cannot be undone.')
                 .replace("{name}", restaurantNameToDelete || "")}
             </DialogDescription>
           </DialogHeader>
@@ -403,7 +424,7 @@ export function RestaurantsList({ t }: RestaurantListProps) {
               onClick={() => setDeleteDialogOpen(false)}
               disabled={deletingRestaurant}
             >
-              {t?.deleteDialog?.cancel || "Cancel"}
+              {t?.list.deleteDialog?.cancel || "Cancel"}
             </Button>
             <Button 
               variant="destructive" 
@@ -411,12 +432,36 @@ export function RestaurantsList({ t }: RestaurantListProps) {
               disabled={deletingRestaurant}
             >
               {deletingRestaurant 
-                ? (t?.deleteDialog?.deleting || "Deleting...") 
-                : (t?.deleteDialog?.confirm || "Delete")}
+                ? (t?.list.deleteDialog?.deleting || "Deleting...") 
+                : (t?.list.deleteDialog?.confirm || "Delete")}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {editDialogOpen && restaurantToEdit && (
+        <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+          <DialogContent className="sm:max-w-lg overflow-hidden">
+            <DialogHeader>
+              <DialogTitle>{t?.list.editDialog?.title || "Edit Restaurant"}</DialogTitle>
+              <DialogDescription>
+                {t?.list.editDialog?.description || "Update restaurant information."}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="max-h-[70vh] overflow-x-visible overflow-y-auto">
+              <EditRestaurantForm 
+                restaurant={restaurantToEdit}
+                t={t.form}
+                onSuccess={() => {
+                  setEditDialogOpen(false)
+                  // Refresh restaurant data
+                  loadData()
+                }}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   )
 }

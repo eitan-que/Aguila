@@ -5,13 +5,14 @@ import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis } fro
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { CalendarDays, TrendingUp, Clock, Share2, Award, Ticket, Trash2 } from "lucide-react"
+import { CalendarDays, TrendingUp, Clock, Share2, Award, Ticket, Trash2, Pencil, ImageIcon } from "lucide-react"
 import { Dictionary } from "@/actions/dictionaries"
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { deleteDiscount, listDiscounts } from "@/actions/discounts"
 import { DrawerDialogTemplate } from "@/components/dashboard/drawerDialogTemplate"
 import { CreateDiscountForm } from "@/components/dashboard/forms/createDiscount"
+import { EditDiscountForm } from "@/components/dashboard/forms/editDiscount"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -57,6 +58,10 @@ export function RestaurantAnalytics({
   const [discountToDelete, setDiscountToDelete] = useState<string | null>(null)
   const [discountNameToDelete, setDiscountNameToDelete] = useState<string | null>(null)
   const [deletingDiscount, setDeletingDiscount] = useState(false)
+
+  // New state for edit dialog
+  const [discountToEdit, setDiscountToEdit] = useState<Discount | null>(null)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
   
   const t = dict.restaurants
 
@@ -184,6 +189,15 @@ export function RestaurantAnalytics({
       setDeleteDialogOpen(false)
       setDiscountToDelete(null)
       setDiscountNameToDelete(null)
+    }
+  }
+
+  // New function to handle edit button click
+  const handleEditDiscount = (discount: Discount) => {
+    // Only allow editing if restaurantId is not null
+    if (discount.restaurantId) {
+      setDiscountToEdit(discount)
+      setEditDialogOpen(true)
     }
   }
 
@@ -651,38 +665,52 @@ export function RestaurantAnalytics({
               ) : (
                 <div className="gap-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 w-full h-auto">
                   {discounts.map((discount) => (
-                    <div key={discount.id} className="group relative flex col-span-1 rounded-md aspect-video overflow-hidden">
-                      <Image
-                        src={discount.imageUrl || "https://placehold.co/1920x1080/png"}
-                        alt={discount.imageAlt || discount.name}
-                        width={1920}
-                        height={1080}
-                        className="object-cover hover:scale-105 transition-transform duration-300 ease-in-out transform"
-                      />
-                      {/* Delete button - show on hover */}
-                      <Button
-                        variant="destructive"
-                        size="icon"
-                        className="top-2 right-2 z-10 absolute opacity-50 group-hover:opacity-100 transition-opacity"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDelete(discount.id, discount.name);
-                        }}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                        <span className="sr-only">
-                          {t.discounts?.form.actions.delete || "Delete Discount"}
-                        </span>
-                      </Button>
-                      {(discount.name || discount.description) && (
-                        <div className="right-0 bottom-0 left-0 absolute flex flex-col justify-end bg-gradient-to-t from-card-foreground/70 to-transparent p-4 w-full h-full text-card">
-                          <h2 className="font-semibold text-lg">{discount.name}</h2>
-                          {discount.description && (
-                            <p className="text-sm">{discount.description}</p>
-                          )}
+                    <Card key={discount.id} className="overflow-hidden">
+                      <div className="relative aspect-video overflow-hidden">
+                        {discount.imageUrl ? (
+                          <Image
+                            src={discount.imageUrl}
+                            alt={discount.imageAlt || discount.name}
+                            fill
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="flex justify-center items-center bg-muted h-full">
+                            <ImageIcon className="w-10 h-10 text-muted-foreground" />
+                          </div>
+                        )}
+                      </div>
+                      <CardContent className="p-4">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h3 className="font-medium">{discount.name}</h3>
+                            {discount.description && (
+                              <p className="mt-1 text-muted-foreground text-sm line-clamp-2">
+                                {discount.description}
+                              </p>
+                            )}
+                          </div>
+                          <div className="flex gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => handleEditDiscount(discount)}
+                            >
+                              <Pencil className="w-4 h-4" />
+                              <span className="sr-only">Edit</span>
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              onClick={() => handleDelete(discount.id, discount.name)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              <span className="sr-only">Delete</span>
+                            </Button>
+                          </div>
                         </div>
-                      )}
-                    </div>
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
               )}
@@ -721,6 +749,29 @@ export function RestaurantAnalytics({
               </DialogFooter>
             </DialogContent>
           </Dialog>
+
+          {/* Edit discount dialog */}
+          {editDialogOpen && discountToEdit && (
+            <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>{t.discounts?.form?.editTitle || "Edit Discount"}</DialogTitle>
+                  <DialogDescription>
+                    {t.discounts?.form?.editDescription || "Update discount information."}
+                  </DialogDescription>
+                </DialogHeader>
+                <EditDiscountForm 
+                  discount={discountToEdit}
+                  t={dict.restaurants.discounts?.form}
+                  onSuccess={() => {
+                    setEditDialogOpen(false)
+                    // Refresh discount data
+                    fetchDiscounts()
+                  }}
+                />
+              </DialogContent>
+            </Dialog>
+          )}
         </TabsContent>
       </Tabs>
     </div>

@@ -7,6 +7,7 @@ import {
   integer,
   json,
   numeric,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 
 export const user = pgTable("user", {
@@ -93,6 +94,7 @@ export const verification = pgTable("verification", {
 export const category = pgTable("category", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
+  description: text("description"),
   createdAt: timestamp("created_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
@@ -110,9 +112,7 @@ export const restaurant = pgTable("restaurant", {
   slug: text("slug").notNull().unique(),
   description: text("description"),
   address: text("address"),
-  // Referencia a la categoría a la que pertenece
-  categoryId: text("category_id")
-    .references(() => category.id, { onDelete: "set null" }),
+  // Remover categoryId ya que ahora es many-to-many
   // Campos para UI
   pictureUrl: text("picture_url"),
   pictureAlt: text("picture_alt"),
@@ -134,7 +134,6 @@ export const restaurant = pgTable("restaurant", {
 }, (table) => ({
   indexes: [
     index('restaurant_slug_idx').on(table.slug),
-    index('restaurant_category_id_idx').on(table.categoryId),
   ],
 }));
 
@@ -153,3 +152,42 @@ export const discount = pgTable("discount", {
 }, (table) => [
   index('discount_restaurant_id_idx').on(table.restaurantId),
 ]);
+
+// ---------------------
+// Tablas de unión para many-to-many
+// ---------------------
+export const restaurantCategory = pgTable("restaurant_category", {
+  restaurantId: text("restaurant_id")
+    .notNull()
+    .references(() => restaurant.id, { onDelete: "cascade" }),
+  categoryId: text("category_id")
+    .notNull()
+    .references(() => category.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+}, (table) => ({
+  pk: primaryKey({ columns: [table.restaurantId, table.categoryId] }),
+  indexes: [
+    index('restaurant_category_restaurant_idx').on(table.restaurantId),
+    index('restaurant_category_category_idx').on(table.categoryId),
+  ],
+}));
+
+export const discountCategory = pgTable("discount_category", {
+  discountId: text("discount_id")
+    .notNull()
+    .references(() => discount.id, { onDelete: "cascade" }),
+  categoryId: text("category_id")
+    .notNull()
+    .references(() => category.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+}, (table) => ({
+  pk: primaryKey({ columns: [table.discountId, table.categoryId] }),
+  indexes: [
+    index('discount_category_discount_idx').on(table.discountId),
+    index('discount_category_category_idx').on(table.categoryId),
+  ],
+}));

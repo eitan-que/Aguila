@@ -2,12 +2,13 @@
 
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
-import { discount, restaurant } from "@/db/schema";
+import { discount, discountCategory, restaurant } from "@/db/schema";
 import { mkdir, writeFile } from "fs/promises";
 import path from "path";
 import { db } from "@/db/drizzle";
 import { put, del } from "@vercel/blob";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, inArray, and } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 type Discount = {
     id: string;
@@ -143,7 +144,10 @@ export async function createDiscount(data: CreateDiscountParams): Promise<{ succ
                 imageAlt,
                 restaurantId
             };
-            
+            revalidatePath(`/dashboard/r/${restaurantId}`);
+            revalidatePath("/");
+            revalidatePath("/es");
+            revalidatePath("/en");
             return { 
                 success: true, 
                 message: "Discount created successfully", 
@@ -196,9 +200,14 @@ export async function deleteDiscount(id: string): Promise<{ success: boolean; me
 }
 
 // Devuelve 3 descuentos aleatorios, opcionalmente filtrados por restaurantId
-export async function getRandomDiscounts(params?: { restaurantId?: string; limit?: number }): Promise<{ success: boolean; data: Discount[]; message?: string }> {
+export async function getRandomDiscounts(params?: { 
+  restaurantId?: string; 
+  limit?: number; 
+  categoryIds?: string[] 
+}): Promise<{ success: boolean; data: Discount[]; message?: string }> {
   const limit = params?.limit ?? 3;
   const restaurantId = params?.restaurantId;
+  const categoryIds = params?.categoryIds;
 
   try {
     const baseSelect = {
@@ -211,14 +220,35 @@ export async function getRandomDiscounts(params?: { restaurantId?: string; limit
       restaurantSlug: restaurant.slug,
     };
 
-    const baseQuery = db
-      .select(baseSelect)
-      .from(discount)
-      .leftJoin(restaurant, eq(restaurant.id, discount.restaurantId));
+    // Apply filters
+    const conditions = [];
+    
+    if (restaurantId) {
+      conditions.push(eq(discount.restaurantId, restaurantId));
+    }
+    
+    let query;
+    
+    if (categoryIds && categoryIds.length > 0) {
+      // Join with discountCategory to filter by categories
+      query = db
+        .select(baseSelect)
+        .from(discount)
+        .leftJoin(restaurant, eq(restaurant.id, discount.restaurantId))
+        .innerJoin(discountCategory, eq(discount.id, discountCategory.discountId));
+      conditions.push(inArray(discountCategory.categoryId, categoryIds));
+    } else {
+      query = db
+        .select(baseSelect)
+        .from(discount)
+        .leftJoin(restaurant, eq(restaurant.id, discount.restaurantId));
+    }
 
-    const rows = restaurantId
-      ? await baseQuery.where(eq(discount.restaurantId, restaurantId)).orderBy(sql`random()`).limit(limit)
-      : await baseQuery.orderBy(sql`random()`).limit(limit);
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
+    }
+
+    const rows = await query.orderBy(sql`random()`).limit(limit);
 
     if (!rows || rows.length === 0) {
       const pool = restaurantId
@@ -238,5 +268,114 @@ export async function getRandomDiscounts(params?: { restaurantId?: string; limit
 
     const shuffled = [...pool].sort(() => Math.random() - 0.5).slice(0, limit);
     return { success: true, data: shuffled, message: "Using fallback discounts" };
+  }
+}
+
+type UpdateDiscountParams = {
+    id: string;
+    name: string;
+    description: string;
+    image?: File; // Optional as we might not always update the image
+    imageAlt: string;
+    restaurantId: string;
+}
+
+export async function updateDiscount(data: UpdateDiscountParams): Promise<{ success: boolean; message?: string; data?: Discount }> {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    
+    if (!session) {
+      return { success: false, message: "Not authenticated" };
+    }
+    
+    if (!session.user?.role || session.user.role !== "admin") {
+      return { success: false, message: "Not authorized" };
+    }
+
+    const { id, name, description, image, imageAlt, restaurantId } = data;
+
+    // Check if discount exists
+    const discountToUpdate = await db.select().from(discount).where(eq(discount.id, id)).limit(1);
+    if (discountToUpdate.length === 0) {
+      return { success: false, message: "Discount not found" };
+    }
+
+    // Prepare update data
+    const updateData: {
+      name: string;
+      description: string | null;
+      imageUrl?: string | null;
+      imageAlt?: string | null;
+    } = {
+      name,
+      description,
+      imageAlt
+    };
+
+    // Handle image upload if provided
+    if (image) {
+      const oldImageUrl = discountToUpdate[0].imageUrl;
+      
+      const imageUrl = await uploadFileToBlob(restaurantId, name, image);
+      if (!imageUrl) {
+        return { success: false, message: "Error uploading discount image" };
+      }
+      
+      updateData.imageUrl = imageUrl;
+      
+      // Delete old image if it exists
+      if (oldImageUrl) {
+        await del(oldImageUrl);
+      }
+    }
+    
+    // Update discount in database
+    await db.update(discount)
+      .set(updateData)
+      .where(eq(discount.id, id));
+    
+    // Get the updated discount to return it
+    const updatedDiscount = await db.select().from(discount).where(eq(discount.id, id)).limit(1);
+    
+    return { 
+      success: true, 
+      message: "Discount updated successfully", 
+      data: updatedDiscount[0] as Discount 
+    };
+  } catch (error) {
+    console.error("Error updating discount:", error);
+    return { success: false, message: "An unexpected error occurred" };
+  }
+}
+
+export async function getDiscountById(id: string): Promise<{ success: boolean; message?: string; data?: Discount }> {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
+    
+    if (!session) {
+      return { success: false, message: "Not authenticated" };
+    }
+    
+    if (!session.user?.role || session.user.role !== "admin") {
+      return { success: false, message: "Not authorized" };
+    }
+
+    const discountData = await db.select().from(discount).where(eq(discount.id, id)).limit(1);
+    
+    if (discountData.length === 0) {
+      return { success: false, message: "Discount not found" };
+    }
+    
+    return { 
+      success: true, 
+      data: discountData[0] as Discount 
+    };
+  } catch (error) {
+    console.error("Error getting discount by ID:", error);
+    return { success: false, message: "An unexpected error occurred" };
   }
 }

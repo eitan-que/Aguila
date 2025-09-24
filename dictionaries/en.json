@@ -170,6 +170,7 @@
       },
       "form": {
         "submit": "Save",
+        "editDescription": "Edit your restaurant details and update information as needed.",
         "sections": {
           "general": "General",
           "location": "Location",
@@ -238,10 +239,16 @@
           "pictureUrl": {
             "label": "Restaurant Picture",
             "placeholder": "Upload restaurant picture",
-            "description": "Upload an image representing your restaurant."
+            "description": "Upload an image representing your restaurant.",
+            "actions": {
+              "add": "Drag and drop your restaurant image here, or click to select a file."
+            },
+            "format": "JPG or PNG, max 5MB"
           },
           "pictureAlt": {
-            "label": "Describe the image"
+            "label": "Describe the image",
+            "placeholder": "Briefly describe the content of the image",
+            "description": "Used for accessibility and SEO."
           },
           "tags": {
             "label": "Tags",
@@ -252,7 +259,11 @@
           "menuPictures": {
             "label": "Menu Pictures",
             "placeholder": "Upload menu pictures",
-            "description": "Upload images of your menu."
+            "description": "Upload images of your menu.",
+            "actions": {
+              "add": "Drag and drop your menu images here, or click to browse."
+            },
+            "format": "JPG or PNG, max 5MB"
           }
         },
         "errors": {
@@ -270,7 +281,15 @@
           "prepTimeRange": "Max prep time must be greater than or equal to min.",
           "urlInvalid": "URL must be valid.",
           "pictureAltMax": "Picture alt text must be at most 300 characters.",
-          "menuPicturesRequired": "At least one menu picture is required."
+          "menuPicturesRequired": "At least one menu picture is required.",
+          "fileFormat": "File must be a JPG or PNG image.",
+          "fileSize": "File size must be less than 5MB."
+        },
+        "actions": {
+          "removeImage": "Remove Image",
+          "updating": "Updating...",
+          "update": "Update Restaurant",
+          "edit": "Edit Restaurant"
         }
       },
       "list": {
@@ -298,6 +317,10 @@
           "previous": "Previous",
           "next": "Next",
           "selectedCount": "{selected} of {total} row(s) selected"
+        },
+        "editDialog": {
+          "title": "Edit Restaurant",
+          "description": "Edit your restaurant details and update information as needed."
         },
         "deleteDialog": {
           "title": "Delete Restaurant",
@@ -454,6 +477,8 @@
         "form": {
           "submit": "Save",
           "forRestaurant": "Creating discount for",
+          "editTitle": "Edit Discount",
+          "editDescription": "Edit your discount details and update information as needed.",
           "fields": {
             "name": {
               "label": "Name",
@@ -498,7 +523,9 @@
             "removeImage": "Remove Image",
             "creating": "Creating...",
             "create": "Create Discount",
-            "submit": "Save"
+            "submit": "Save",
+            "updating": "Updating...",
+            "update": "Update Discount"
           },
           "toasts": {
             "creating": "Creating discount...",
@@ -506,7 +533,10 @@
             "error": "Error creating discount",
             "deleteSuccess": "Discount deleted successfully",
             "deleteError": "Failed to delete discount",
-            "unexpected": "An unexpected error occurred"
+            "unexpected": "An unexpected error occurred",
+            "updating": "Updating discount...",
+            "updateSuccess": "Discount updated successfully!",
+            "updateError": "Error updating discount"
           },
           "sections": {
             "general": "General",
@@ -530,6 +560,11 @@
             "label": "Name",
             "placeholder": "Enter category name",
             "description": "The name of the category as it will appear in the dashboard and app."
+          },
+          "description": {
+            "label": "Description",
+            "placeholder": "Enter category description",
+            "description": "A short description of the category."
           }
         },
         "errors": {
@@ -537,14 +572,19 @@
         },
         "actions": {
           "creating": "Creating...",
-          "create": "Create Category"
+          "create": "Create Category",
+          "updating": "Updating...",
+          "update": "Update Category"
         },
         "toasts": {
           "creating": "Creating category...",
           "success": "Category created successfully!",
           "error": "Error creating category",
           "deleteSuccess": "Category deleted successfully",
-          "deleteError": "Error deleting category"
+          "deleteError": "Error deleting category",
+          "updating": "Updating category...",
+          "updateSuccess": "Category updated successfully!",
+          "updateError": "Error updating category"
         }
       },
       "list": {
@@ -580,6 +620,10 @@
           "previous": "Previous",
           "next": "Next",
           "selectedCount": "{selected} of {total} row(s) selected"
+        },
+        "editDialog": {
+          "title": "Edit Category",
+          "description": "Edit your category details and update information as needed."
         },
         "deleteDialog": {
           "title": "Delete Category",

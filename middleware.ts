@@ -1,9 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { match } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
-import { auth } from "./lib/auth";
-import { headers } from "next/headers";
-import { locales } from "./actions/dictionaries"; // unifica con dictionaries
+import { locales } from "./actions/dictionaries";
 import type { Lang } from "./actions/dictionaries";
 
 const DEFAULT_LOCALE: Lang = "en";
@@ -15,7 +13,7 @@ function negotiateLocale(request: NextRequest): Lang {
   return (matched.startsWith("es") ? "es" : "en") as Lang;
 }
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Early return for root path
@@ -32,60 +30,7 @@ export async function middleware(request: NextRequest) {
   const hasSupportedLocale = !!candidate && (locales as readonly string[]).includes(candidate);
 
   if (hasSupportedLocale) {
-    // Check for dashboard access - restricted to admin and restaurantOwner roles
-    if (segments.length > 1 && segments[1] === "dashboard") {
-      try {
-        const session = await auth.api.getSession({
-          headers: await headers(),
-        });
-        
-        if (!session || !session.user) {
-          // User not authenticated, redirect to signin
-          const url = request.nextUrl.clone();
-          url.pathname = `/${candidate}/auth/signin`;
-          url.searchParams.set("callbackUrl", pathname);
-          return NextResponse.redirect(url);
-        }
-        
-        // Check if user has the required role
-        const hasValidRole = session.user.role === "admin" || session.user.role === "restaurantOwner";
-        
-        if (!hasValidRole) {
-          // User doesn't have permission, redirect to home
-          const url = request.nextUrl.clone();
-          url.pathname = `/${candidate}`;
-          return NextResponse.redirect(url);
-        }
-      } catch (error) {
-        console.error("Authorization check failed in middleware:", error);
-        // On error, redirect to home as a fallback
-        const url = request.nextUrl.clone();
-        url.pathname = `/${candidate}`;
-        return NextResponse.redirect(url);
-      }
-    }
-    
-    // Special logic for signin with locale already present
-    const isSigninPath = pathname === `/${candidate}/auth/signin` || 
-                        pathname.startsWith(`/${candidate}/auth/signin?`);
-    
-    if (isSigninPath) {
-      try {
-        const session = await auth.api.getSession({
-          headers: await headers(),
-        });
-        if (session) {
-          const url = request.nextUrl.clone();
-          url.pathname = `/${candidate}/auth/callback`;
-          url.searchParams.set("source", "signin");
-          url.searchParams.set("redirect", "/");
-          return NextResponse.redirect(url);
-        }
-      } catch (error) {
-        // If session check fails, continue without redirect
-        console.error("Session check failed in middleware:", error);
-      }
-    }
+    // No auth checks in middleware - just handle locale routing
     return NextResponse.next();
   }
 
@@ -98,7 +43,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|api|apple-icon.png|icon0.png|icon1.png|manifest.json).*)",
+    // Match everything except static files and API routes
+    "/((?!_next/static|_next/image|favicon.ico|api|apple-icon.png|icon0.png|icon1.png|manifest.json|sw.js).*)",
   ],
 };
 

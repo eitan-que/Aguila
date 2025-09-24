@@ -2,6 +2,9 @@ import { getDictionary, Lang } from "@/actions/dictionaries";
 import { getRestaurantBySlug } from "@/actions/restaurant";
 import { SiteHeader } from "@/components/dashboard/siteHeader";
 import { RestaurantAnalytics } from "@/components/dashboard/restaurants/RestaurantAnalytics";
+import { Button } from "@/components/ui/button";
+import { Pencil } from "lucide-react";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 export default async function RestaurantPage({
@@ -49,6 +52,12 @@ export default async function RestaurantPage({
           <h1 className="font-bold text-2xl">
             {restaurant.data.name || dict.dashboard.restaurants.title}
           </h1>
+          <Link href={`/${lang}/dashboard/r/${restaurantSlug}/edit`}>
+            <Button>
+              <Pencil className="mr-2 w-4 h-4" />
+              {dict.dashboard.restaurants.form.actions.edit || "Edit Restaurant"}
+            </Button>
+          </Link>
         </header>
         <RestaurantAnalytics
           restaurantId={restaurant.data.id}

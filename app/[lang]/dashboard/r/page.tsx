@@ -31,7 +31,7 @@ export default async function RestaurantsPage({
             form={<CreateRestaurantForm {...dict.dashboard.restaurants.form} />}
           />
         </header>
-        <RestaurantsList t={dict.dashboard.restaurants.list} />
+        <RestaurantsList t={dict.dashboard.restaurants} />
       </div>
     </>
   )

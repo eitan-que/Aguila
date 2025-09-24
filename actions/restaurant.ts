@@ -5,6 +5,7 @@ import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { eq } from "drizzle-orm";
 import { del, put } from "@vercel/blob";
+import { revalidatePath } from "next/cache"
 
 type CreateRestaurantParsed = {
     name: string
@@ -182,6 +183,13 @@ export async function CreateRestaurant(data: CreateRestaurantParsed) {
             menuPictureUrl: menuPictureUrls.length > 0 ? menuPictureUrls : undefined, // Save menu picture URLs
         })
 
+        revalidatePath("/dashboard/r");
+        revalidatePath("/");
+        revalidatePath("/es");
+        revalidatePath("/en");
+        revalidatePath("/es/r");
+        revalidatePath("/en/r");
+        
         return { success: true }
     } catch (err) {
         console.error("Create restaurant error:", err)
@@ -355,5 +363,233 @@ export async function getMenuRestaurants() {
   } catch (err) {
     console.error("Get menu restaurants error:", err);
     return { success: false, message: "Internal Server Error", data: [] as any[] };
+  }
+}
+
+type UpdateRestaurantParsed = {
+    id: string
+    name: string
+    slug: string
+    description?: string
+    address?: string
+    lat?: number
+    lon?: number
+    website?: string
+    phone?: string
+    email?: string
+    prepTimeMin?: number
+    prepTimeMax?: number
+    picture?: File | null
+    pictureAlt?: string
+    tags?: string[]
+    menuPictures?: File[] | null
+    removedMenuPictures?: string[] // URLs of menu pictures to remove
+}
+
+export async function UpdateRestaurant(data: UpdateRestaurantParsed) {
+    try {
+        const session = await auth.api.getSession({
+            headers: await headers(),
+        })
+        if (!session) {
+            return { success: false, message: "Not authenticated" }
+        }
+        if (!session.user?.role || session.user.role !== "admin") {
+            return { success: false, message: "Not authorized" }
+        }
+
+        // Check if restaurant exists
+        const existingRestaurant = await db.select().from(restaurant).where(eq(restaurant.id, data.id)).limit(1)
+        if (existingRestaurant.length === 0) {
+            return { success: false, message: "Restaurant not found" }
+        }
+        
+        // Validations - similar to CreateRestaurant
+        if (!data.name || data.name.length < 3) {
+            return { success: false, message: "Name must be at least 3 characters" }
+        }
+        if (!data.slug || data.slug.length < 3) {
+            return { success: false, message: "Slug must be at least 3 characters" }
+        }
+        if (data.description && data.description.length > 300) {
+            return { success: false, message: "Description must be at most 300 characters" }
+        }
+        if (data.address && data.address.length > 300) {
+            return { success: false, message: "Address must be at most 300 characters" }
+        }
+        if (data.lat != null && (data.lat < -90 || data.lat > 90)) {
+            return { success: false, message: "Latitude must be between -90 and 90" }
+        }
+        if (data.lon != null && (data.lon < -180 || data.lon > 180)) {
+            return { success: false, message: "Longitude must be between -180 and 180" }
+        }
+        if (data.phone && data.phone.length < 7) {
+            return { success: false, message: "Phone number must be at least 7 characters" }
+        }
+        if (!isValidEmail(data.email)) {
+            return { success: false, message: "Email is not valid" }
+        }
+        if (data.prepTimeMin != null && data.prepTimeMin < 0) {
+            return { success: false, message: "Minimum preparation time must be at least 0" }
+        }
+        if (data.prepTimeMax != null && data.prepTimeMax < 0) {
+            return { success: false, message: "Maximum preparation time must be at least 0" }
+        }
+        if (data.prepTimeMin != null && data.prepTimeMax != null && data.prepTimeMin > data.prepTimeMax) {
+            return { success: false, message: "Minimum preparation time must be less than maximum preparation time" }
+        }
+        if (!isValidUrl(data.website)) {
+            return { success: false, message: "Website is not valid" }
+        }
+        if (data.picture && data.picture.size > 5 * 1024 * 1024) {
+            return { success: false, message: "Picture size must be less than 5MB" }
+        }
+        if (data.pictureAlt && data.pictureAlt.length > 300) {
+            return { success: false, message: "Picture alt text must be at most 300 characters" }
+        }
+        if (data.tags && data.tags.length > 5) {
+            return { success: false, message: "You can only add up to 5 tags" }
+        }
+        
+        // Slug unique check (only if it changed)
+        if (data.slug !== existingRestaurant[0].slug) {
+            const slugExists = await db.select().from(restaurant).where(eq(restaurant.slug, data.slug))
+            if (slugExists.length > 0) {
+                return { success: false, message: "Slug already exists. Please choose another one." }
+            }
+        }
+
+        // Prepare update data
+        const updateData: {
+            name: string
+            slug: string
+            description?: string | null
+            address?: string | null
+            pictureUrl?: string | null
+            pictureAlt?: string | null
+            prepTimeMin?: number | null
+            prepTimeMax?: number | null
+            lat?: string | null
+            lon?: string | null
+            phone?: string | null
+            email?: string | null
+            website?: string | null
+            tags?: string[] | null
+            menuPictureUrl?: string[] | null
+            updatedAt: Date
+        } = {
+            name: data.name,
+            slug: data.slug,
+            description: data.description ?? undefined,
+            address: data.address ?? undefined,
+            prepTimeMin: data.prepTimeMin ?? undefined,
+            prepTimeMax: data.prepTimeMax ?? undefined,
+            lat: data.lat != null ? data.lat.toString() : undefined,
+            lon: data.lon != null ? data.lon.toString() : undefined,
+            phone: data.phone ?? undefined,
+            email: data.email ?? undefined,
+            website: data.website ?? undefined,
+            tags: data.tags ?? undefined,
+            pictureAlt: data.pictureAlt ?? undefined,
+            updatedAt: new Date(),
+        }
+
+        // Handle main picture upload
+        if (data.picture) {
+            try {
+                // If there's an existing image, delete it
+                if (existingRestaurant[0].pictureUrl) {
+                    await del(existingRestaurant[0].pictureUrl);
+                }
+                
+                const pictureUrl = await uploadFileToBlob(data.slug, data.picture);
+                if (pictureUrl) {
+                    updateData.pictureUrl = pictureUrl;
+                }
+            } catch (error) {
+                console.error("Error updating restaurant picture:", error);
+                return { success: false, message: "Error uploading restaurant image" };
+            }
+        }
+
+        // Handle menu pictures
+        if (data.menuPictures && data.menuPictures.length > 0) {
+            try {
+                // Get existing menu pictures
+                const existingMenuUrls = existingRestaurant[0].menuPictureUrl || [];
+                
+                // Remove any requested deleted images
+                if (data.removedMenuPictures && data.removedMenuPictures.length > 0) {
+                    // Delete from blob storage
+                    for (const url of data.removedMenuPictures) {
+                        if (existingMenuUrls.includes(url)) {
+                            await del(url);
+                        }
+                    }
+                    
+                    // Filter out removed URLs
+                    const remainingUrls = existingMenuUrls.filter(url => 
+                        !data.removedMenuPictures?.includes(url)
+                    );
+                    
+                    // Upload new menu pictures
+                    const newMenuUrls = await uploadMenuFilesToBlob(data.slug, data.menuPictures);
+                    
+                    // Combine remaining and new URLs
+                    updateData.menuPictureUrl = [...remainingUrls, ...newMenuUrls];
+                } else {
+                    // Just add new pictures to existing ones
+                    const newMenuUrls = await uploadMenuFilesToBlob(data.slug, data.menuPictures);
+                    updateData.menuPictureUrl = [...existingMenuUrls, ...newMenuUrls];
+                }
+            } catch (error) {
+                console.error("Error updating menu pictures:", error);
+                return { success: false, message: "Error uploading menu images: " + (error as Error).message };
+            }
+        } else if (data.removedMenuPictures && data.removedMenuPictures.length > 0) {
+            // Only removing pictures, no new ones
+            const existingMenuUrls = existingRestaurant[0].menuPictureUrl || [];
+            
+            // Delete from blob storage
+            for (const url of data.removedMenuPictures) {
+                if (existingMenuUrls.includes(url)) {
+                    await del(url);
+                }
+            }
+            
+            // Filter out removed URLs
+            updateData.menuPictureUrl = existingMenuUrls.filter(url => 
+                !data.removedMenuPictures?.includes(url)
+            );
+        }
+
+        // Update restaurant in database
+        await db.update(restaurant)
+            .set(updateData)
+            .where(eq(restaurant.id, data.id));
+
+        revalidatePath("/dashboard/r");
+        revalidatePath("/");
+        revalidatePath("/es");
+        revalidatePath("/en");
+        revalidatePath("/es/r");
+        revalidatePath("/en/r");
+        return { success: true, message: "Restaurant updated successfully" };
+    } catch (err) {
+        console.error("Update restaurant error:", err);
+        return { success: false, message: "Internal Server Error" };
+    }
+}
+
+export async function getRestaurantById(id: string) {
+  try {
+    const restaurantData = await db.select().from(restaurant).where(eq(restaurant.id, id)).limit(1);
+    if (restaurantData.length === 0) {
+      return { success: false, message: "Restaurant not found", data: null };
+    }
+    return { success: true, data: restaurantData[0] };
+  } catch (err) {
+    console.error("Get restaurant by id error:", err);
+    return { success: false, message: "Internal Server Error", data: null };
   }
 }
