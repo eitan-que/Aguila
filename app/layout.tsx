@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/primitives/theme-provider"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 import { baseUrl } from '@/lib/utils';
-import { Lang } from "@/actions/dictionaries";
+import { Lang, locales } from "@/actions/dictionaries";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,6 +26,12 @@ export const metadata: Metadata = {
     index: true
   }
 };
+
+export const revalidate = 3600 // 1 hour
+
+export async function generateStaticParams() {
+  return locales.map((lang) => ({ lang }))
+}
 
 export default async function RootLayout({
   children,
