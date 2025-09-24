@@ -67,6 +67,12 @@
     },
     "tags": {
       "bestSeller": "Best seller"
+    },
+    "promoDialog": {
+      "title": "Join Aguila!",
+      "description": "Sign up to get access to the best exclusive promos",
+      "register": "Sign up",
+      "dismiss": "Not now"
     }
   },
   "navbar": {

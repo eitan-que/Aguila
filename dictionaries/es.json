@@ -67,6 +67,12 @@
     },
     "tags": {
       "bestSeller": "Más vendido"
+    },
+    "promoDialog": {
+      "title": "¡Únete a Aguila!",
+      "description": "Regístrate para tener acceso a las mejores promos exclusivas",
+      "register": "Registrarme",
+      "dismiss": "Ahora no"
     }
   },
   "navbar": {
