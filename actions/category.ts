@@ -354,6 +354,14 @@ export async function updateCategory(data: { id: string, name: string; descripti
   }
 }
 
+export type categoryData = {
+    id: string;
+    name: string;
+    description: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 export async function getCategoryById(id: string) {
   try {
     const session = await auth.api.getSession({

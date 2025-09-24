@@ -43,9 +43,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { CategoryWithStats, deleteCategory, getCategoryById, listCategories } from "@/actions/category"
+import { categoryData, CategoryWithStats, deleteCategory, getCategoryById, listCategories } from "@/actions/category"
 import { Dictionary } from "@/actions/dictionaries"
-import { DrawerDialogTemplate } from "@/components/dashboard/drawerDialogTemplate"
 import { EditCategoryForm } from "@/components/dashboard/forms/editCategory"
 
 type CategoriesListProps = {
@@ -63,7 +62,7 @@ export function CategoriesList({ t }: CategoriesListProps) {
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null)
   const [categoryNameToDelete, setCategoryNameToDelete] = useState<string | null>(null)
   const [deletingCategory, setDeletingCategory] = useState(false)
-  const [categoryToEdit, setCategoryToEdit] = useState<any | null>(null)
+  const [categoryToEdit, setCategoryToEdit] = useState<categoryData | null>(null)
   const [isLoadingCategory, setIsLoadingCategory] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
 

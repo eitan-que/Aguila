@@ -39,7 +39,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { deleteRestaurant, getRestaurantById, listRestaurants, RestaurantWithStats } from "@/actions/restaurant"
+import { deleteRestaurant, getRestaurantById, listRestaurants, restaurantData, RestaurantWithStats } from "@/actions/restaurant"
 import { toast } from "sonner"
 import { Dictionary } from "@/actions/dictionaries"
 import Link from "next/link"
@@ -58,7 +58,7 @@ export function RestaurantsList({ t }: RestaurantListProps) {
   const [restaurantToDelete, setRestaurantToDelete] = useState<string | null>(null)
   const [restaurantNameToDelete, setRestaurantNameToDelete] = useState<string | null>(null)
   const [deletingRestaurant, setDeletingRestaurant] = useState(false)
-  const [restaurantToEdit, setRestaurantToEdit] = useState<any | null>(null)
+  const [restaurantToEdit, setRestaurantToEdit] = useState<restaurantData | null>(null)
   const [isLoadingRestaurant, setIsLoadingRestaurant] = useState(false)
   const [editDialogOpen, setEditDialogOpen] = useState(false)
 
@@ -450,7 +450,24 @@ export function RestaurantsList({ t }: RestaurantListProps) {
             </DialogHeader>
             <div className="max-h-[70vh] overflow-x-visible overflow-y-auto">
               <EditRestaurantForm 
-                restaurant={restaurantToEdit}
+                restaurant={{
+                  id: restaurantToEdit.id,
+                  name: restaurantToEdit.name ?? undefined,
+                  slug: restaurantToEdit.slug ?? undefined,
+                  description: restaurantToEdit.description ?? undefined,
+                  address: restaurantToEdit.address ?? undefined,
+                  lat: restaurantToEdit.lat ?? undefined,
+                  lon: restaurantToEdit.lon ?? undefined,
+                  pictureUrl: restaurantToEdit.pictureUrl ?? undefined,
+                  pictureAlt: restaurantToEdit.pictureAlt ?? undefined,
+                  prepTimeMin: restaurantToEdit.prepTimeMin ?? undefined,
+                  prepTimeMax: restaurantToEdit.prepTimeMax ?? undefined,
+                  tags: restaurantToEdit.tags ?? undefined,
+                  website: restaurantToEdit.website ?? undefined,
+                  phone: restaurantToEdit.phone ?? undefined,
+                  email: restaurantToEdit.email ?? undefined,
+                  menuPictureUrl: restaurantToEdit.menuPictureUrl ?? undefined,
+                }}
                 t={t.form}
                 onSuccess={() => {
                   setEditDialogOpen(false)

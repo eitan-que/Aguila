@@ -581,6 +581,27 @@ export async function UpdateRestaurant(data: UpdateRestaurantParsed) {
     }
 }
 
+export type restaurantData = {
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    address: string | null;
+    pictureUrl: string | null;
+    pictureAlt: string | null;
+    prepTimeMin: number | null;
+    prepTimeMax: number | null;
+    tags: string[] | null;
+    lat: string | null;
+    lon: string | null;
+    phone: string | null;
+    email: string | null;
+    website: string | null;
+    menuPictureUrl: string[] | null;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 export async function getRestaurantById(id: string) {
   try {
     const restaurantData = await db.select().from(restaurant).where(eq(restaurant.id, id)).limit(1);
