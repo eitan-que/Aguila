@@ -25,11 +25,11 @@ export default function DiscountBanner({discount, asLinkToRestaurant}: {discount
                 draggable={false}
               />
             {(discount.name || discount.description) && (
-                <div className="right-0 bottom-0 left-0 absolute flex flex-col justify-end bg-gradient-to-t from-card-foreground/70 to-transparent p-4 pb-7 w-full h-full text-card">
+                <div className="right-0 bottom-0 left-0 absolute flex flex-col justify-end bg-gradient-to-t from-black/70 to-transparent p-4 pb-7 w-full h-full text-white">
                     <h2 className="font-semibold text-lg">{discount.name}</h2>
-                    {discount.description && (
+                    {/* {discount.description && (
                         <p className="text-sm line-clamp-2">{discount.description}</p>
-                    )}
+                    )} */}
                 </div>
             )}
           </Link>

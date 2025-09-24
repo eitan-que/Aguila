@@ -15,9 +15,10 @@ type SignInFormProps = {
   dict: Dictionary;
   lang: Lang;
   onEmailSent?: () => void; // Optional callback when email is sent
+  callbackUrl?: string; // Optional callback URL after sign-in
 }
 
-export function SignInForm({ dict, lang, onEmailSent }: SignInFormProps) {
+export function SignInForm({ dict, lang, onEmailSent, callbackUrl }: SignInFormProps) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState<false | "email" | "google" | "github">(false)
   // Added state for sent view + countdown + resend btn loading
@@ -62,7 +63,7 @@ export function SignInForm({ dict, lang, onEmailSent }: SignInFormProps) {
     setCookie('lang', lang, { maxAge: 60 * 5 });
     await signIn.magicLink({
       email,
-      callbackURL: `/auth/callback?source=signin&provider=email`
+      callbackURL: `/auth/callback?source=signin&provider=email${callbackUrl ? `&callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}`
     });
     setLastSentEmail(normalizeEmail(email));
     setEmailSent(true);
@@ -113,7 +114,7 @@ export function SignInForm({ dict, lang, onEmailSent }: SignInFormProps) {
     try {
       await signIn.social({ 
         provider, 
-        callbackURL: `/auth/callback?source=signin&provider=${provider}` 
+        callbackURL: `/auth/callback?source=signin&provider=${provider}${callbackUrl ? `&callbackUrl=${encodeURIComponent(callbackUrl)}` : ''}` 
       });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : dict.error.genericError;

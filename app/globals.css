@@ -115,7 +115,7 @@
   --card-foreground: #FFFFFF;      /* Texto sobre tarjetas oscuras (gris claro) */
   --popover: #171717;              /* Fondo de popover en modo oscuro */
   --popover-foreground: #FFFFFF;   /* Texto de popover en modo oscuro */
-  --primary: #DC2626;              /* Color primario en modo oscuro (naranja algo más claro para mayor vividez) */
+  --primary: #F97316;              /* Color primario en modo oscuro (naranja algo más claro para mayor vividez) */
   --primary-foreground: #FFFFFF;   /* Texto sobre primario en oscuro (negro sobre naranja claro) */
   --secondary: #10B981;            /* Color secundario en modo oscuro (teal algo más claro) */
   --secondary-foreground: #FFFFFF; /* Texto sobre secundario en oscuro (negro sobre teal) */
@@ -123,7 +123,7 @@
   --muted-foreground: #A3A3A3;     /* Texto atenuado en oscuro (gris) */
   --accent: #D4D4D4;                 /* Acento (dorado brillante) para elementos que requieren atención (ej. etiquetas promocionales) */
   --accent-foreground: #171717;      /* Texto sobre fondo de acento (texto oscuro sobre dorado claro) */
-  --border: #E5E5E5;                 /* Color de borde para divisores y contornos (gris claro) */
+  --border: #363636;                 /* Color de borde para divisores y contornos (gris claro) */
   --input: #171717;                  /* Fondo de inputs (blanco en tema claro, dentro de tarjetas) */
   --ring: #D4D4D4;                   /* Color para el halo de enfoque (ring) de elementos en focus (naranja con transparencia) */
   --destructive: #C20C0C;            /* Color destructivo (error) (rojo para estados de error o botones de eliminar) */

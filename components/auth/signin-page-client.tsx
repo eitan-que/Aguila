@@ -7,11 +7,11 @@ import type { Dictionary, Lang } from "@/actions/dictionaries"
 
 type Props = {
   lang: Lang
-  // Tip: replace `any` with your dict type if you have it exported
+  callbackUrl?: string
   dict: Dictionary
 }
 
-export default function SignInPageClient({ lang, dict }: Props) {
+export default function SignInPageClient({ lang, dict, callbackUrl }: Props) {
   const [emailSent, setEmailSent] = useState(false)
 
   return (
@@ -21,7 +21,7 @@ export default function SignInPageClient({ lang, dict }: Props) {
         backUrl={emailSent ? "goBack" : `/${lang}/`}
       />
       <div className="flex flex-col flex-1 justify-center items-center p-4 sm:p-6 lg:p-8">
-        <SignInForm dict={dict} lang={lang} onEmailSent={() => setEmailSent(true)} />
+        <SignInForm dict={dict} lang={lang} onEmailSent={() => setEmailSent(true)} callbackUrl={callbackUrl} />
       </div>
     </>
   )

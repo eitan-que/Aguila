@@ -19,14 +19,22 @@ export default async function Callback({
     const redirectTo = typeof resolvedSearchParams.redirect === 'string' 
         ? resolvedSearchParams.redirect 
         : '/';
+
+    const callbackUrl = resolvedSearchParams.callbackUrl;
+    if (callbackUrl) {
+        // If callbackUrl is provided, use it for redirection
+        const formattedCallbackUrl = typeof callbackUrl === 'string' ? callbackUrl : callbackUrl[0];
+        const decodedCallbackUrl = decodeURIComponent(formattedCallbackUrl);
+        redirect(decodedCallbackUrl);
+    }
     
     // Redirect to the specified path or home
     redirect(redirectTo);
     
     // If you want to show a loading spinner while redirecting, you can return a spinner component
     return (
-        <main className="flex min-h-[100dvh] flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
-            <Loader2 className="animate-spin w-10 h-10"/>
+        <main className="flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8 min-h-[100dvh]">
+            <Loader2 className="w-10 h-10 animate-spin"/>
         </main>
     )
 }

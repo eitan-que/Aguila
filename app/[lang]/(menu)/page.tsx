@@ -4,6 +4,8 @@ import Restaurants from "@/components/menu/sections/restaurants";
 import DiscountBanners from "@/components/menu/sections/discountBanners";
 import { getRandomDiscounts } from "@/actions/discounts";
 import { getMenuRestaurants } from "@/actions/restaurant";
+import Navbar from "@/components/menu/navbar/navbar";
+import { HomeIcon, User } from "lucide-react";
 
 export const revalidate = 3600 // 1 hour
 
@@ -64,9 +66,28 @@ export default async function Home({
           restaurants={restaurants}
           variant="secondary"
         />
-        {/* <Navbar
-          items={navItems}
-        /> */}
+        <Navbar
+          items={[
+            {
+              label: dict.navbar.home,
+              url: `/${lang}/`,
+              icon: HomeIcon,
+              isActive: true
+            },
+            {
+              label: dict.navbar.account,
+              url: `/${lang}/account/`,
+              icon: User,
+              isActive: false
+            },
+            {
+              label: dict.navbar.aguila,
+              url: `/${lang}/faq/`,
+              icon: "aguila",
+              isActive: false
+            }
+          ]}
+        />
     </main>
   )
 }

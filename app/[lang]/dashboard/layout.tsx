@@ -22,8 +22,9 @@ export default async function DashboardLayout({
     })
     
     if (!session?.user) {
-        // Redirect to sign-in page with callback URL
-        redirect(`/${lang}/auth/signin?callbackUrl=/${lang}/dashboard`);
+        const callbackUrl = `/${lang}/dashboard/`
+        const encoded = encodeURIComponent(callbackUrl)
+        redirect(`/${lang}/auth/signin?callbackUrl=${encoded}`)
     }
     
     // Role check - only allow admin and restaurantOwner roles

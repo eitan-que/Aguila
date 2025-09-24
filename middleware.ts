@@ -44,7 +44,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     // Match everything except static files and API routes
-    "/((?!_next/static|_next/image|favicon.ico|api|apple-icon.png|icon0.png|icon1.png|manifest.json|sw.js).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api|apple-icon.png|icon0.svg|icon1.png|manifest.json|sw.js).*)",
   ],
 };
 

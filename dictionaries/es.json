@@ -75,10 +75,38 @@
       "dismiss": "Ahora no"
     }
   },
+  "account": {
+    "title": "Tu Cuenta",
+    "welcome": "Bienvenido",
+    "description": "Administra tu información personal y preferencias",
+    "personalInfo": {
+      "title": "Información Personal",
+      "name": "Nombre",
+      "namePlaceholder": "Tu nombre",
+      "email": "Email",
+      "noName": "No establecido"
+    },
+    "preferences": {
+      "theme": {
+        "label": "Tema",
+        "toggleLabel": "Cambiar tema",
+        "options": {
+          "light": "Claro",
+          "dark": "Oscuro",
+          "system": "Sistema"
+        }
+      }
+    },
+    "actions": {
+      "edit": "Editar",
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    }
+  },
   "navbar": {
     "home": "Inicio",
-    "orders": "Pedidos",
-    "profile": "Perfil"
+    "account": "Cuenta",
+    "aguila": "Águila"
   },
   "dashboard": {
     "sidebar": {
@@ -683,6 +711,41 @@
     }
   },
   "legal": {
+    "faq": {
+      "title": "Preguntas Frecuentes",
+      "sections": [
+        {
+          "id": "QuienesSomos",
+          "question": "¿Quiénes somos?",
+          "answer": "Somos una plataforma dedicada a conectar a los usuarios con los mejores restaurantes y locales de la zona."
+        },
+        {
+          "id": "ComoFunciona",
+          "question": "¿Cómo funciona Águila?",
+          "answer": "Águila permite a los usuarios descubrir restaurantes cercanos, ver menús, promociones y más, todo desde una interfaz fácil de usar."
+        },
+        {
+          "id": "QueLocalesAparecen",
+          "question": "¿Qué locales aparecen en Águila?",
+          "answer": "En Águila incluimos locales gastronómicos y comercios que ofrezcan propuestas de almuerzo o merienda cerca de ORT."
+        },
+        {
+          "id": "CobrosAEstudiantes",
+          "question": "¿Cobran a los estudiantes por usar Águila?",
+          "answer": "No, Águila es completamente gratuito para los estudiantes. Nuestro objetivo es facilitar el acceso a buenas opciones de comida sin costo alguno."
+        },
+        {
+          "id": "PrivacidadDatos",
+          "question": "¿Cómo manejan mi privacidad y datos?",
+          "answer": "Nos tomamos muy en serio la privacidad de nuestros usuarios. Consulta nuestra ##Política de Privacidad## para más detalles sobre cómo protegemos tu información."
+        },
+        {
+          "id": "ProblemasTecnicos",
+          "question": "¿Qué hago si tengo problemas técnicos?",
+          "answer": "Si experimentas algún problema técnico, por favor envíanos un correo a ##aguila.startup@gmail.com## y haremos lo posible por ayudarte."
+        }
+      ]
+    },
     "terms": {
       "title": "Términos y Condiciones de Uso",
       "sections": [

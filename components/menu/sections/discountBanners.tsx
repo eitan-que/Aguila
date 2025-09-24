@@ -115,7 +115,7 @@ export default function DiscountBanners({
       </div>
 
       <div className="bottom-2 absolute flex justify-center items-center w-full">
-        <div className="flex justify-center items-center gap-1 bg-card/25 p-1 rounded-full">
+        <div className="flex justify-center items-center gap-1 bg-white/25 p-1 rounded-full">
           {discounts.map((_, idx) => (
             <button
               key={idx}
@@ -123,7 +123,7 @@ export default function DiscountBanners({
               aria-label={`Ir al banner ${idx + 1}`}
               onClick={() => scrollToIndex(idx)}
               className={`rounded-full h-2 transition-all ${
-                idx === currentIndex ? "bg-card w-6" : "bg-card/50 w-2"
+                idx === currentIndex ? "bg-white w-6" : "bg-white/50 w-2"
               }`}
             />
           ))}

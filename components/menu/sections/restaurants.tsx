@@ -105,12 +105,14 @@ export default function Restaurants(
                                 />
                                 <div className="flex flex-col gap-1 px-1">
                                     <h3 className="font-bold text-sm/4">{r.name}</h3>
-                                    <PrimitiveTag
-                                        Icon={MapPin}
-                                        text={`${meters} m`}
-                                        textColor="text-muted-foreground"
-                                        backgroundColor="bg-transparent"
-                                    />
+                                    {meters !== undefined && (
+                                        <PrimitiveTag
+                                            Icon={MapPin}
+                                            text={`${meters} m`}
+                                            textColor="text-muted-foreground"
+                                            backgroundColor="bg-transparent"
+                                        />
+                                    )}
                                 </div>
                             </Link>
                         )})}

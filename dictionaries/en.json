@@ -75,10 +75,38 @@
       "dismiss": "Not now"
     }
   },
+  "account": {
+    "title": "Your Account",
+    "welcome": "Welcome",
+    "description": "Manage your personal information and preferences",
+    "personalInfo": {
+      "title": "Personal Information",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "noName": "Not set"
+    },
+    "preferences": {
+      "theme": {
+        "label": "Theme",
+        "toggleLabel": "Toggle theme",
+        "options": {
+          "light": "Light",
+          "dark": "Dark",
+          "system": "System"
+        }
+      }
+    },
+    "actions": {
+      "edit": "Edit",
+      "save": "Save",
+      "cancel": "Cancel"
+    }
+  },
   "navbar": {
     "home": "Home",
-    "orders": "Orders",
-    "profile": "Profile"
+    "account": "Account",
+    "aguila": "Águila"
   },
   "dashboard": {
     "sidebar": {
@@ -681,6 +709,41 @@
     }
   },
   "legal": {
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "sections": [
+        {
+          "id": "QuienesSomos",
+          "question": "Who are we?",
+          "answer": "We are a platform dedicated to connecting users with the best restaurants and venues in the area."
+        },
+        {
+          "id": "ComoFunciona",
+          "question": "How does Águila work?",
+          "answer": "Águila allows users to discover nearby restaurants, view menus, promotions and more, all from an easy-to-use interface."
+        },
+        {
+          "id": "QueLocalesAparecen",
+          "question": "What venues appear in Águila?",
+          "answer": "In Águila, we include food establishments and businesses that offer lunch or snack options near ORT."
+        },
+        {
+          "id": "CobrosAEstudiantes",
+          "question": "Do you charge students for using Águila?",
+          "answer": "No, Águila is completely free for students. Our goal is to facilitate access to good food options at no cost."
+        },
+        {
+          "id": "PrivacidadDatos",
+          "question": "How do you handle my privacy and data?",
+          "answer": "We take our users' privacy very seriously. Check our ##Privacy Policy## for more details on how we protect your information."
+        },
+        {
+          "id": "ProblemasTecnicos",
+          "question": "What should I do if I have technical problems?",
+          "answer": "If you experience any technical issues, please send us an email at ##aguila.startup@gmail.com## and we'll do our best to help you."
+        }
+      ]
+    },
     "terms": {
       "title": "Terms and Conditions of Use",
       "sections": [
